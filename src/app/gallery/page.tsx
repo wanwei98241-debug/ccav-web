@@ -1,136 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
-// ===== Mock 数据类型 =====
-interface GalleryItem {
-  id: number;
-  title: string;
-  description: string;
-  imageUrl: string;
-  author: string;
-  avatarUrl: string;
-  likes: number;
-  comments: number;
-  liked: boolean;
-  tags: string[];
-  courseName?: string;
-  createdAt: string;
-}
-
-// ===== Mock 数据 =====
-const MOCK_ITEMS: GalleryItem[] = [
-  {
-    id: 1,
-    title: "水墨丹青 · 江南烟雨",
-    description: "用可灵AI生成的江南水乡水墨动画，配合古筝BGM，效果惊艳！提示词：烟雨江南，水墨风格，小船流水，4K",
-    imageUrl: "https://picsum.photos/seed/art1/600/800",
-    author: "张三",
-    avatarUrl: "https://api.dicebear.com/7.x/initials/svg?seed=张三&backgroundColor=c8b898&textColor=0d0d0d",
-    likes: 42,
-    comments: 8,
-    liked: false,
-    tags: ["可灵", "文生图", "水墨风"],
-    courseName: "M3 · AI视频制作入门",
-    createdAt: "2026-05-28",
-  },
-  {
-    id: 2,
-    title: "赛博朋克城市夜景",
-    description: "用提示词优化的方式生成了霓虹城市夜景，色彩丰富，很有质感。",
-    imageUrl: "https://picsum.photos/seed/art2/600/800",
-    author: "李四",
-    avatarUrl: "https://api.dicebear.com/7.x/initials/svg?seed=李四&backgroundColor=206683&textColor=ffffff",
-    likes: 38,
-    comments: 5,
-    liked: false,
-    tags: ["提示词", "赛博朋克"],
-    courseName: "M2 · 提示词入门",
-    createdAt: "2026-05-27",
-  },
-  {
-    id: 3,
-    title: "古风侍女 · 短视频",
-    description: "可灵文生视频入门作品，古风侍女在庭院中漫步。提示词：古风、侍女、庭院、柳树、长裙飘逸",
-    imageUrl: "https://picsum.photos/seed/art3/600/800",
-    author: "王五",
-    avatarUrl: "https://api.dicebear.com/7.x/initials/svg?seed=王五&backgroundColor=b93a32&textColor=ffffff",
-    likes: 56,
-    comments: 12,
-    liked: false,
-    tags: ["可灵", "文生视频", "古风"],
-    courseName: "M1 · AI视频工具全景",
-    createdAt: "2026-05-26",
-  },
-  {
-    id: 4,
-    title: "国潮字体设计",
-    description: "用AI生成的国潮风格字体设计，结合了传统书法与现代设计。",
-    imageUrl: "https://picsum.photos/seed/art4/600/800",
-    author: "赵六",
-    avatarUrl: "https://api.dicebear.com/7.x/initials/svg?seed=赵六&backgroundColor=4a90a8&textColor=ffffff",
-    likes: 29,
-    comments: 4,
-    liked: false,
-    tags: ["设计", "国潮", "字体"],
-    createdAt: "2026-05-25",
-  },
-  {
-    id: 5,
-    title: "敦煌飞天 · AI重构",
-    description: "用可灵生图+Runway运动笔刷，敦煌飞天的飘带动画效果。",
-    imageUrl: "https://picsum.photos/seed/art5/600/800",
-    author: "孙七",
-    avatarUrl: "https://api.dicebear.com/7.x/initials/svg?seed=孙七&backgroundColor=c8b898&textColor=0d0d0d",
-    likes: 71,
-    comments: 15,
-    liked: false,
-    tags: ["可灵", "Runway", "敦煌"],
-    courseName: "M3 · AI视频制作入门",
-    createdAt: "2026-05-24",
-  },
-  {
-    id: 6,
-    title: "山水间 · 国风水墨MV",
-    description: "完整AI音乐MV作品，水墨山水画配合古风音乐的视觉盛宴。",
-    imageUrl: "https://picsum.photos/seed/art6/600/800",
-    author: "周八",
-    avatarUrl: "https://api.dicebear.com/7.x/initials/svg?seed=周八&backgroundColor=206683&textColor=ffffff",
-    likes: 94,
-    comments: 22,
-    liked: true,
-    tags: ["MV", "水墨", "音乐"],
-    courseName: "M4 · 综合创作",
-    createdAt: "2026-05-23",
-  },
-  {
-    id: 7,
-    title: "故宫雪景 · AI复原",
-    description: "用AI给故宫老照片加上了雪景特效，既有历史感又有新意。",
-    imageUrl: "https://picsum.photos/seed/art7/600/800",
-    author: "吴九",
-    avatarUrl: "https://api.dicebear.com/7.x/initials/svg?seed=吴九&backgroundColor=b93a32&textColor=ffffff",
-    likes: 63,
-    comments: 9,
-    liked: false,
-    tags: ["复原", "故宫", "雪景"],
-    createdAt: "2026-05-22",
-  },
-  {
-    id: 8,
-    title: "AI短片 · 太空之旅",
-    description: "用提示词一步步生成太空场景，Luma+可灵组合的科幻短片。",
-    imageUrl: "https://picsum.photos/seed/art8/600/800",
-    author: "郑十",
-    avatarUrl: "https://api.dicebear.com/7.x/initials/svg?seed=郑十&backgroundColor=4a90a8&textColor=ffffff",
-    likes: 48,
-    comments: 11,
-    liked: false,
-    tags: ["科幻", "Luma", "短片"],
-    courseName: "M5 · 进阶技巧",
-    createdAt: "2026-05-21",
-  },
-];
+import { GalleryItem, getGalleryItems, toggleLike as apiToggleLike, submitComment as apiSubmitComment } from "@/lib/api";
 
 export default function GalleryPage() {
   const [items, setItems] = useState<GalleryItem[]>([]);
@@ -140,12 +11,10 @@ export default function GalleryPage() {
   const [commentText, setCommentText] = useState("");
 
   useEffect(() => {
-    // TODO: 对接王万里的后端 API
-    // fetch('/api/gallery').then(...)
-    setTimeout(() => {
-      setItems(MOCK_ITEMS);
+    getGalleryItems().then((data) => {
+      setItems(data);
       setLoading(false);
-    }, 300);
+    });
   }, []);
 
   const filtered = activeTag
@@ -154,23 +23,24 @@ export default function GalleryPage() {
 
   const allTags = [...new Set(items.flatMap((it) => it.tags))];
 
-  const toggleLike = (id: number) => {
+  const toggleLike = async (id: number) => {
     setItems((prev) =>
       prev.map((it) =>
-        it.id === id ? { ...it, liked: !it.liked, likes: it.liked ? it.likes - 1 : it.likes + 1 } : it
+        it.id === id ? { ...it, liked: !it.liked, likes_count: it.liked ? it.likes_count - 1 : it.likes_count + 1 } : it
       )
     );
     if (selectedItem?.id === id) {
       setSelectedItem((prev) =>
-        prev ? { ...prev, liked: !prev.liked, likes: prev.liked ? prev.likes - 1 : prev.likes + 1 } : null
+        prev ? { ...prev, liked: !prev.liked, likes_count: prev.liked ? prev.likes_count - 1 : prev.likes_count + 1 } : null
       );
     }
+    await apiToggleLike(id);
   };
 
-  const handleComment = (e: React.FormEvent) => {
+  const handleComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!commentText.trim()) return;
-    // TODO: 对接后端
+    await apiSubmitComment(selectedItem?.id ?? 0, commentText);
     setCommentText("");
   };
 
@@ -239,7 +109,7 @@ export default function GalleryPage() {
               >
                 <div className="relative overflow-hidden">
                   <img
-                    src={item.imageUrl}
+                    src={item.image_url}
                     alt={item.title}
                     className="w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     loading="lazy"
@@ -248,13 +118,13 @@ export default function GalleryPage() {
                 <div className="p-3">
                   <h3 className="text-sm text-white/80 font-medium truncate">{item.title}</h3>
                   <div className="flex items-center gap-2 mt-2 text-xs text-white/30">
-                    <img src={item.avatarUrl} alt="" className="w-4 h-4 rounded-full" />
+                    <img src={item.avatar_url} alt="" className="w-4 h-4 rounded-full" />
                     <span>{item.author}</span>
                     <span className="ml-auto flex items-center gap-1">
                       <svg width="12" height="12" viewBox="0 0 24 24" fill={item.liked ? "#c8b898" : "none"} stroke="currentColor" strokeWidth="2" className="text-white/30">
                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                       </svg>
-                      {item.likes}
+                      {item.likes_count}
                     </span>
                   </div>
                 </div>
@@ -277,7 +147,7 @@ export default function GalleryPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <img
-              src={selectedItem.imageUrl}
+              src={selectedItem.image_url}
               alt={selectedItem.title}
               className="w-full max-h-[50vh] object-contain"
               style={{ background: "#0a0a0a" }}
@@ -288,16 +158,16 @@ export default function GalleryPage() {
                 <div>
                   <h2 className="text-xl font-bold text-white/90">{selectedItem.title}</h2>
                   <div className="flex items-center gap-2 mt-1 text-xs text-white/40">
-                    <img src={selectedItem.avatarUrl} alt="" className="w-5 h-5 rounded-full" />
+                    <img src={selectedItem.avatar_url} alt="" className="w-5 h-5 rounded-full" />
                     <span>{selectedItem.author}</span>
-                    {selectedItem.courseName && (
+                    {selectedItem.course_name && (
                       <>
                         <span>·</span>
-                        <span className="text-[#c8b898]/60">{selectedItem.courseName}</span>
+                        <span className="text-[#c8b898]/60">{selectedItem.course_name}</span>
                       </>
                     )}
                     <span>·</span>
-                    <span>{selectedItem.createdAt}</span>
+                    <span>{selectedItem.created_at}</span>
                   </div>
                 </div>
                 <button
@@ -311,7 +181,7 @@ export default function GalleryPage() {
                   <svg width="14" height="14" viewBox="0 0 24 24" fill={selectedItem.liked ? "#c8b898" : "none"} stroke="currentColor" strokeWidth="2">
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                   </svg>
-                  {selectedItem.likes}
+                  {selectedItem.likes_count}
                 </button>
               </div>
 
@@ -333,7 +203,7 @@ export default function GalleryPage() {
               {/* 评论区 */}
               <div>
                 <h3 className="text-sm text-white/40 mb-3">
-                  评论 <span className="text-white/20">({selectedItem.comments})</span>
+                  评论 <span className="text-white/20">({selectedItem.comments_count})</span>
                 </h3>
 
                 {/* 评论输入 */}
