@@ -1,0 +1,573 @@
+"use client";
+
+import { useState, useEffect, useCallback, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ImageIcon,
+  VideoIcon,
+  Sparkles,
+  Zap,
+  Loader2,
+  Download,
+  RotateCcw,
+  CheckCircle,
+  AlertCircle,
+  Send,
+  Wand2,
+} from "lucide-react";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import { COST, EARNING, INITIAL_CREDITS, LEVEL_LABELS, computeCost } from "@/lib/credits";
+
+type TaskType = "image" | "video";
+type TaskStatus = "idle" | "optimizing" | "queued" | "generating" | "done" | "error";
+
+type ProviderType = "auto" | "kling" | "replicate";
+
+interface Task {
+  id: string;
+  type: TaskType;
+  status: TaskStatus;
+  prompt: string;
+  optimizedPrompt?: string;
+  resultUrl?: string;
+  message?: string;
+  progress?: number;
+  provider?: string;
+}
+
+function generateId() {
+  return Math.random().toString(36).slice(2, 10);
+}
+
+export default function PlaygroundPage() {
+  const [taskType, setTaskType] = useState<TaskType>("image");
+  const [prompt, setPrompt] = useState("");
+  const [useKimiOptimize, setUseKimiOptimize] = useState(true);
+  const [provider, setProvider] = useState<ProviderType>("auto");
+
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [optimizing, setOptimizing] = useState(false);
+  const generatingStartRef = useRef<number>(0);
+  const [elapsed, setElapsed] = useState(0);
+  const activeTask = tasks.find(t => t.status === "generating" || t.status === "queued" || t.status === "optimizing");
+  const isGenerating = !!activeTask;
+
+  // 计时器
+  useEffect(() => {
+    if (isGenerating && generatingStartRef.current === 0) {
+      generatingStartRef.current = Date.now();
+    }
+    if (!isGenerating) {
+      generatingStartRef.current = 0;
+      setElapsed(0);
+      return;
+    }
+    const timer = setInterval(() => {
+      setElapsed(Math.floor((Date.now() - generatingStartRef.current) / 1000));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [isGenerating]);
+
+
+
+  const optimizePrompt = async (rawPrompt: string): Promise<string> => {
+    try {
+      const res = await fetch("/api/optimize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: rawPrompt, type: taskType }),
+      });
+      if (!res.ok) throw new Error("优化失败");
+      const data = await res.json();
+      return data.optimizedPrompt || rawPrompt;
+    } catch {
+      return rawPrompt;
+    }
+  };
+
+  const handleGenerate = async () => {
+    if (!prompt.trim()) return;
+
+    const taskId = generateId();
+    const task: Task = {
+      id: taskId,
+      type: taskType,
+      status: useKimiOptimize ? "optimizing" : "queued",
+      prompt: prompt.trim(),
+    };
+    setTasks((prev) => [task, ...prev]);
+    setPrompt("");
+
+    let finalPrompt = task.prompt;
+
+    if (useKimiOptimize) {
+      setOptimizing(true);
+      try {
+        finalPrompt = await optimizePrompt(task.prompt);
+        setTasks((prev) =>
+          prev.map((t) =>
+            t.id === taskId ? { ...t, optimizedPrompt: finalPrompt, status: "queued" as TaskStatus } : t
+          )
+        );
+      } catch {
+        // ignore
+      } finally {
+        setOptimizing(false);
+      }
+    }
+
+    // 统一走后端代理（自动降级）
+    try {
+      setTasks((prev) =>
+        prev.map((t) => (t.id === taskId ? { ...t, status: "generating" } : t))
+      );
+
+      const body: { type: string; prompt: string; provider?: string } = { type: taskType, prompt: finalPrompt };
+      if (provider !== "auto") body.provider = provider;
+
+      const res = await fetch("/api/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (!res.ok || (data.code && data.code !== 0)) {
+        throw new Error(data.message || data.error || "生成失败");
+      }
+      const genTaskId: string = data.data?.task_id;
+      const genProvider: string = data.data?.provider || provider;
+      if (!genTaskId) throw new Error("未获取到任务ID");
+
+      // 轮询
+      pollTask(taskId, genTaskId, taskType, genProvider);
+    } catch (err: unknown) {
+      setTasks((prev) =>
+        prev.map((t) =>
+          t.id === taskId
+            ? { ...t, status: "error", message: err instanceof Error ? err.message : "请求失败" }
+            : t
+        )
+      );
+    }
+  };
+
+  const pollTask = useCallback(
+    async (
+      localId: string,
+      genTaskId: string,
+      type: TaskType,
+      genProvider: string
+    ) => {
+      const maxAttempts = 60;
+      let attempts = 0;
+
+      const interval = setInterval(async () => {
+        attempts++;
+        if (attempts > maxAttempts) {
+          clearInterval(interval);
+          setTasks((prev) =>
+            prev.map((t) =>
+              t.id === localId
+                ? { ...t, status: "error", message: "超时，请稍后手动刷新" }
+                : t
+            )
+          );
+          return;
+        }
+
+        try {
+          let status = "";
+          let resultUrl: string | undefined;
+
+          // 统一走后端代理查询
+          const url = `/api/generate/task?taskId=${genTaskId}&type=${type}&provider=${genProvider}`;
+          const res = await fetch(url);
+          const data = await res.json();
+
+          if (data.code === 0 && data.data) {
+            const taskData = data.data;
+            status = taskData.task_status || taskData.status || "";
+            if (status === "succeed" || status === "succeeded") {
+              const works = taskData.task_result?.images || taskData.task_result?.videos || [];
+              if (works.length > 0) resultUrl = works[0].url;
+            }
+          }
+
+          if (status === "succeed" || status === "succeeded") {
+            if (resultUrl) {
+              clearInterval(interval);
+              setTasks((prev) =>
+                prev.map((t) =>
+                  t.id === localId ? { ...t, status: "done", resultUrl, provider: data.data?.provider || genProvider } : t
+                )
+              );
+            }
+          } else if (status === "failed" || status === "fail") {
+            clearInterval(interval);
+            setTasks((prev) =>
+              prev.map((t) =>
+                t.id === localId ? { ...t, status: "error", message: "生成失败" } : t
+              )
+            );
+          } else {
+            setTasks((prev) =>
+              prev.map((t) =>
+                t.id === localId
+                  ? { ...t, progress: Math.min((attempts / maxAttempts) * 100, 95) }
+                  : t
+              )
+            );
+          }
+        } catch {
+          // keep polling
+        }
+      }, 5000);
+    },
+    []
+  );
+
+  return (
+    <>
+      <Navbar />
+      <main className="flex-1 pt-16">
+        <section className="py-12 bg-gradient-to-b from-[#161b22] to-[#0d1117]">
+          <div className="max-w-5xl mx-auto px-5">
+            <div className="text-center mb-8">
+              <h1 className="text-3xl md:text-4xl font-bold text-[#f0f6fc] mb-3">
+                AI 实操工坊
+              </h1>
+              <p className="text-[#8b949e]">
+                输入提示词 → Kimi 优化 → AI 生成，零代码体验多平台 AI 创作全流程
+              </p>
+            </div>
+
+            <div className="flex justify-center gap-4 mb-8 flex-wrap">
+              <span className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-[#238636] text-white text-sm font-medium">
+                <Zap className="w-4 h-4" />
+                体验课（平台代付）
+              </span>
+
+            </div>
+
+            {/* 积分规则弹窗（暂隐藏） */}
+            <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="max-w-2xl mx-auto mb-6 p-5 rounded-xl bg-[#161b22] border border-[#30363d] text-sm"
+              >
+                <h4 className="text-[#f0f6fc] font-semibold mb-3">📋 积分规则</h4>
+
+                {/* 初始积分 */}
+                <div className="mb-4">
+                  <p className="text-[#8b949e] mb-2 text-xs uppercase tracking-wide">初始积分</p>
+                  <div className="flex flex-wrap gap-2">
+                    {Object.entries(INITIAL_CREDITS).map(([key, val]) => (
+                      <span key={key} className="px-2.5 py-1 rounded-lg bg-[#0d1117] border border-[#30363d] text-[#c9d1d9] text-xs">
+                        {LEVEL_LABELS[key] || key}：<span className="text-[#d2991d] font-medium">{val}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <p className="text-[#8b949e] mb-2 text-xs uppercase tracking-wide">消耗</p>
+                    <div className="space-y-1.5 text-[#c9d1d9]">
+                      <div>提示词优化 <span className="text-[#d2991d] font-medium">{COST.prompt_optimize}分</span></div>
+                      <div>文生图 <span className="text-[#d2991d] font-medium">{COST.text_to_image}分</span></div>
+                      <div>文生视频 <span className="text-[#d2991d] font-medium">{COST.text_to_video}分</span></div>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-[#8b949e] mb-2 text-xs uppercase tracking-wide">赚取</p>
+                    <div className="space-y-1.5 text-[#c9d1d9]">
+                      {Object.entries(EARNING).map(([key, val]) => (
+                        <div key={key}>+
+                          {{
+                            daily_checkin: "每日签到",
+                            complete_lesson: "完成一节课",
+                            complete_course: "完成一门课",
+                            work_featured: "作品被精选",
+                            invite_friend: "邀请好友",
+                            community_post: "社区投稿",
+                            instructor_rating: "教师好评",
+                          }[key] || key}{" "}
+                          <span className="text-[#238636] font-medium">+{val}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-t border-[#30363d] pt-3 text-xs text-[#8b949e]">
+                  💡 积分不够？签到、做作业、创作作品、邀请好友都能赚积分
+                </div>
+              </motion.div>
+
+            <div className="max-w-3xl mx-auto">
+              <div className="flex gap-3 mb-4">
+                <button
+                  onClick={() => setTaskType("image")}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all border ${
+                    taskType === "image"
+                      ? "bg-[#58a6ff]/10 border-[#58a6ff] text-[#58a6ff]"
+                      : "bg-[#161b22] border-[#30363d] text-[#8b949e] hover:border-[#58a6ff]/30"
+                  }`}
+                >
+                  <ImageIcon className="w-4 h-4" /> 文生图
+                </button>
+                <button
+                  onClick={() => setTaskType("video")}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all border ${
+                    taskType === "video"
+                      ? "bg-[#e53e3e]/10 border-[#e53e3e] text-[#e53e3e]"
+                      : "bg-[#161b22] border-[#30363d] text-[#8b949e] hover:border-[#e53e3e]/30"
+                  }`}
+                >
+                  <VideoIcon className="w-4 h-4" /> 文生视频
+                </button>
+                <div className="flex items-center gap-1 rounded-xl bg-[#161b22] border border-[#30363d] p-0.5">
+                  {(["auto", "kling", "replicate"] as ProviderType[]).map((p) => (
+                    <button
+                      key={p}
+                      onClick={() => setProvider(p)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                        provider === p
+                          ? "bg-[#bc8cff]/20 text-[#bc8cff]"
+                          : "text-[#8b949e] hover:text-[#c9d1d9]"
+                      }`}
+                    >
+                      {p === "auto" ? "🚀 自动" : p === "kling" ? "🇨🇳 可灵" : "🌍 Replicate"}
+                    </button>
+                  ))}
+                </div>
+                <label className="ml-auto flex items-center gap-2 text-sm text-[#8b949e] cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={useKimiOptimize}
+                    onChange={(e) => setUseKimiOptimize(e.target.checked)}
+                    className="rounded border-[#30363d] bg-[#161b22] text-[#58a6ff] focus:ring-[#58a6ff]"
+                  />
+                  <Wand2 className="w-4 h-4" /> Kimi 优化
+                </label>
+              </div>
+
+              <div className="relative">
+                <textarea
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handleGenerate(); }}
+                  placeholder={
+                    taskType === "image"
+                      ? "描述你想要的画面，例如：一只橘猫在樱花树下打盹..."
+                      : "描述你想要的视频，例如：一只橘猫缓缓走过樱花树下..."
+                  }
+                  rows={4}
+                  className="w-full px-5 py-4 pr-14 rounded-2xl bg-[#161b22] border border-[#30363d] text-[#c9d1d9] placeholder:text-[#8b949e] focus:border-[#58a6ff] outline-none resize-none transition-colors"
+                />
+                <button
+                  onClick={handleGenerate}
+                  disabled={!prompt.trim() || optimizing}
+                  className="absolute right-3 bottom-3 w-10 h-10 rounded-xl bg-gradient-to-r from-[#58a6ff] to-[#bc8cff] text-white flex items-center justify-center hover:shadow-lg hover:shadow-[#58a6ff]/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                >
+                  {optimizing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+                </button>
+              </div>
+              <p className="mt-2 text-xs text-[#8b949e]">
+                按 Cmd/Ctrl + Enter 快速发送 · 
+                本次消耗 <span className="text-[#d2991d] font-medium">{computeCost(taskType === "image" ? "text_to_image" : "text_to_video", "kling")}</span> 积分
+                {useKimiOptimize && <> · Kimi 优化 <span className="text-[#d2991d] font-medium">+{COST.prompt_optimize}</span> 分</>}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-8 bg-[#0d1117]">
+          <div className="max-w-5xl mx-auto px-5">
+            {tasks.length === 0 ? (
+              <div className="text-center py-16 text-[#8b949e]">
+                <Sparkles className="w-12 h-12 mx-auto mb-4 opacity-30" />
+                <p>还没有生成记录，在上方输入提示词开始创作吧</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {tasks.map((task) => (
+                  <motion.div
+                    key={task.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="rounded-2xl bg-[#161b22] border border-[#30363d] overflow-hidden"
+                  >
+                    <div className="px-5 py-3 border-b border-[#30363d] flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        {task.type === "image" ? <ImageIcon className="w-4 h-4 text-[#58a6ff]" /> : <VideoIcon className="w-4 h-4 text-[#e53e3e]" />}
+                        <span className="text-sm text-[#c9d1d9]">{task.type === "image" ? "文生图" : "文生视频"}</span>
+                      </div>
+                      <StatusBadge status={task.status} />
+                    </div>
+                    <div className="p-5 space-y-3">
+                      <div>
+                        <p className="text-xs text-[#8b949e] mb-1">原始提示词</p>
+                        <p className="text-sm text-[#c9d1d9]">{task.prompt}</p>
+                      </div>
+                      {task.optimizedPrompt && (
+                        <div className="p-3 rounded-xl bg-[#0d1117] border border-[#30363d]">
+                          <p className="text-xs text-[#58a6ff] mb-1 flex items-center gap-1">
+                            <Sparkles className="w-3 h-3" /> Kimi 优化后
+                          </p>
+                          <p className="text-sm text-[#c9d1d9]">{task.optimizedPrompt}</p>
+                        </div>
+                      )}
+                      {(task.status === "optimizing" || task.status === "queued" || task.status === "generating") && (
+                        <div className="py-8 text-center">
+                          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-3 text-[#58a6ff]" />
+                          <p className="text-sm text-[#8b949e]">
+                            {task.status === "optimizing" ? "Kimi 正在优化提示词..." : task.status === "queued" ? "排队中..." : `${task.provider === 'replicate' ? 'Replicate' : '可灵'}正在生成中，请稍候...`}
+                          </p>
+                          {task.progress !== undefined && (
+                            <div className="mt-3 max-w-xs mx-auto h-1.5 rounded-full bg-[#0d1117] overflow-hidden">
+                              <div className="h-full bg-gradient-to-r from-[#58a6ff] to-[#bc8cff] transition-all duration-500" style={{ width: `${task.progress}%` }} />
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      {task.status === "error" && (
+                        <div className="py-4 text-center text-[#e53e3e]">
+                          <AlertCircle className="w-8 h-8 mx-auto mb-2" />
+                          <p className="text-sm">{task.message || "生成失败"}</p>
+                        </div>
+                      )}
+                      {task.status === "done" && task.resultUrl && (
+                        <div className="space-y-3">
+                          {task.type === "image" ? (
+                            <img src={task.resultUrl} alt="AI 生成图片" className="w-full rounded-xl" loading="lazy" />
+                          ) : (
+                            <video src={task.resultUrl} controls className="w-full rounded-xl" />
+                          )}
+                          <div className="flex gap-2">
+                            <a href={task.resultUrl} target="_blank" download className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#238636] text-white text-sm font-medium hover:bg-[#2ea043] transition-colors">
+                              <Download className="w-4 h-4" /> 下载
+                            </a>
+                            <button onClick={() => { setPrompt(task.optimizedPrompt || task.prompt); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#30363d] text-[#c9d1d9] text-sm hover:bg-[#484f58] transition-colors">
+                              <RotateCcw className="w-4 h-4" /> 再试一次
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+      </main>
+
+      {/* 居中生成进度覆盖层 */}
+      <AnimatePresence>
+        {activeTask && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-[#0d1117]/90 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="text-center px-8 py-10 rounded-3xl bg-[#161b22] border border-[#30363d] shadow-2xl max-w-sm w-full"
+            >
+              {/* 类型图标 */}
+              <div className="mb-5">
+                {activeTask.type === "image" ? (
+                  <ImageIcon className="w-10 h-10 mx-auto text-[#58a6ff]" />
+                ) : (
+                  <VideoIcon className="w-10 h-10 mx-auto text-[#e53e3e]" />
+                )}
+              </div>
+
+              {/* 旋转动画 */}
+              <div className="relative mx-auto w-20 h-20 mb-5">
+                <div className="absolute inset-0 rounded-full border-[3px] border-[#30363d]" />
+                <div className="absolute inset-0 rounded-full border-[3px] border-transparent border-t-[#58a6ff] animate-spin" />
+                <div className="absolute inset-2 rounded-full bg-[#161b22] flex items-center justify-center">
+                  <Loader2 className="w-6 h-6 text-[#58a6ff] animate-spin" />
+                </div>
+              </div>
+
+              {/* 标题 */}
+              <h2 className="text-lg font-bold text-[#f0f6fc] mb-1">
+                {activeTask.status === "optimizing"
+                  ? "Kimi 正在优化提示词..."
+                  : activeTask.status === "queued"
+                  ? "排队等待中..."
+                  : "AI 正在创作中..."}
+              </h2>
+              <p className="text-sm text-[#8b949e] mb-4">
+                {activeTask.type === "image" ? "文生图" : "文生视频"} · 请耐心等候
+              </p>
+
+              {/* 进度条 */}
+              <div className="mb-4">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm text-[#8b949e]">完成度</span>
+                  <span className="text-sm font-bold text-[#58a6ff]">
+                    {activeTask.progress !== undefined ? `${Math.round(activeTask.progress)}%` : "—"}
+                  </span>
+                </div>
+                <div className="w-full h-2 rounded-full bg-[#0d1117] overflow-hidden">
+                  <motion.div
+                    className="h-full bg-gradient-to-r from-[#58a6ff] to-[#bc8cff]"
+                    initial={{ width: 0 }}
+                    animate={{ width: `${activeTask.progress || 0}%` }}
+                    transition={{ duration: 0.5 }}
+                  />
+                </div>
+              </div>
+
+              {/* 计时器 */}
+              <div className="flex items-center justify-center gap-2 text-sm text-[#8b949e]">
+                <span>⏱</span>
+                <span>
+                  {Math.floor(elapsed / 60)}:{(elapsed % 60).toString().padStart(2, "0")}
+                </span>
+              </div>
+              <p className="text-xs text-[#6e7681] mt-1">
+                可灵 AI 正在生成{activeTask.type === "image" ? "图片" : "视频"}（约{activeTask.type === "image" ? "5～15" : "30～60"}秒）
+              </p>
+
+              {/* 提示词预览 */}
+              <div className="mt-5 pt-4 border-t border-[#30363d] text-left">
+                <p className="text-xs text-[#8b949e] mb-1">提示词</p>
+                <p className="text-sm text-[#c9d1d9] line-clamp-2">
+                  {activeTask.optimizedPrompt || activeTask.prompt}
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <Footer />
+    </>
+  );
+}
+
+function StatusBadge({ status }: { status: TaskStatus }) {
+  const map: Record<TaskStatus, { text: string; className: string; icon: React.ReactNode }> = {
+    idle: { text: "待开始", className: "bg-[#30363d] text-[#8b949e]", icon: null },
+    optimizing: { text: "优化中", className: "bg-[#58a6ff]/10 text-[#58a6ff]", icon: <Loader2 className="w-3 h-3 animate-spin" /> },
+    queued: { text: "排队中", className: "bg-[#d2991d]/10 text-[#d2991d]", icon: <Loader2 className="w-3 h-3 animate-spin" /> },
+    generating: { text: "生成中", className: "bg-[#bc8cff]/10 text-[#bc8cff]", icon: <Loader2 className="w-3 h-3 animate-spin" /> },
+    done: { text: "已完成", className: "bg-[#238636]/10 text-[#3fb950]", icon: <CheckCircle className="w-3 h-3" /> },
+    error: { text: "失败", className: "bg-[#e53e3e]/10 text-[#e53e3e]", icon: <AlertCircle className="w-3 h-3" /> },
+  };
+  const { text, className, icon } = map[status];
+  return (
+    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${className}`}>
+      {icon}{text}
+    </span>
+  );
+}
