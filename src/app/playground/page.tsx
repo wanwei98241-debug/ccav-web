@@ -14,10 +14,15 @@ import {
   AlertCircle,
   Send,
   Wand2,
+  Coins,
+  ExternalLink,
+  User as UserIcon,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { COST, EARNING, INITIAL_CREDITS, LEVEL_LABELS, computeCost } from "@/lib/credits";
+import { useAuth } from "@/lib/auth";
+import Link from "next/link";
 
 type TaskType = "image" | "video";
 type TaskStatus = "idle" | "optimizing" | "queued" | "generating" | "done" | "error";
@@ -235,68 +240,25 @@ export default function PlaygroundPage() {
               </p>
             </div>
 
-            <div className="flex justify-center gap-4 mb-8 flex-wrap">
+            <div className="flex justify-center gap-4 mb-6 flex-wrap">
               <span className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-[#238636] text-white text-sm font-medium">
                 <Zap className="w-4 h-4" />
                 体验课（平台代付）
               </span>
 
-            </div>
+              {/* 当前积分余额 */}
+              <CreditsDisplay />
 
-            {/* 积分规则弹窗（暂隐藏） */}
-            <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="max-w-2xl mx-auto mb-6 p-5 rounded-xl bg-[#161b22] border border-[#30363d] text-sm"
+              {/* 积分规则链接 */}
+              <Link
+                href="/credits"
+                className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-[#161b22] border border-[#30363d] text-[#d2991d] text-sm font-medium hover:bg-[#1c2333] hover:border-[#d2991d] transition-all"
               >
-                <h4 className="text-[#f0f6fc] font-semibold mb-3">📋 积分规则</h4>
-
-                {/* 初始积分 */}
-                <div className="mb-4">
-                  <p className="text-[#8b949e] mb-2 text-xs uppercase tracking-wide">初始积分</p>
-                  <div className="flex flex-wrap gap-2">
-                    {Object.entries(INITIAL_CREDITS).map(([key, val]) => (
-                      <span key={key} className="px-2.5 py-1 rounded-lg bg-[#0d1117] border border-[#30363d] text-[#c9d1d9] text-xs">
-                        {LEVEL_LABELS[key] || key}：<span className="text-[#d2991d] font-medium">{val}</span>
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <p className="text-[#8b949e] mb-2 text-xs uppercase tracking-wide">消耗</p>
-                    <div className="space-y-1.5 text-[#c9d1d9]">
-                      <div>提示词优化 <span className="text-[#d2991d] font-medium">{COST.prompt_optimize}分</span></div>
-                      <div>文生图 <span className="text-[#d2991d] font-medium">{COST.text_to_image}分</span></div>
-                      <div>文生视频 <span className="text-[#d2991d] font-medium">{COST.text_to_video}分</span></div>
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-[#8b949e] mb-2 text-xs uppercase tracking-wide">赚取</p>
-                    <div className="space-y-1.5 text-[#c9d1d9]">
-                      {Object.entries(EARNING).map(([key, val]) => (
-                        <div key={key}>+
-                          {{
-                            daily_checkin: "每日签到",
-                            complete_lesson: "完成一节课",
-                            complete_course: "完成一门课",
-                            work_featured: "作品被精选",
-                            invite_friend: "邀请好友",
-                            community_post: "社区投稿",
-                            instructor_rating: "教师好评",
-                          }[key] || key}{" "}
-                          <span className="text-[#238636] font-medium">+{val}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="border-t border-[#30363d] pt-3 text-xs text-[#8b949e]">
-                  💡 积分不够？签到、做作业、创作作品、邀请好友都能赚积分
-                </div>
-              </motion.div>
+                <Coins className="w-4 h-4" />
+                积分规则
+                <ExternalLink className="w-3 h-3 opacity-60" />
+              </Link>
+            </div>
 
             <div className="max-w-3xl mx-auto">
               <div className="flex gap-3 mb-4">
@@ -545,6 +507,47 @@ export default function PlaygroundPage() {
 
       <Footer />
     </>
+  );
+}
+
+/** 当前用户积分余额显示组件 */
+function CreditsDisplay() {
+  const { user, isAuthenticated, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <span className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-[#0d1117] border border-[#30363d] text-[#8b949e] text-sm">
+        <Loader2 className="w-4 h-4 animate-spin" />
+        加载中...
+      </span>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <Link
+        href="/login"
+        className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-[#161b22] border border-[#30363d] text-[#8b949e] text-sm font-medium hover:text-[#58a6ff] hover:border-[#58a6ff] transition-all"
+      >
+        <UserIcon className="w-4 h-4" />
+        登录后可查看积分
+      </Link>
+    );
+  }
+
+  const credits = user?.credits ?? 0;
+  const level = credits >= 5000 ? "高级" : credits >= 2000 ? "中级" : credits >= 500 ? "初级" : "注册";
+
+  return (
+    <span className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-[#161b22] border border-[#30363d] text-[#c9d1d9] text-sm font-medium">
+      <Coins className="w-4 h-4 text-[#d2991d]" />
+      <span>
+        <span className="text-[#d2991d] font-bold">{credits}</span>
+        <span className="text-[#8b949e] ml-1">积分</span>
+      </span>
+      <span className="text-[#30363d]">|</span>
+      <span className="text-[#8b949e] text-xs">{level}学员</span>
+    </span>
   );
 }
 
