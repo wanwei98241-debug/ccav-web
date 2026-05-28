@@ -61,7 +61,7 @@ export default function Home() {
             <a href="/" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>首页</a>
             <a href="#courses" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>课程体系</a>
             <a href="#training" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>师资培训</a>
-            <a href="#playground" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>AI工坊</a>
+            <a href="/playground" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>AI工坊</a>
             <a href="/tools" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>AI工具矩阵</a>
             <a href="/board.html" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>任务看板</a>
             <a href="#about" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>关于我们</a>
@@ -119,7 +119,7 @@ export default function Home() {
             探索课程
           </a>
           <a
-            href="#playground"
+            href="/playground"
             className="inline-block px-7 py-2.5 rounded-lg font-semibold cursor-pointer transition duration-300"
             style={{
               background: "rgba(0,200,220,0.10)",
