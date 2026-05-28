@@ -133,7 +133,7 @@ export async function getQuizResults() {
 
 // ============ 作品墙 ============
 
-/** GalleryItem 类型 — 与后端数据模型对齐 */
+/** GalleryItem 类型 — 前端统一使用 snake_case */
 export interface GalleryItem {
   id: number;
   title: string;
@@ -147,6 +147,27 @@ export interface GalleryItem {
   course_name?: string;
   created_at: string;
   comments_count?: number;
+}
+
+/**
+ * 将后端 camelCase 数据映射为前端 snake_case
+ * 后台 API 服务器 (3001) 返回 { imageUrl, avatarUrl, likes, comments, courseName, createdAt }
+ */
+function normalizeGalleryItem(raw: any): GalleryItem {
+  return {
+    id: raw.id,
+    title: raw.title,
+    description: raw.description,
+    image_url: raw.imageUrl ?? raw.image_url ?? '',
+    author: raw.author ?? '匿名',
+    avatar_url: raw.avatarUrl ?? raw.avatar_url ?? '',
+    likes_count: raw.likes ?? raw.likes_count ?? 0,
+    liked: raw.liked ?? false,
+    tags: raw.tags ?? [],
+    course_name: raw.courseName ?? raw.course_name ?? undefined,
+    created_at: raw.createdAt ?? raw.created_at ?? '',
+    comments_count: raw.comments ?? raw.comments_count ?? 0,
+  };
 }
 
 // 降级用 Mock 数据
@@ -163,10 +184,23 @@ const MOCK_GALLERY: GalleryItem[] = [
 
 /** 获取作品列表（带降级到Mock） */
 export async function getGalleryItems(tag?: string): Promise<GalleryItem[]> {
-  const path = tag ? `/gallery?tag=${encodeURIComponent(tag)}` : '/gallery';
-  const data = await fetchAPI<{ items: GalleryItem[] }>(path);
-  if (data?.items && data.items.length > 0) {
-    return data.items.map(it => ({ ...it, liked: it.liked ?? false }));
+  // 优先请求后端 API
+  const params = tag ? `?tag=${encodeURIComponent(tag)}` : '';
+  try {
+    const res = await fetch(`/api/gallery${params}`, {
+      headers: { 'Content-Type': 'application/json' },
+      signal: AbortSignal.timeout(5000),
+    });
+    if (res.ok) {
+      const body = await res.json();
+      // 兼容 { code: 0, data: [...] } 和 { items: [...] } 两种返回格式
+      const rawItems: any[] = body.data ?? body.items ?? [];
+      if (rawItems.length > 0) {
+        return rawItems.map(normalizeGalleryItem);
+      }
+    }
+  } catch {
+    // API 不可用时降级
   }
   // 降级到Mock
   return MOCK_GALLERY.map(it => ({ ...it }));
@@ -174,21 +208,35 @@ export async function getGalleryItems(tag?: string): Promise<GalleryItem[]> {
 
 /** 点赞/取消点赞 */
 export async function toggleLike(itemId: number): Promise<boolean> {
-  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-  const data = await fetchAPI<{ liked: boolean }>(`/gallery/${itemId}/like`, {
-    method: 'POST',
-    headers: token ? { Authorization: `Bearer ${token}` } : undefined,
-  });
-  return data?.liked ?? false;
+  try {
+    const res = await fetch(`/api/gallery/${itemId}/like`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (res.ok) {
+      const body = await res.json();
+      return body.liked ?? false;
+    }
+  } catch {
+    // API 不可用时静默失败
+  }
+  return false;
 }
 
 /** 提交评论 */
 export async function submitComment(itemId: number, content: string): Promise<boolean> {
-  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-  const data = await fetchAPI<{ success: boolean }>(`/gallery/${itemId}/comments`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-    body: JSON.stringify({ content }),
-  });
-  return data?.success ?? false;
+  try {
+    const res = await fetch(`/api/gallery/${itemId}/comments`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content }),
+    });
+    if (res.ok) {
+      const body = await res.json();
+      return body.success ?? false;
+    }
+  } catch {
+    // API 不可用时静默失败
+  }
+  return false;
 }
