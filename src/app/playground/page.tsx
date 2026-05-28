@@ -77,14 +77,22 @@ export default function PlaygroundPage() {
 
 
   const optimizePrompt = async (rawPrompt: string): Promise<string> => {
-    // 前端模拟Kimi优化：加一些限定语让提示词更具体
-    await new Promise(r => setTimeout(r, 1200 + Math.random() * 800));
-    const typeHint = taskType === "image" ? "4K摄影，超写实风格，电影级光影" : "电影级运镜，流畅动画，4K画质";
-    const enhanced = rawPrompt.replace(/[\u4e00-\u9fff]/g, (match: string) => match);
-    if (enhanced.trim().length < 10) {
-      return `${rawPrompt}，${typeHint}，细腻质感，自然光影`;
+    try {
+      const res = await fetch("/api/optimize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: rawPrompt, type: taskType }),
+      });
+      const data = await res.json();
+      if (data.code === 0 && data.data?.optimized_prompt) {
+        return data.data.optimized_prompt;
+      }
+      console.warn("优化失败，使用原始提示词", data);
+      return rawPrompt;
+    } catch (err) {
+      console.error("优化接口异常，降级到原始提示词", err);
+      return rawPrompt;
     }
-    return `${rawPrompt}。${typeHint}，画面精美绝伦`;
   };
 
   const handleGenerate = async () => {
@@ -118,36 +126,48 @@ export default function PlaygroundPage() {
       }
     }
 
-    // 前端模拟生成（展示效果，稍后对接真实API）
+    // 调后端 API 提交生成任务
+    const genProvider = provider === "auto" ? "kling" : provider;
+    const endpoint = taskType === "image" ? "/api/kling/generate" : "/api/kling/generate";
+
     setTasks((prev) =>
-      prev.map((t) => (t.id === taskId ? { ...t, status: "generating", progress: 0 } : t))
+      prev.map((t) => (t.id === taskId ? { ...t, status: "generating", progress: 0, provider: genProvider } : t))
     );
-    
-    // 模拟生成进度
-    const totalSteps = 20;
-    for (let i = 1; i <= totalSteps; i++) {
-      await new Promise(r => setTimeout(r, 200 + Math.random() * 300));
-      const progress = Math.round((i / totalSteps) * 100);
+
+    try {
+      const generateRes = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt: finalPrompt,
+          type: taskType,
+          provider: genProvider,
+        }),
+      });
+      const generateData = await generateRes.json();
+
+      if (generateData.code === 0 && generateData.data?.task_id) {
+        // 提交成功，开始轮询
+        pollTask(taskId, generateData.data.task_id, taskType, genProvider);
+      } else {
+        setTasks((prev) =>
+          prev.map((t) =>
+            t.id === taskId
+              ? { ...t, status: "error", message: generateData.message || "提交失败" }
+              : t
+          )
+        );
+      }
+    } catch (err) {
+      console.error("提交生成请求失败", err);
       setTasks((prev) =>
         prev.map((t) =>
-          t.id === taskId ? { ...t, progress } : t
+          t.id === taskId
+            ? { ...t, status: "error", message: "网络异常，请稍后重试" }
+            : t
         )
       );
     }
-    
-    // 生成完成——显示占位结果
-    const genProvider = provider === "auto" ? "kling" : provider;
-    const resultUrl = taskType === "image"
-      ? `https://placehold.co/1024x1024/1a1a2e/c8b898?text=可灵AI+文生图`
-      : `https://placehold.co/800x450/1a1a2e/c8b898?text=可灵AI+文生视频`;
-    
-    setTasks((prev) =>
-      prev.map((t) =>
-        t.id === taskId
-          ? { ...t, status: "done", resultUrl, provider: genProvider }
-          : t
-      )
-    );
   };
 
   const pollTask = useCallback(
@@ -178,9 +198,8 @@ export default function PlaygroundPage() {
           let status = "";
           let resultUrl: string | undefined;
 
-          // 统一走后端代理查询
-          const url = `/api/generate/task?taskId=${genTaskId}&type=${type}&provider=${genProvider}`;
-          const res = await fetch(url);
+          // 走后端代理查询任务状态
+          const res = await fetch(`/api/kling/task?taskId=${genTaskId}&type=${type}`);
           const data = await res.json();
 
           if (data.code === 0 && data.data) {
@@ -209,11 +228,11 @@ export default function PlaygroundPage() {
               )
             );
           } else {
+            // 剩余轮次数算百分比进度，最大95%
+            const pct = Math.round(((attempts) / maxAttempts) * 95);
             setTasks((prev) =>
               prev.map((t) =>
-                t.id === localId
-                  ? { ...t, progress: Math.min((attempts / maxAttempts) * 100, 95) }
-                  : t
+                t.id === localId ? { ...t, progress: Math.min(pct, 95) } : t
               )
             );
           }
