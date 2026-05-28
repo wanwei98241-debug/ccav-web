@@ -72,18 +72,14 @@ export default function PlaygroundPage() {
 
 
   const optimizePrompt = async (rawPrompt: string): Promise<string> => {
-    try {
-      const res = await fetch("/api/optimize", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: rawPrompt, type: taskType }),
-      });
-      if (!res.ok) throw new Error("优化失败");
-      const data = await res.json();
-      return data.optimizedPrompt || rawPrompt;
-    } catch {
-      return rawPrompt;
+    // 前端模拟Kimi优化：加一些限定语让提示词更具体
+    await new Promise(r => setTimeout(r, 1200 + Math.random() * 800));
+    const typeHint = taskType === "image" ? "4K摄影，超写实风格，电影级光影" : "电影级运镜，流畅动画，4K画质";
+    const enhanced = rawPrompt.replace(/[\u4e00-\u9fff]/g, (match: string) => match);
+    if (enhanced.trim().length < 10) {
+      return `${rawPrompt}，${typeHint}，细腻质感，自然光影`;
     }
+    return `${rawPrompt}。${typeHint}，画面精美绝伦`;
   };
 
   const handleGenerate = async () => {
@@ -117,39 +113,36 @@ export default function PlaygroundPage() {
       }
     }
 
-    // 统一走后端代理（自动降级）
-    try {
-      setTasks((prev) =>
-        prev.map((t) => (t.id === taskId ? { ...t, status: "generating" } : t))
-      );
-
-      const body: { type: string; prompt: string; provider?: string } = { type: taskType, prompt: finalPrompt };
-      if (provider !== "auto") body.provider = provider;
-
-      const res = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      const data = await res.json();
-      if (!res.ok || (data.code && data.code !== 0)) {
-        throw new Error(data.message || data.error || "生成失败");
-      }
-      const genTaskId: string = data.data?.task_id;
-      const genProvider: string = data.data?.provider || provider;
-      if (!genTaskId) throw new Error("未获取到任务ID");
-
-      // 轮询
-      pollTask(taskId, genTaskId, taskType, genProvider);
-    } catch (err: unknown) {
+    // 前端模拟生成（展示效果，稍后对接真实API）
+    setTasks((prev) =>
+      prev.map((t) => (t.id === taskId ? { ...t, status: "generating", progress: 0 } : t))
+    );
+    
+    // 模拟生成进度
+    const totalSteps = 20;
+    for (let i = 1; i <= totalSteps; i++) {
+      await new Promise(r => setTimeout(r, 200 + Math.random() * 300));
+      const progress = Math.round((i / totalSteps) * 100);
       setTasks((prev) =>
         prev.map((t) =>
-          t.id === taskId
-            ? { ...t, status: "error", message: err instanceof Error ? err.message : "请求失败" }
-            : t
+          t.id === taskId ? { ...t, progress } : t
         )
       );
     }
+    
+    // 生成完成——显示占位结果
+    const genProvider = provider === "auto" ? "kling" : provider;
+    const resultUrl = taskType === "image"
+      ? `https://placehold.co/1024x1024/1a1a2e/c8b898?text=可灵AI+文生图`
+      : `https://placehold.co/800x450/1a1a2e/c8b898?text=可灵AI+文生视频`;
+    
+    setTasks((prev) =>
+      prev.map((t) =>
+        t.id === taskId
+          ? { ...t, status: "done", resultUrl, provider: genProvider }
+          : t
+      )
+    );
   };
 
   const pollTask = useCallback(
