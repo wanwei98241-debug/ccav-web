@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Home() {
   const [selectedCourse, setSelectedCourse] = useState<number | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const courseDetails = (idx: number) => {
     setSelectedCourse(idx);
@@ -23,13 +25,49 @@ export default function Home() {
           </span>
           <span className="text-xs text-[#c8b898] hidden sm:inline">—— Creative Culture AI Video</span>
         </div>
-        <div className="flex items-center gap-6 text-sm text-white/50 ml-auto">
+        {/* 桌面端导航 */}
+        <div className="hidden md:flex items-center gap-6 text-sm text-white/50 ml-auto">
           <a href="/" className="hover:text-[#c8b898] transition">首页</a>
           <a href="#courses" className="hover:text-[#c8b898] transition">课程体系</a>
           <a href="#training" className="hover:text-[#c8b898] transition">师资培训</a>
           <a href="#playground" className="hover:text-[#c8b898] transition">AI工坊</a>
+          <a href="#about" className="hover:text-[#c8b898] transition">关于我们</a>
+          <a href="/tools" className="hover:text-[#c8b898] transition">AI工具矩阵</a>
+          <a href="/board.html" className="hover:text-[#c8b898] transition">任务看板</a>
+        </div>
+        {/* 手机端汉堡菜单 */}
+        <div className="md:hidden flex items-center gap-2 ml-auto">
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="text-white/60 hover:text-white p-2 transition"
+            aria-label="菜单"
+          >
+            {menuOpen ? (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            ) : (
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
+              </svg>
+            )}
+          </button>
         </div>
       </nav>
+      {/* 汉堡菜单展开面板 */}
+      {menuOpen && (
+        <div className="md:hidden border-t border-white/5 bg-[#0d0d0d]">
+          <div className="flex flex-col px-8 py-4 gap-3 text-sm text-white/50">
+            <a href="/" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>首页</a>
+            <a href="#courses" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>课程体系</a>
+            <a href="#training" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>师资培训</a>
+            <a href="#playground" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>AI工坊</a>
+            <a href="#about" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>关于我们</a>
+            <a href="/tools" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>AI工具矩阵</a>
+            <a href="/board.html" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>任务看板</a>
+          </div>
+        </div>
+      )}
 
       {/* Hero */}
       <section className="text-center py-20 px-4 relative z-10">
@@ -105,9 +143,9 @@ export default function Home() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {courses.map((course, idx) => (
-            <div
+            <Link
               key={idx}
-              onClick={() => courseDetails(idx)}
+              href={`/courses/${course.id}`}
               className="ink-card p-6 cursor-pointer block"
             >
               <div className="mb-3">
@@ -125,7 +163,7 @@ export default function Home() {
               <div className="mt-3 pt-3 border-t border-white/5">
                 <span className="text-[10px] text-white bg-white/5 border border-white/10 px-2 py-0.5 rounded">{course.outcome}</span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
@@ -254,7 +292,7 @@ export default function Home() {
 
       {/* 页脚 */}
       <footer className="border-t border-white/5 py-8 text-center relative z-10">
-        <p className="text-sm text-white/50 mb-2 serif">123.207.103.72 — 用 AI，讲好中国故事</p>
+        <p className="text-sm text-white/50 mb-2 serif">ccav.com — 用 AI，讲好中国故事</p>
         <p className="text-xs text-white/35">以 T/CCPS 0041—2026团体标准为核心的AI视频制作教学平台 · © 2026</p>
       </footer>
     </>
@@ -323,5 +361,3 @@ const courses = [
     outcome: "学习成果：平台认证讲师资格+教学资质",
   },
 ];
-
-
