@@ -214,7 +214,7 @@ export function normalizeGalleryItem(raw: any): GalleryItem {
     created_at: raw.createdAt ?? raw.created_at ?? '',
     comments_count: raw.comments ?? raw.comments_count ?? 0,
     unlocked: raw.unlocked ?? false,
-    unlock_cost: raw.unlock_cost ?? 50,
+    unlock_cost: raw.unlockCost ?? raw.unlock_cost ?? 50,
   };
 }
 
