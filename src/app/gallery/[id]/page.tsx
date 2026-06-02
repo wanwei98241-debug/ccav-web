@@ -11,6 +11,7 @@ import {
   toggleLike as apiToggleLike,
   toggleDislike as apiToggleDislike,
   recordView as apiRecordView,
+  unlockWork,
 } from "@/lib/api";
 import type { GalleryItem } from "@/lib/api";
 
@@ -21,6 +22,8 @@ export default function GalleryDetailPage() {
   const [item, setItem] = useState<GalleryItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [unlocking, setUnlocking] = useState(false);
+  const [unlockMsg, setUnlockMsg] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id || isNaN(id)) {
@@ -215,9 +218,51 @@ export default function GalleryDetailPage() {
                   </div>
                 )}
 
-                <div className="my-6 border-t border-white/5" />
+                {/* Phase C: 积分锁面板 */}
+                {(item.unlock_cost ?? 0) > 0 && !item.unlocked && (
+                  <div className="my-8 p-6 rounded-xl border border-white/5 text-center" style={{ background: "#0a0a0a" }}>
+                    <div className="text-4xl mb-3">🔒</div>
+                    <p className="text-sm text-white/50 mb-1">该作品需要解锁才能查看完整内容</p>
+                    <p className="text-xs text-white/30 mb-4">解锁后可查看评论、给作品打分</p>
+                    <button
+                      onClick={async () => {
+                        if (unlocking) return;
+                        setUnlocking(true);
+                        setUnlockMsg(null);
+                        const result = await unlockWork(item.id);
+                        if (result?.success) {
+                          setItem((prev) =>
+                            prev ? { ...prev, unlocked: true } : prev
+                          );
+                          setUnlockMsg("🎉 解锁成功！");
+                        } else {
+                          setUnlockMsg(result?.message || "解锁失败，请稍后重试");
+                        }
+                        setUnlocking(false);
+                      }}
+                      disabled={unlocking}
+                      className="w-full max-w-[280px] mx-auto block text-sm font-medium px-6 py-2.5 rounded-lg transition disabled:opacity-50"
+                      style={{
+                        background: unlocking ? "#555" : "linear-gradient(135deg, #c8b898, #a08050)",
+                        color: "#000",
+                      }}
+                    >
+                      {unlocking ? "解锁中..." : `🔓 ${item.unlock_cost || 50} 积分解锁`}
+                    </button>
+                    {unlockMsg && (
+                      <p className={`mt-3 text-xs ${unlockMsg.includes("成功") ? "text-green-400" : "text-red-400"}`}>
+                        {unlockMsg}
+                      </p>
+                    )}
+                  </div>
+                )}
 
-                <CommentsList galleryId={item.id} />
+                {(item.unlocked || !((item.unlock_cost ?? 0) > 0)) && (
+                  <>
+                    <div className="my-6 border-t border-white/5" />
+                    <CommentsList galleryId={item.id} />
+                  </>
+                )}
               </div>
             </div>
           </div>

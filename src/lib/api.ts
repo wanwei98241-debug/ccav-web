@@ -170,9 +170,8 @@ export interface GalleryItem {
   created_at: string;
   comments_count?: number;
   /** Phase C: 积分锁 */
-  unlock?: boolean;
   unlocked?: boolean;
-  unlockCost?: number;
+  unlock_cost?: number;
 }
 
 /** GalleryComment 类型 */
@@ -214,9 +213,8 @@ export function normalizeGalleryItem(raw: any): GalleryItem {
     course_id: raw.course_id ?? undefined,
     created_at: raw.createdAt ?? raw.created_at ?? '',
     comments_count: raw.comments ?? raw.comments_count ?? 0,
-    unlock: raw.unlock ?? false,
     unlocked: raw.unlocked ?? false,
-    unlockCost: raw.unlockCost ?? raw.unlock_cost ?? 50,
+    unlock_cost: raw.unlock_cost ?? 50,
   };
 }
 
