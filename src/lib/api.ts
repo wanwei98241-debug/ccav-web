@@ -169,6 +169,10 @@ export interface GalleryItem {
   course_id?: number;
   created_at: string;
   comments_count?: number;
+  /** Phase C: 积分锁 */
+  unlock?: boolean;
+  unlocked?: boolean;
+  unlockCost?: number;
 }
 
 /** GalleryComment 类型 */
@@ -210,6 +214,9 @@ export function normalizeGalleryItem(raw: any): GalleryItem {
     course_id: raw.course_id ?? undefined,
     created_at: raw.createdAt ?? raw.created_at ?? '',
     comments_count: raw.comments ?? raw.comments_count ?? 0,
+    unlock: raw.unlock ?? false,
+    unlocked: raw.unlocked ?? false,
+    unlockCost: raw.unlockCost ?? raw.unlock_cost ?? 50,
   };
 }
 
@@ -340,4 +347,14 @@ export async function submitComment(itemId: number, content: string): Promise<bo
 export async function getGalleryComments(galleryId: number): Promise<GalleryComment[]> {
   const result = await galleryFetch<GalleryComment[]>(`${galleryId}/comments`);
   return result ?? [];
+}
+
+/** Phase C: 解锁作品（消耗积分） — 后端反代路径 /api/gallery/{id}/unlock */
+export async function unlockWork(
+  itemId: number
+): Promise<{ success: boolean; message?: string } | null> {
+  return galleryFetch<{ success: boolean; message?: string }>(
+    `${itemId}/unlock`,
+    { method: 'POST', headers: { 'Content-Type': 'application/json' } }
+  );
 }
