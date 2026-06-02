@@ -1,40 +1,124 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { GalleryItem, getGalleryItems, toggleLike as apiToggleLike, submitComment as apiSubmitComment } from "@/lib/api";
+import { GalleryItem, getGalleryItems, toggleLike as apiToggleLike, toggleDislike as apiToggleDislike, recordView as apiRecordView, submitComment as apiSubmitComment } from "@/lib/api";
+import CommentsList from "@/components/gallery/CommentsList";
 
 export default function GalleryPage() {
+  // 固定分类选项（保留兼容）
+  const CATEGORIES = [
+    "文生图", "文生视频", "图生图", "图生视频",
+    "歌词创作", "音乐创作", "歌曲短视频", "虚拟主播",
+  ];
+
+  // 技术形态大分类（上方按钮）
+  const TECH_TYPES = [
+    { value: '', label: '全部' },
+    { value: 'image', label: '图片' },
+    { value: 'video', label: '视频' },
+    { value: 'music', label: '音乐' },
+    { value: 'vtuber', label: '虚拟主播' },
+  ];
+
+  // 场景 + 风格 选项（展开面板）
+  const SCENE_OPTIONS = ["短片故事", "社交媒体", "商业广告", "音乐MV", "教学演示"];
+  const STYLE_OPTIONS = ["国风水墨", "科幻赛博", "古风典雅", "日系动漫", "写实胶片"];
+
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [commentText, setCommentText] = useState("");
 
+  // 三维筛选状态
+  const [activeTechType, setActiveTechType] = useState<string>('');
+  const [activeScene, setActiveScene] = useState<string>('');
+  const [activeStyle, setActiveStyle] = useState<string>('');
+  const [showFilterPanel, setShowFilterPanel] = useState(false);
+
   useEffect(() => {
-    getGalleryItems().then((data) => {
+    getGalleryItems({
+      tech_type: activeTechType || undefined,
+      scene: activeScene || undefined,
+      style: activeStyle || undefined,
+    }).then((data) => {
       setItems(data);
       setLoading(false);
     });
-  }, []);
+  }, [activeTechType, activeScene, activeStyle]);
 
-  const filtered = activeTag
-    ? items.filter((it) => it.tags.includes(activeTag))
-    : items;
+  // 交叉查询：分类 + 标签 + 三维叠加
+  const filtered = items.filter((it) => {
+    if (activeCategory && it.category !== activeCategory) return false;
+    if (activeTag && !it.tags.includes(activeTag)) return false;
+    return true;
+  });
 
   const allTags = [...new Set(items.flatMap((it) => it.tags))];
 
+  // 清除所有筛选
+  const clearFilters = () => {
+    setActiveCategory(null);
+    setActiveTag(null);
+    setActiveTechType('');
+    setActiveScene('');
+    setActiveStyle('');
+    setShowFilterPanel(false);
+  };
+
+  const hasActiveFilters = activeCategory || activeTag || activeTechType || activeScene || activeStyle;
+
+  // 场景/风格单选切换
+  const toggleScene = (s: string) => {
+    setActiveScene(activeScene === s ? '' : s);
+  };
+  const toggleStyle = (s: string) => {
+    setActiveStyle(activeStyle === s ? '' : s);
+  };
+
+  // 记录浏览量 — 打开弹窗时调用
+  const openDetail = async (item: GalleryItem) => {
+    setSelectedItem(item);
+    // 异步记录浏览量
+    apiRecordView(item.id).then((count) => {
+      if (count !== null) {
+        setItems((prev) =>
+          prev.map((it) =>
+            it.id === item.id ? { ...it, views_count: count } : it
+          )
+        );
+        setSelectedItem((prev) =>
+          prev && prev.id === item.id ? { ...prev, views_count: count } : prev
+        );
+      }
+    });
+  };
+
   const toggleLike = async (id: number) => {
+    const result = await apiToggleLike(id);
+    if (!result) return;
     setItems((prev) =>
       prev.map((it) =>
-        it.id === id ? { ...it, liked: !it.liked, likes_count: it.liked ? it.likes_count - 1 : it.likes_count + 1 } : it
+        it.id === id ? { ...it, ...result } : it
       )
     );
-    if (selectedItem?.id === id) {
-      setSelectedItem((prev) =>
-        prev ? { ...prev, liked: !prev.liked, likes_count: prev.liked ? prev.likes_count - 1 : prev.likes_count + 1 } : null
-      );
-    }
-    await apiToggleLike(id);
+    setSelectedItem((prev) =>
+      prev?.id === id ? { ...prev, ...result } : prev
+    );
+  };
+
+  const toggleDislike = async (id: number) => {
+    const result = await apiToggleDislike(id);
+    if (!result) return;
+    setItems((prev) =>
+      prev.map((it) =>
+        it.id === id ? { ...it, ...result } : it
+      )
+    );
+    setSelectedItem((prev) =>
+      prev?.id === id ? { ...prev, ...result } : prev
+    );
   };
 
   const handleComment = async (e: React.FormEvent) => {
@@ -59,32 +143,149 @@ export default function GalleryPage() {
         <p className="text-white/40 text-sm md:text-base max-w-xl mx-auto">
           学员AI作品展示区 · 用AI创造文化之美
         </p>
-        {/* 标签过滤 */}
+        {/* 技术形态大分类（上方按钮组） */}
         <div className="flex flex-wrap justify-center gap-2 mt-8">
-          <button
-            onClick={() => setActiveTag(null)}
-            className={`px-3 py-1 text-xs rounded-full border transition ${
-              !activeTag
-                ? "bg-[#c8b898]/10 text-[#c8b898] border-[#c8b898]/30"
-                : "text-white/40 border-white/10 hover:text-white/60"
-            }`}
-          >
-            全部
-          </button>
-          {allTags.map((tag) => (
+          {TECH_TYPES.map((t) => (
             <button
-              key={tag}
-              onClick={() => setActiveTag(tag)}
-              className={`px-3 py-1 text-xs rounded-full border transition ${
-                activeTag === tag
-                  ? "bg-[#c8b898]/10 text-[#c8b898] border-[#c8b898]/30"
+              key={t.value}
+              onClick={() => setActiveTechType(activeTechType === t.value ? '' : t.value)}
+              className={`px-4 py-1.5 text-sm rounded-full border transition ${
+                activeTechType === t.value
+                  ? "bg-[#4ac0d8]/20 text-[#4ac0d8] border-[#4ac0d8]/50 shadow-sm shadow-[#4ac0d8]/10"
                   : "text-white/40 border-white/10 hover:text-white/60"
               }`}
             >
-              {tag}
+              {t.label}
             </button>
           ))}
         </div>
+
+        {/* 展开筛选面板按钮 */}
+        <div className="flex flex-wrap justify-center gap-3 mt-4">
+          <button
+            onClick={() => setShowFilterPanel(!showFilterPanel)}
+            className={`flex items-center gap-1.5 px-4 py-1.5 text-xs rounded-lg border transition ${
+              showFilterPanel || activeScene || activeStyle
+                ? "bg-[#c8b898]/10 text-[#c8b898] border-[#c8b898]/30"
+                : "text-white/30 border-white/10 hover:text-white/50"
+            }`}
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M4 21V14M4 10V3M12 21V12M12 8V3M20 21V16M20 12V3M1 14h6M9 8h6M17 16h6" />
+            </svg>
+            展开筛选
+            {activeScene || activeStyle ? (
+              <span className="w-1.5 h-1.5 rounded-full bg-[#c8b898]" />
+            ) : null}
+          </button>
+          {hasActiveFilters && (
+            <button
+              onClick={clearFilters}
+              className="px-3 py-1 text-xs rounded-lg border border-red-500/20 text-red-400/60 hover:text-red-400 hover:border-red-500/40 transition"
+            >
+              清除筛选
+            </button>
+          )}
+        </div>
+
+        {/* 场景 + 风格 折叠面板 */}
+        {showFilterPanel && (
+          <div className="max-w-lg mx-auto mt-4 p-4 rounded-xl border border-white/10" style={{background: "rgba(255,255,255,0.03)"}}>
+            {/* 应用场景 */}
+            <div className="mb-3">
+              <p className="text-xs text-white/30 mb-2 text-left">应用场景</p>
+              <div className="flex flex-wrap gap-2">
+                {SCENE_OPTIONS.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => toggleScene(s)}
+                    className={`px-3 py-1 text-xs rounded-full border transition ${
+                      activeScene === s
+                        ? "bg-[#c8b898]/15 text-[#c8b898] border-[#c8b898]/40"
+                        : "text-white/30 border-white/10 hover:text-white/50"
+                    }`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+            {/* 艺术风格 */}
+            <div>
+              <p className="text-xs text-white/30 mb-2 text-left">艺术风格</p>
+              <div className="flex flex-wrap gap-2">
+                {STYLE_OPTIONS.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => toggleStyle(s)}
+                    className={`px-3 py-1 text-xs rounded-full border transition ${
+                      activeStyle === s
+                        ? "bg-[#c8b898]/15 text-[#c8b898] border-[#c8b898]/40"
+                        : "text-white/30 border-white/10 hover:text-white/50"
+                    }`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 旧分类过滤（保留兼容） */}
+        <div className="flex flex-wrap justify-center gap-2 mt-5">
+          <button
+            onClick={() => setActiveCategory(null)}
+            className={`px-3 py-1 text-xs rounded-full border transition ${
+              !activeCategory
+                ? "bg-[#4ac0d8]/15 text-[#4ac0d8] border-[#4ac0d8]/40"
+                : "text-white/40 border-white/10 hover:text-white/60"
+            }`}
+          >
+            全部分类
+          </button>
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
+              className={`px-3 py-1 text-xs rounded-full border transition ${
+                activeCategory === cat
+                  ? "bg-[#4ac0d8]/15 text-[#4ac0d8] border-[#4ac0d8]/40"
+                  : "text-white/40 border-white/10 hover:text-white/60"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+        {/* 标签过滤（风格/内容 — 保留兼容） */}
+        {allTags.length > 0 && (
+          <div className="flex flex-wrap justify-center gap-2 mt-3">
+            <button
+              onClick={() => setActiveTag(null)}
+              className={`px-3 py-1 text-xs rounded-full border transition ${
+                !activeTag
+                  ? "bg-[#c8b898]/10 text-[#c8b898] border-[#c8b898]/30"
+                  : "text-white/30 border-white/10 hover:text-white/50"
+              }`}
+            >
+              全部
+            </button>
+            {allTags.map((tag) => (
+              <button
+                key={tag}
+                onClick={() => setActiveTag(activeTag === tag ? null : tag)}
+                className={`px-3 py-1 text-xs rounded-full border transition ${
+                  activeTag === tag
+                    ? "bg-[#c8b898]/10 text-[#c8b898] border-[#c8b898]/30"
+                    : "text-white/30 border-white/10 hover:text-white/50"
+                }`}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* 作品网格 */}
@@ -105,7 +306,7 @@ export default function GalleryPage() {
                 key={item.id}
                 className="break-inside-avoid cursor-pointer group rounded-lg overflow-hidden border border-white/5 hover:border-[#c8b898]/20 transition-all duration-300"
                 style={{ background: "rgba(255,255,255,0.02)" }}
-                onClick={() => setSelectedItem(item)}
+                onClick={() => openDetail(item)}
               >
                 <div className="relative overflow-hidden">
                   <img
@@ -114,13 +315,29 @@ export default function GalleryPage() {
                     className="w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     loading="lazy"
                   />
+                  {item.media_type === 'video' && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-12 h-12 rounded-full bg-black/50 flex items-center justify-center backdrop-blur-sm group-hover:bg-black/70 transition">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                          <polygon points="8,5 19,12 8,19" />
+                        </svg>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className="p-3">
                   <h3 className="text-sm text-white/80 font-medium truncate">{item.title}</h3>
                   <div className="flex items-center gap-2 mt-2 text-xs text-white/30">
                     <img src={item.avatar_url} alt="" className="w-4 h-4 rounded-full" />
                     <span>{item.author}</span>
-                    <span className="ml-auto flex items-center gap-1">
+                    <span className="ml-auto flex items-center gap-2">
+                      <span className="flex items-center gap-0.5 text-white/30">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                          <circle cx="12" cy="12" r="3" />
+                        </svg>
+                        {item.views_count}
+                      </span>
                       <svg width="12" height="12" viewBox="0 0 24 24" fill={item.liked ? "#c8b898" : "none"} stroke="currentColor" strokeWidth="2" className="text-white/30">
                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                       </svg>
@@ -146,14 +363,41 @@ export default function GalleryPage() {
             style={{ background: "#111" }}
             onClick={(e) => e.stopPropagation()}
           >
-            <img
-              src={selectedItem.image_url}
-              alt={selectedItem.title}
-              className="w-full max-h-[50vh] object-contain"
-              style={{ background: "#0a0a0a" }}
-            />
+            {selectedItem.media_type === 'video' && selectedItem.video_url ? (
+              <video
+                src={selectedItem.video_url}
+                controls
+                autoPlay
+                className="w-full max-h-[50vh] object-contain"
+                style={{ background: "#0a0a0a" }}
+              />
+            ) : (
+              <img
+                src={selectedItem.image_url}
+                alt={selectedItem.title}
+                className="w-full max-h-[50vh] object-contain"
+                style={{ background: "#0a0a0a" }}
+              />
+            )}
             <div className="p-6">
               {/* 标题 + 操作 */}
+              {/* 统计数据 */}
+              <div className="flex items-center gap-4 mb-4 text-xs text-white/40">
+                <span className="flex items-center gap-1">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                  {selectedItem.views_count?.toLocaleString() || 0}
+                </span>
+                <span className="flex items-center gap-1">
+                  ❤️ {selectedItem.likes_count}
+                </span>
+                <span className="flex items-center gap-1">
+                  💩 {selectedItem.dislikes_count}
+                </span>
+              </div>
+
               <div className="flex items-start justify-between">
                 <div>
                   <h2 className="text-xl font-bold text-white/90">{selectedItem.title}</h2>
@@ -170,19 +414,40 @@ export default function GalleryPage() {
                     <span>{selectedItem.created_at}</span>
                   </div>
                 </div>
-                <button
-                  onClick={() => toggleLike(selectedItem.id)}
-                  className="flex items-center gap-1 text-sm px-3 py-1 rounded-full border transition"
-                  style={{
-                    borderColor: selectedItem.liked ? "rgba(200,184,152,0.3)" : "rgba(255,255,255,0.1)",
-                    color: selectedItem.liked ? "#c8b898" : "rgba(255,255,255,0.4)",
-                  }}
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill={selectedItem.liked ? "#c8b898" : "none"} stroke="currentColor" strokeWidth="2">
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                  </svg>
-                  {selectedItem.likes_count}
-                </button>
+                <div className="flex items-center gap-2">
+                  {/* 点赞按钮 */}
+                  <button
+                    onClick={() => toggleLike(selectedItem.id)}
+                    className={`flex items-center gap-1 text-sm px-3 py-1 rounded-full border transition ${
+                      selectedItem.liked ? 'bg-[#c8b898]/10' : ''
+                    }`}
+                    style={{
+                      borderColor: selectedItem.liked ? "rgba(200,184,152,0.3)" : "rgba(255,255,255,0.1)",
+                      color: selectedItem.liked ? "#c8b898" : "rgba(255,255,255,0.4)",
+                    }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill={selectedItem.liked ? "#c8b898" : "none"} stroke="currentColor" strokeWidth="2">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
+                    {selectedItem.likes_count}
+                  </button>
+                  {/* 鄙视按钮 */}
+                  <button
+                    onClick={() => toggleDislike(selectedItem.id)}
+                    className={`flex items-center gap-1 text-sm px-3 py-1 rounded-full border transition ${
+                      selectedItem.disliked ? 'bg-red-900/20' : ''
+                    }`}
+                    style={{
+                      borderColor: selectedItem.disliked ? "rgba(255,80,80,0.3)" : "rgba(255,255,255,0.1)",
+                      color: selectedItem.disliked ? "#ff6666" : "rgba(255,255,255,0.4)",
+                    }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill={selectedItem.disliked ? "#ff6666" : "none"} stroke="currentColor" strokeWidth="2">
+                      <path d="M17 14V2M9 18.12l-4-6.3V4h11.2l1.2 5.46a2 2 0 0 1-.24 1.73L12 20" />
+                    </svg>
+                    {selectedItem.dislikes_count}
+                  </button>
+                </div>
               </div>
 
               {/* 标签 */}
@@ -230,23 +495,8 @@ export default function GalleryPage() {
                   </button>
                 </form>
 
-                {/* Mock 评论 */}
-                <div className="space-y-3">
-                  <div className="flex gap-2">
-                    <img src="https://api.dicebear.com/7.x/initials/svg?seed=助教&backgroundColor=206683&textColor=ffffff" alt="" className="w-6 h-6 rounded-full flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-xs text-white/40">助教小王 <span className="text-white/20 ml-2">刚刚</span></p>
-                      <p className="text-sm text-white/50 mt-1">不错哦！建议在提示词里加上"4K"和"慢动作"，效果会更出彩 👍</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <img src="https://api.dicebear.com/7.x/initials/svg?seed=张三&backgroundColor=c8b898&textColor=0d0d0d" alt="" className="w-6 h-6 rounded-full flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-xs text-white/40">张三 <span className="text-white/20 ml-2">10分钟前</span></p>
-                      <p className="text-sm text-white/50 mt-1">谢谢老师！我试一下加个慢动作 😊</p>
-                    </div>
-                  </div>
-                </div>
+                {/* 真实评论 — 从API获取 */}
+                <CommentsList galleryId={selectedItem.id} />
               </div>
             </div>
           </div>
