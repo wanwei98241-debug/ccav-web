@@ -35,6 +35,7 @@ export default function Home() {
           <a href="/tools" className="hover:text-[#c8b898] transition">AI工具矩阵</a>
           <a href="/board.html" className="hover:text-[#c8b898] transition">任务看板</a>
           <a href="/about" className="hover:text-[#c8b898] transition">关于我们</a>
+          <Link href="/login" className="border border-white/20 text-white/60 px-3 py-1 rounded text-xs no-underline hover:border-[#c8b898]/50 hover:text-[#c8b898] transition">登录</Link>
         </div>
         {/* 手机端汉堡菜单 */}
         <div className="md:hidden flex items-center gap-2 ml-auto">
@@ -67,6 +68,7 @@ export default function Home() {
             <a href="/tools" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>AI工具矩阵</a>
             <a href="/board.html" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>任务看板</a>
             <a href="/about" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>关于我们</a>
+            <Link href="/login" className="border border-white/20 text-white/60 text-center px-3 py-2 rounded text-xs no-underline hover:border-[#c8b898]/50 hover:text-[#c8b898] transition mt-2" onClick={() => setMenuOpen(false)}>登录</Link>
           </div>
         </div>
       )}
