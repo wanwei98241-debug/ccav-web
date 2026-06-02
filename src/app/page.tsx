@@ -28,12 +28,12 @@ export default function Home() {
         {/* 桌面端导航 */}
         <div className="hidden md:flex items-center gap-6 text-sm text-white/50 ml-auto">
           <a href="/" className="hover:text-[#c8b898] transition">首页</a>
-          <a href="#courses" className="hover:text-[#c8b898] transition">课程体系</a>
-          <a href="#training" className="hover:text-[#c8b898] transition">师资培训</a>
+          <a href="/courses" className="hover:text-[#c8b898] transition">课程体系</a>
+          <a href="/training" className="hover:text-[#c8b898] transition">师资培训</a>
           <a href="/playground" className="hover:text-[#c8b898] transition">AI工坊</a>
           <a href="/tools" className="hover:text-[#c8b898] transition">AI工具矩阵</a>
           <a href="/board.html" className="hover:text-[#c8b898] transition">任务看板</a>
-          <a href="#about" className="hover:text-[#c8b898] transition">关于我们</a>
+          <a href="/about" className="hover:text-[#c8b898] transition">关于我们</a>
         </div>
         {/* 手机端汉堡菜单 */}
         <div className="md:hidden flex items-center gap-2 ml-auto">
@@ -59,12 +59,12 @@ export default function Home() {
         <div className="md:hidden border-t border-white/5 bg-[#0d0d0d]">
           <div className="flex flex-col px-8 py-4 gap-3 text-sm text-white/50">
             <a href="/" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>首页</a>
-            <a href="#courses" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>课程体系</a>
-            <a href="#training" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>师资培训</a>
+            <a href="/courses" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>课程体系</a>
+            <a href="/training" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>师资培训</a>
             <a href="/playground" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>AI工坊</a>
             <a href="/tools" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>AI工具矩阵</a>
             <a href="/board.html" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>任务看板</a>
-            <a href="#about" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>关于我们</a>
+            <a href="/about" className="hover:text-[#c8b898] transition py-1" onClick={() => setMenuOpen(false)}>关于我们</a>
           </div>
         </div>
       )}
@@ -109,7 +109,7 @@ export default function Home() {
 
         <div className="flex gap-4 justify-center mt-8">
           <a
-            href="#courses"
+            href="/courses"
             className="inline-block px-7 py-2.5 rounded-lg font-semibold text-white cursor-pointer transition duration-300"
             style={{
               background: "linear-gradient(135deg, #c0392b, #8b1a1a)",
