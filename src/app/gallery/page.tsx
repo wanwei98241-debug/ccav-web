@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { GalleryItem, getGalleryItems, toggleLike as apiToggleLike, toggleDislike as apiToggleDislike, recordView as apiRecordView, submitComment as apiSubmitComment } from "@/lib/api";
+import { GalleryItem, getGalleryItems, galleryFetch, toggleLike as apiToggleLike, toggleDislike as apiToggleDislike, recordView as apiRecordView, submitComment as apiSubmitComment } from "@/lib/api";
 import CommentsList from "@/components/gallery/CommentsList";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -28,9 +28,9 @@ export default function GalleryPage() {
     { value: 'vtuber', label: '虚拟主播' },
   ];
 
-  // 场景 + 风格 选项（展开面板）
-  const SCENE_OPTIONS = ["短片故事", "社交媒体", "商业广告", "音乐MV", "教学演示"];
-  const STYLE_OPTIONS = ["国风水墨", "科幻赛博", "古风典雅", "日系动漫", "写实胶片"];
+  // 场景 + 风格 选项（从后端API获取，动态刷新）
+  const [sceneOptions, setSceneOptions] = useState<string[]>([]);
+  const [styleOptions, setStyleOptions] = useState<string[]>([]);
 
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -44,6 +44,14 @@ export default function GalleryPage() {
   const [activeScene, setActiveScene] = useState<string>('');
   const [activeStyle, setActiveStyle] = useState<string>('');
   const [showFilterPanel, setShowFilterPanel] = useState(false);
+
+  // 加载时同步获取筛选选项
+  useEffect(() => {
+    galleryFetch('/api/gallery/filters', {}).then((res: any) => {
+      if (res?.data?.scenes) setSceneOptions(res.data.scenes);
+      if (res?.data?.styles) setStyleOptions(res.data.styles);
+    }).catch(() => {});
+  }, []);
 
   useEffect(() => {
     getGalleryItems({
@@ -205,7 +213,7 @@ export default function GalleryPage() {
             <div className="mb-3">
               <p className="text-xs text-white/30 mb-2 text-left">应用场景</p>
               <div className="flex flex-wrap gap-2">
-                {SCENE_OPTIONS.map((s) => (
+                {sceneOptions.map((s) => (
                   <button
                     key={s}
                     onClick={() => toggleScene(s)}
@@ -224,7 +232,7 @@ export default function GalleryPage() {
             <div>
               <p className="text-xs text-white/30 mb-2 text-left">艺术风格</p>
               <div className="flex flex-wrap gap-2">
-                {STYLE_OPTIONS.map((s) => (
+                {styleOptions.map((s) => (
                   <button
                     key={s}
                     onClick={() => toggleStyle(s)}
