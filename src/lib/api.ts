@@ -185,6 +185,16 @@ export interface GalleryComment {
   created_at: string;
 }
 
+// 后端 category 英文值 → 前端中文显示
+const CATEGORY_LABEL: Record<string, string> = {
+  'text-to-image': '文生图',
+  'text-to-video': '文生视频',
+  'image-to-image': '图生图',
+  'image-to-video': '图生视频',
+  'song-video': '歌曲短视频',
+  'virtual-streamer': '虚拟主播',
+};
+
 /**
  * 将后端 camelCase 数据映射为前端 snake_case
  * 后台 API 服务器 (3001) 返回 { imageUrl, avatarUrl, likes, comments, courseName, createdAt }
@@ -202,7 +212,7 @@ export function normalizeGalleryItem(raw: any): GalleryItem {
     video_url: raw.videoUrl ?? raw.video_url ?? undefined,
     author: raw.author ?? '匿名',
     avatar_url: raw.avatarUrl ?? raw.avatar_url ?? '',
-    category: raw.category ?? undefined,
+    category: CATEGORY_LABEL[raw.category] ?? raw.category ?? undefined,
     likes_count: raw.likes ?? raw.likes_count ?? 0,
     dislikes_count: raw.dislikes_count ?? 0,
     views_count: raw.views_count ?? 0,
@@ -214,7 +224,7 @@ export function normalizeGalleryItem(raw: any): GalleryItem {
     created_at: raw.createdAt ?? raw.created_at ?? '',
     comments_count: raw.comments ?? raw.comments_count ?? 0,
     unlocked: raw.unlocked ?? false,
-    unlock_cost: raw.unlockCost ?? raw.unlock_cost ?? 50,
+    unlock_cost: raw.unlockCost ?? raw.unlock_cost ?? 0,
   };
 }
 

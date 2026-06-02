@@ -7,17 +7,19 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
 export default function GalleryPage() {
-  // 固定分类选项：value 与后端一致，label 显示用
+  // 固定分类选项：value（后端英文值）用于筛选请求，label 用于展示
+  // value=后端英文值(用于API请求)，label=中文显示名(用于页面展示)
   const CATEGORIES: { value: string; label: string }[] = [
-    { value: "文生图", label: "文生图" },
-    { value: "文生视频", label: "文生视频" },
-    { value: "图生图", label: "图生图" },
-    { value: "图生视频", label: "图生视频" },
-    { value: "歌词创作", label: "歌词创作" },
-    { value: "音乐创作", label: "音乐创作" },
-    { value: "歌曲短视频", label: "歌曲短视频" },
-    { value: "虚拟主播", label: "虚拟主播" },
+    { value: 'text-to-image', label: '文生图' },
+    { value: 'text-to-video', label: '文生视频' },
+    { value: 'image-to-image', label: '图生图' },
+    { value: 'image-to-video', label: '图生视频' },
+    { value: 'song-video', label: '歌曲短视频' },
   ];
+  // 反向映射：英文值→中文（用于本地filter比较，因为 normalizeGalleryItem 已转为中文）
+  const CATEGORY_VALUE_TO_LABEL: Record<string, string> = Object.fromEntries(
+    CATEGORIES.map(c => [c.value, c.label])
+  );
 
   // 技术形态大分类（上方按钮）
   const TECH_TYPES = [
@@ -66,7 +68,8 @@ export default function GalleryPage() {
 
   // 交叉查询：分类 + 标签 + 三维叠加
   const filtered = items.filter((it) => {
-    if (activeCategory && it.category !== activeCategory) return false;
+    // activeCategory 是英文值(后端原始值)，it.category 已转为中文显示名
+    if (activeCategory && it.category !== CATEGORY_VALUE_TO_LABEL[activeCategory]) return false;
     if (activeTag && !it.tags.includes(activeTag)) return false;
     return true;
   });
