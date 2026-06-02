@@ -31,7 +31,7 @@ export default function Navbar() {
           <Link href="/gallery" className="hover:text-[#c8b898] transition no-underline">作品墙</Link>
           <Link href="/board.html" className="hover:text-[#c8b898] transition no-underline">任务看板</Link>
           <Link href="/about" className="hover:text-[#c8b898] transition no-underline">关于我们</Link>
-          <Link href="#" className="border border-white/20 text-white/60 px-3 py-1 rounded text-xs no-underline hover:border-[#c8b898]/50 hover:text-[#c8b898] transition">登录</Link>
+          <Link href="/login" className="border border-white/20 text-white/60 px-3 py-1 rounded text-xs no-underline hover:border-[#c8b898]/50 hover:text-[#c8b898] transition">登录</Link>
         </div>
         {/* 手机端汉堡菜单 */}
         <div className="md:hidden flex items-center gap-2 ml-auto">
@@ -64,7 +64,7 @@ export default function Navbar() {
             <Link href="/gallery" className="hover:text-[#c8b898] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>作品墙</Link>
             <Link href="/board.html" className="hover:text-[#c8b898] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>任务看板</Link>
             <Link href="/about" className="hover:text-[#c8b898] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>关于我们</Link>
-            <Link href="#" className="border border-white/20 text-white/60 text-center px-3 py-2 rounded text-xs no-underline hover:border-[#c8b898]/50 hover:text-[#c8b898] transition" onClick={() => setMenuOpen(false)}>登录</Link>
+            <Link href="/login" className="border border-white/20 text-white/60 text-center px-3 py-2 rounded text-xs no-underline hover:border-[#c8b898]/50 hover:text-[#c8b898] transition" onClick={() => setMenuOpen(false)}>登录</Link>
           </div>
         </div>
       )}
