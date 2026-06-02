@@ -3,6 +3,8 @@
 import { useState, useEffect } from "react";
 import { GalleryItem, getGalleryItems, toggleLike as apiToggleLike, toggleDislike as apiToggleDislike, recordView as apiRecordView, submitComment as apiSubmitComment } from "@/lib/api";
 import CommentsList from "@/components/gallery/CommentsList";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 export default function GalleryPage() {
   // 固定分类选项：value 与后端一致，label 显示用
@@ -135,7 +137,9 @@ export default function GalleryPage() {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: "#0d0d0d" }}>
+    <>
+      <Navbar />
+      <div className="min-h-screen" style={{ background: "#0d0d0d" }}>
       {/* Hero */}
       <section className="relative pt-20 pb-16 px-4 text-center overflow-hidden">
         <div className="absolute inset-0 opacity-[0.03]"
@@ -509,5 +513,7 @@ export default function GalleryPage() {
         </div>
       )}
     </div>
+      <Footer />
+    </>
   );
 }
