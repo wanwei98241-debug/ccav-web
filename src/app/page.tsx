@@ -197,9 +197,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 师资培训 */}
+      {/* 师资培训 — 整张卡片可点击，直接跳到 /training 详情页 */}
       <section id="training" className="max-w-4xl mx-auto px-4 pb-16 relative z-10">
-        <div className="ink-card p-6 md:p-8">
+        <Link
+          href="/training"
+          className="ink-card p-6 md:p-8 block hover:border-[#c8b898]/30 transition-all cursor-pointer"
+        >
           <div className="flex flex-col md:flex-row items-start gap-6">
             <div className="flex items-center justify-center" style={{ width: 64, height: 64, background: "rgba(180,160,80,0.12)", borderRadius: 12, fontSize: 44 }}>🎓</div>
             <div className="flex-1">
@@ -215,16 +218,17 @@ export default function Home() {
               </div>
               <div className="flex items-center gap-4">
                 <span className="text-xl font-bold text-[#c8b898] serif">¥3,999</span>
-                <a
+                <Link
                   href="/training"
-                  className="ink-btn text-sm"
+                  className="ink-btn text-sm inline-flex items-center gap-1"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  了解详情
-                </a>
+                  了解详情 →
+                </Link>
               </div>
             </div>
           </div>
-        </div>
+        </Link>
       </section>
 
       {/* 底部背书 */}
