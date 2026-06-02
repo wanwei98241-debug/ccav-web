@@ -24,13 +24,13 @@ export default function Navbar() {
         {/* 桌面端导航 */}
         <div className="hidden md:flex items-center gap-6 text-sm text-white/50 ml-auto">
           <Link href="/" className="hover:text-[#c8b898] transition no-underline">首页</Link>
-          <Link href="/#courses" className="hover:text-[#c8b898] transition no-underline">课程体系</Link>
-          <Link href="/#training" className="hover:text-[#c8b898] transition no-underline">师资培训</Link>
+          <Link href="/training" className="hover:text-[#c8b898] transition no-underline">师资培训</Link>
+          <Link href="/courses" className="hover:text-[#c8b898] transition no-underline">课程体系</Link>
           <Link href="/playground" className="hover:text-[#c8b898] transition no-underline">AI工坊</Link>
           <Link href="/tools" className="hover:text-[#c8b898] transition no-underline">AI工具矩阵</Link>
           <Link href="/gallery" className="hover:text-[#c8b898] transition no-underline">作品墙</Link>
           <Link href="/board.html" className="hover:text-[#c8b898] transition no-underline">任务看板</Link>
-          <Link href="/#about" className="hover:text-[#c8b898] transition no-underline">关于我们</Link>
+          <Link href="/about" className="hover:text-[#c8b898] transition no-underline">关于我们</Link>
           <Link href="#" className="border border-white/20 text-white/60 px-3 py-1 rounded text-xs no-underline hover:border-[#c8b898]/50 hover:text-[#c8b898] transition">登录</Link>
         </div>
         {/* 手机端汉堡菜单 */}
@@ -57,13 +57,13 @@ export default function Navbar() {
         <div className="md:hidden border-t border-white/5 bg-[#0d0d0d] z-10">
           <div className="flex flex-col px-8 py-4 gap-3 text-sm text-white/50">
             <Link href="/" className="hover:text-[#c8b898] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>首页</Link>
-            <Link href="/#courses" className="hover:text-[#c8b898] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>课程体系</Link>
-            <Link href="/#training" className="hover:text-[#c8b898] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>师资培训</Link>
+            <Link href="/training" className="hover:text-[#c8b898] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>师资培训</Link>
+            <Link href="/courses" className="hover:text-[#c8b898] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>课程体系</Link>
             <Link href="/playground" className="hover:text-[#c8b898] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>AI工坊</Link>
             <Link href="/tools" className="hover:text-[#c8b898] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>AI工具矩阵</Link>
             <Link href="/gallery" className="hover:text-[#c8b898] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>作品墙</Link>
             <Link href="/board.html" className="hover:text-[#c8b898] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>任务看板</Link>
-            <Link href="/#about" className="hover:text-[#c8b898] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>关于我们</Link>
+            <Link href="/about" className="hover:text-[#c8b898] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>关于我们</Link>
             <Link href="#" className="border border-white/20 text-white/60 text-center px-3 py-2 rounded text-xs no-underline hover:border-[#c8b898]/50 hover:text-[#c8b898] transition" onClick={() => setMenuOpen(false)}>登录</Link>
           </div>
         </div>
