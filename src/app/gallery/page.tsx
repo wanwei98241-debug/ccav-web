@@ -5,10 +5,16 @@ import { GalleryItem, getGalleryItems, toggleLike as apiToggleLike, toggleDislik
 import CommentsList from "@/components/gallery/CommentsList";
 
 export default function GalleryPage() {
-  // 固定分类选项（保留兼容）
-  const CATEGORIES = [
-    "文生图", "文生视频", "图生图", "图生视频",
-    "歌词创作", "音乐创作", "歌曲短视频", "虚拟主播",
+  // 固定分类选项：value 与后端一致，label 显示用
+  const CATEGORIES: { value: string; label: string }[] = [
+    { value: "文生图", label: "文生图" },
+    { value: "文生视频", label: "文生视频" },
+    { value: "图生图", label: "图生图" },
+    { value: "图生视频", label: "图生视频" },
+    { value: "歌词创作", label: "歌词创作" },
+    { value: "音乐创作", label: "音乐创作" },
+    { value: "歌曲短视频", label: "歌曲短视频" },
+    { value: "虚拟主播", label: "虚拟主播" },
   ];
 
   // 技术形态大分类（上方按钮）
@@ -246,15 +252,15 @@ export default function GalleryPage() {
           </button>
           {CATEGORIES.map((cat) => (
             <button
-              key={cat}
-              onClick={() => setActiveCategory(activeCategory === cat ? null : cat)}
+              key={cat.value}
+              onClick={() => setActiveCategory(activeCategory === cat.value ? null : cat.value)}
               className={`px-3 py-1 text-xs rounded-full border transition ${
-                activeCategory === cat
+                activeCategory === cat.value
                   ? "bg-[#4ac0d8]/15 text-[#4ac0d8] border-[#4ac0d8]/40"
                   : "text-white/40 border-white/10 hover:text-white/60"
               }`}
             >
-              {cat}
+              {cat.label}
             </button>
           ))}
         </div>
