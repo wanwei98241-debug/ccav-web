@@ -24,8 +24,8 @@ export default function Navbar() {
         {/* 桌面端导航 */}
         <div className="hidden md:flex items-center gap-6 text-sm text-white/50 ml-auto">
           <Link href="/" className="hover:text-[#c8b898] transition no-underline">首页</Link>
-          <Link href="/training" className="hover:text-[#c8b898] transition no-underline">师资培训</Link>
           <Link href="/courses" className="hover:text-[#c8b898] transition no-underline">课程体系</Link>
+          <Link href="/training" className="hover:text-[#c8b898] transition no-underline">师资培训</Link>
           <Link href="/playground" className="hover:text-[#c8b898] transition no-underline">AI工坊</Link>
           <Link href="/tools" className="hover:text-[#c8b898] transition no-underline">AI工具矩阵</Link>
           <Link href="/gallery" className="hover:text-[#c8b898] transition no-underline">作品墙</Link>
@@ -57,8 +57,8 @@ export default function Navbar() {
         <div className="md:hidden border-t border-white/5 bg-[#0d0d0d] z-10">
           <div className="flex flex-col px-8 py-4 gap-3 text-sm text-white/50">
             <Link href="/" className="hover:text-[#c8b898] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>首页</Link>
-            <Link href="/training" className="hover:text-[#c8b898] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>师资培训</Link>
             <Link href="/courses" className="hover:text-[#c8b898] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>课程体系</Link>
+            <Link href="/training" className="hover:text-[#c8b898] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>师资培训</Link>
             <Link href="/playground" className="hover:text-[#c8b898] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>AI工坊</Link>
             <Link href="/tools" className="hover:text-[#c8b898] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>AI工具矩阵</Link>
             <Link href="/gallery" className="hover:text-[#c8b898] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>作品墙</Link>
