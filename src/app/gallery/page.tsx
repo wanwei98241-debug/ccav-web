@@ -16,10 +16,6 @@ export default function GalleryPage() {
     { value: 'image-to-video', label: '图生视频' },
     { value: 'song-video', label: '歌曲短视频' },
   ];
-  // 反向映射：英文值→中文（用于本地filter比较，因为 normalizeGalleryItem 已转为中文）
-  const CATEGORY_VALUE_TO_LABEL: Record<string, string> = Object.fromEntries(
-    CATEGORIES.map(c => [c.value, c.label])
-  );
 
   // 技术形态大分类（上方按钮）
   const TECH_TYPES = [
@@ -68,8 +64,8 @@ export default function GalleryPage() {
 
   // 交叉查询：分类 + 标签 + 三维叠加
   const filtered = items.filter((it) => {
-    // activeCategory 是英文值(后端原始值)，it.category 已转为中文显示名
-    if (activeCategory && it.category !== CATEGORY_VALUE_TO_LABEL[activeCategory]) return false;
+    // activeCategory 与 it.category 都是英文值，直接比较
+    if (activeCategory && it.category !== activeCategory) return false;
     if (activeTag && !it.tags.includes(activeTag)) return false;
     return true;
   });

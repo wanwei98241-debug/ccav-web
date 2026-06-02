@@ -12,8 +12,8 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/api';
  * 开发/调试时直连 3001 端口
  */
 const GALLERY_API_BASE = typeof window !== 'undefined'
-  ? (window.__NEXT_DATA__?.props?.galleryApiBase ?? process.env.NEXT_PUBLIC_GALLERY_API_URL ?? 'http://100.119.92.94:3001')
-  : (process.env.NEXT_PUBLIC_GALLERY_API_URL ?? 'http://100.119.92.94:3001');
+  ? (window.__NEXT_DATA__?.props?.galleryApiBase ?? process.env.NEXT_PUBLIC_GALLERY_API_URL ?? '/api')
+  : (process.env.NEXT_PUBLIC_GALLERY_API_URL ?? '/api');
 
 async function fetchAPI<T>(path: string, options?: RequestInit): Promise<T | null> {
   try {
@@ -212,7 +212,7 @@ export function normalizeGalleryItem(raw: any): GalleryItem {
     video_url: raw.videoUrl ?? raw.video_url ?? undefined,
     author: raw.author ?? '匿名',
     avatar_url: raw.avatarUrl ?? raw.avatar_url ?? '',
-    category: CATEGORY_LABEL[raw.category] ?? raw.category ?? undefined,
+    category: raw.category ?? undefined,
     likes_count: raw.likes ?? raw.likes_count ?? 0,
     dislikes_count: raw.dislikes_count ?? 0,
     views_count: raw.views_count ?? 0,
@@ -264,7 +264,7 @@ export async function getGalleryItems(opts?: {
   if (tag) params.set('tag', tag);
   if (category) params.set('category', category);
   const queryStr = params.toString();
-  const url = `${GALLERY_API_BASE}/api/gallery${queryStr ? '?' + queryStr : ''}`;
+  const url = `${GALLERY_API_BASE}/gallery${queryStr ? '?' + queryStr : ''}`;
   try {
     const res = await fetch(url, {
       headers: getAuthHeaders(),
@@ -294,7 +294,7 @@ export async function getGalleryItems(opts?: {
 /** Gallery API 统一请求封装 */
 export async function galleryFetch<T>(path: string, options?: RequestInit): Promise<T | null> {
   const base = GALLERY_API_BASE;
-  const url = `${base}/api/gallery${path.startsWith('/') ? path : '/' + path}`;
+  const url = `${base}/gallery${path.startsWith('/') ? path : '/' + path}`;
   try {
     const merged = { ...options };
     merged.headers = {
