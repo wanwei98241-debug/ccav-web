@@ -41,7 +41,7 @@ export default function GalleryPage() {
   const [activeTechType, setActiveTechType] = useState<string>('');
   const [activeScene, setActiveScene] = useState<string>('');
   const [activeStyle, setActiveStyle] = useState<string>('');
-  const [showFilterPanel, setShowFilterPanel] = useState(false);
+  const [showFilterPanel, setShowFilterPanel] = useState(true);
 
   // 加载时同步获取筛选选项
   useEffect(() => {
@@ -53,6 +53,8 @@ export default function GalleryPage() {
 
   useEffect(() => {
     getGalleryItems({
+      category: activeCategory || undefined,
+      tag: activeTag || undefined,
       tech_type: activeTechType || undefined,
       scene: activeScene || undefined,
       style: activeStyle || undefined,
@@ -60,7 +62,7 @@ export default function GalleryPage() {
       setItems(data);
       setLoading(false);
     });
-  }, [activeTechType, activeScene, activeStyle]);
+  }, [activeCategory, activeTag, activeTechType, activeScene, activeStyle]);
 
   // 交叉查询：分类 + 标签 + 三维叠加
   const filtered = items.filter((it) => {
@@ -332,13 +334,31 @@ export default function GalleryPage() {
                     className="w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     loading="lazy"
                   />
-                  {item.media_type === 'video' && (
+                  {item.tech_type === 'video' && (
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="w-12 h-12 rounded-full bg-black/50 flex items-center justify-center backdrop-blur-sm group-hover:bg-black/70 transition">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
                           <polygon points="8,5 19,12 8,19" />
                         </svg>
                       </div>
+                    </div>
+                  )}
+                  {item.tech_type === 'music' && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-12 h-12 rounded-full bg-black/50 flex items-center justify-center backdrop-blur-sm group-hover:bg-black/70 transition">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                          <path d="M9 18V5l12-2v13" />
+                          <circle cx="6" cy="18" r="3" />
+                          <circle cx="18" cy="16" r="3" />
+                        </svg>
+                      </div>
+                    </div>
+                  )}
+                  {/* 视频时长角标 */}
+                  {item.tech_type === 'video' && item.duration_seconds && (
+                    <div className="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 rounded text-[10px] font-medium"
+                      style={{ background: "rgba(0,0,0,0.65)", color: "rgba(255,255,255,0.85)" }}>
+                      {String(Math.floor(item.duration_seconds / 60)).padStart(2,'0')}:{String(item.duration_seconds % 60).padStart(2,'0')}
                     </div>
                   )}
                 </div>
@@ -358,7 +378,7 @@ export default function GalleryPage() {
                       <svg width="12" height="12" viewBox="0 0 24 24" fill={item.liked ? "#c8b898" : "none"} stroke="currentColor" strokeWidth="2" className="text-white/30">
                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                       </svg>
-                      {item.likes_count}
+                      {item.likes_count - item.dislikes_count}
                     </span>
                   </div>
                 </div>
@@ -380,7 +400,7 @@ export default function GalleryPage() {
             style={{ background: "#111" }}
             onClick={(e) => e.stopPropagation()}
           >
-            {selectedItem.media_type === 'video' && selectedItem.video_url ? (
+            {selectedItem.tech_type === 'video' && selectedItem.video_url ? (
               <video
                 src={selectedItem.video_url}
                 controls
@@ -408,7 +428,7 @@ export default function GalleryPage() {
                   {selectedItem.views_count?.toLocaleString() || 0}
                 </span>
                 <span className="flex items-center gap-1">
-                  ❤️ {selectedItem.likes_count}
+                  ❤️ {selectedItem.likes_count - selectedItem.dislikes_count}
                 </span>
                 <span className="flex items-center gap-1">
                   💩 {selectedItem.dislikes_count}
@@ -446,7 +466,7 @@ export default function GalleryPage() {
                     <svg width="14" height="14" viewBox="0 0 24 24" fill={selectedItem.liked ? "#c8b898" : "none"} stroke="currentColor" strokeWidth="2">
                       <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                     </svg>
-                    {selectedItem.likes_count}
+                    {selectedItem.likes_count - selectedItem.dislikes_count}
                   </button>
                   {/* 鄙视按钮 */}
                   <button
