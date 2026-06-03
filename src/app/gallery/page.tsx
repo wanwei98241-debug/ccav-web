@@ -151,7 +151,7 @@ export default function GalleryPage() {
       <div className="min-h-screen" style={{ background: "#0d0d0d" }}>
       {/* Hero */}
       <section className="relative pt-20 pb-16 px-4 text-center overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.03]"
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
           style={{
             background: "radial-gradient(circle at 50% 0%, #c8b898 0%, transparent 70%)",
           }}
