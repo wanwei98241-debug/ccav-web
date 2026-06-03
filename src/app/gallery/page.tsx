@@ -45,7 +45,7 @@ export default function GalleryPage() {
 
   // 加载时同步获取筛选选项
   useEffect(() => {
-    galleryFetch('/api/gallery/filters', {}).then((res: any) => {
+    galleryFetch('/filters', {}).then((res: any) => {
       if (res?.data?.scenes) setSceneOptions(res.data.scenes);
       if (res?.data?.styles) setStyleOptions(res.data.styles);
     }).catch(() => {});
@@ -278,7 +278,7 @@ export default function GalleryPage() {
           ))}
         </div>
         {/* 标签过滤（风格/内容 — 保留兼容） */}
-        {allTags.length > 0 && (
+        {hasActiveFilters && allTags.length > 0 && (
           <div className="flex flex-wrap justify-center gap-2 mt-3">
             <button
               onClick={() => setActiveTag(null)}
