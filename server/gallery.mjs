@@ -1,5 +1,6 @@
 /**
  * ccav.com 作品墙 API 路由
+ * GET   /api/gallery/filters       — 获取筛选选项（场景+风格）
  * GET   /api/gallery              — 获取作品列表（支持 ?tag= 过滤，?page&pageSize 分页）
  * GET   /api/gallery/:id          — 获取单个作品详情（同时增加浏览量）
  * POST  /api/gallery              — 发布作品（需登录）
@@ -31,11 +32,24 @@ function formatGalleryItem(row, userId = null) {
   // 取评论数
   const commentsRow = db.prepare('SELECT COUNT(*) as cnt FROM gallery_comments WHERE gallery_id = ?').get(row.id);
 
+  // tech_type 字段：根据 category 映射为媒体类型（前端筛选按钮值）
+  // 前端 TECH_TYPES = [{value:'image'},{value:'video'},{value:'music'},{value:'vtuber'}]
+  const techTypeMap = {
+    'text-to-image': 'image',
+    'image-to-image': 'image',
+    'text-to-video': 'video',
+    'image-to-video': 'video',
+    'song-video': 'music',
+    'video-to-video': 'video',
+  };
+  const tech_type = techTypeMap[row.category] || 'image';
+
   return {
     id: row.id,
     title: row.title,
     description: row.description,
     media_type: row.media_type || 'image',
+    tech_type,
     image_url: row.image_url,
     video_url: row.video_url || undefined,
     user_id: row.user_id || undefined,
@@ -55,12 +69,31 @@ function formatGalleryItem(row, userId = null) {
   };
 }
 
+// ============ GET /api/gallery/filters — 获取筛选选项（场景+风格）============
+router.get('/filters', (req, res) => {
+  try {
+    const scenes = db.prepare(`SELECT DISTINCT scene FROM gallery WHERE scene IS NOT NULL AND scene != '' ORDER BY scene`).all().map(r => r.scene);
+    const styles = db.prepare(`SELECT DISTINCT style FROM gallery WHERE style IS NOT NULL AND style != '' ORDER BY style`).all().map(r => r.style);
+    res.json({ code: 0, data: { scenes, styles } });
+  } catch (err) {
+    console.error('[GET /api/gallery/filters Error]', err.message);
+    res.status(500).json({ code: 1, error: err.message });
+  }
+});
+
 // ============ GET /api/gallery — 获取作品列表（支持分类+标签交叉查询）============
 router.get('/', (req, res) => {
   try {
-    const { tag, category, page = 1, pageSize = 50 } = req.query;
+    const { tag, category, techType, page = 1, pageSize = 50 } = req.query;
     const offset = (Number(page) - 1) * Number(pageSize);
     const limit = Number(pageSize);
+
+    // techType → 对应的 category 集合
+    const techTypeCategoryMap = {
+      'image': ['text-to-image', 'image-to-image'],
+      'video': ['text-to-video', 'image-to-video', 'video-to-video'],
+      'music': ['song-video'],
+    };
 
     const conditions = [];
     const params = [];
@@ -72,6 +105,13 @@ router.get('/', (req, res) => {
     if (category) {
       conditions.push('category = ?');
       params.push(category);
+    }
+    if (techType) {
+      const cats = techTypeCategoryMap[String(techType).toLowerCase()];
+      if (cats && cats.length > 0) {
+        conditions.push(`category IN (${cats.map(() => '?').join(',')})`);
+        params.push(...cats);
+      }
     }
 
     const where = conditions.length > 0 ? 'WHERE ' + conditions.join(' AND ') : '';
