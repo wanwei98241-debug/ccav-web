@@ -27,20 +27,18 @@ export default function GalleryDetailPage() {
 
   // ── 浏览器回退修复 ──
   // 用户从 /gallery 进入 /gallery/:id，回退时应回到 /gallery
-  // 原理：用 replaceState 将前一个历史条目（/gallery）的 URL 替换为 /gallery
-  // 再用 popstate 确保回退操作生效
+  // 原理：pushState 推入一个带标记的哨兵条目（URL 不变但 state 不同）
+  // 回退到哨兵时触发 popstate → 检测到标记 → 硬导航到 /gallery
   useEffect(() => {
-    const handlePopState = () => {
-      // popstate 触发说明用户点了回退
-      // 判断是否应该回到 /gallery
-      window.location.href = '/gallery';
+    const SENTINEL = '__gallery_back__';
+    // 推入哨兵条目（URL 不变，但 state 对象不同，浏览器一定触发 popstate）
+    window.history.pushState({ [SENTINEL]: true }, '');
+    const handlePopState = (e: PopStateEvent) => {
+      if (e.state && e.state[SENTINEL]) {
+        window.location.href = '/gallery';
+      }
     };
     window.addEventListener('popstate', handlePopState);
-    // 在历史中插入一个标记条目，当回退到这个条目时触发 popstate
-    // 这样浏览器回退时：/gallery/:id → (标记条目) → popstate → /gallery
-    // 推入带 #gallery-back 的 URL，确保和当前页 URL 不同
-    // 这样浏览器回退时一定会触发 popstate 事件
-    window.history.pushState(null, '', window.location.href + '#gallery-back');
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 

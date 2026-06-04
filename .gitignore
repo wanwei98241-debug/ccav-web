@@ -42,3 +42,8 @@ next-env.d.ts
 /dist
 /archive
 dist/
+# database
+server/ccav.db
+server/ccav.db-shm
+server/ccav.db-wal
+server/ccav.db.bak
