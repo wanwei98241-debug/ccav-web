@@ -25,6 +25,23 @@ export default function GalleryDetailPage() {
   const [unlocking, setUnlocking] = useState(false);
   const [unlockMsg, setUnlockMsg] = useState<string | null>(null);
 
+  // ── 浏览器回退修复 ──
+  // 用户从 /gallery 进入 /gallery/:id，回退时应回到 /gallery
+  // 原理：用 replaceState 将前一个历史条目（/gallery）的 URL 替换为 /gallery
+  // 再用 popstate 确保回退操作生效
+  useEffect(() => {
+    const handlePopState = () => {
+      // popstate 触发说明用户点了回退
+      // 判断是否应该回到 /gallery
+      window.location.href = '/gallery';
+    };
+    window.addEventListener('popstate', handlePopState);
+    // 在历史中插入一个标记条目，当回退到这个条目时触发 popstate
+    // 这样浏览器回退时：/gallery/:id → (标记条目) → popstate → /gallery
+    window.history.pushState(null, '', window.location.href);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   useEffect(() => {
     if (!id || isNaN(id)) {
       setError("无效的作品ID");
