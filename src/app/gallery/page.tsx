@@ -384,6 +384,7 @@ export default function GalleryPage() {
                     controls
                     autoPlay
                     muted
+                    preload="metadata"
                     className="w-full max-h-[50vh] object-contain"
                     style={{ background: "#0a0a0a" }}
                     playsInline
