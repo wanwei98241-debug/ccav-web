@@ -38,7 +38,9 @@ export default function GalleryDetailPage() {
     window.addEventListener('popstate', handlePopState);
     // 在历史中插入一个标记条目，当回退到这个条目时触发 popstate
     // 这样浏览器回退时：/gallery/:id → (标记条目) → popstate → /gallery
-    window.history.pushState(null, '', window.location.href);
+    // 推入带 #gallery-back 的 URL，确保和当前页 URL 不同
+    // 这样浏览器回退时一定会触发 popstate 事件
+    window.history.pushState(null, '', window.location.href + '#gallery-back');
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
