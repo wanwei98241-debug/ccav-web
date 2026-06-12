@@ -34,17 +34,25 @@ export default function AboutPage() {
       <Navbar />
       <main className="flex-1 pt-16">
         {/* Hero */}
-        <section className="py-20 bg-gradient-to-b from-[#161b22] to-[#0d1117]">
+        <section className="py-20"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 60% at 15% 20%, rgba(37,99,235,0.04) 0%, transparent 60%), " +
+              "radial-gradient(ellipse 60% 50% at 85% 60%, rgba(14,165,233,0.03) 0%, transparent 60%), " +
+              "#f8fafc",
+            borderBottom: "1px solid rgba(37,99,235,0.08)",
+          }}
+        >
           <div className="max-w-4xl mx-auto px-5 text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className="text-3xl md:text-5xl font-bold text-[#f0f6fc] mb-6">
+              <h1 className="text-3xl md:text-5xl font-bold mb-6" style={{ color: "#1e293b" }}>
                 关于 ccav.com
               </h1>
-              <p className="text-lg md:text-xl text-[#8b949e] leading-relaxed max-w-2xl mx-auto">
+              <p className="text-lg md:text-xl leading-relaxed max-w-2xl mx-auto" style={{ color: "rgba(0,0,0,0.55)" }}>
                 以国家团标为核心的AI视频制作教学平台。
                 学生缴费上课是主体，所有课程、认证、考核均对标团标1-6级。
               </p>
@@ -53,13 +61,14 @@ export default function AboutPage() {
         </section>
 
         {/* Values */}
-        <section className="py-16 bg-[#0d1117]">
+        <section className="py-16" style={{ background: "#f1f5f9" }}>
           <div className="max-w-6xl mx-auto px-5">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-2xl md:text-3xl font-bold text-[#f0f6fc] text-center mb-12"
+              className="text-2xl md:text-3xl font-bold text-center mb-12"
+              style={{ color: "#1e293b" }}
             >
               平台核心原则
             </motion.h2>
@@ -72,13 +81,13 @@ export default function AboutPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="p-6 rounded-2xl bg-[#161b22] border border-[#30363d] hover:border-[#58a6ff]/20 transition-all"
+                  className="p-6 rounded-2xl bg-white border border-[rgba(37,99,235,0.08)] shadow-sm hover:border-[#58a6ff]/20 transition-all"
                 >
                   <div className="w-10 h-10 rounded-lg bg-[#58a6ff]/10 flex items-center justify-center mb-4">
-                    <v.icon className="w-5 h-5 text-[#58a6ff]" />
+                    <v.icon className="w-5 h-5 text-[#2563eb]" />
                   </div>
-                  <h3 className="text-lg font-semibold text-[#f0f6fc] mb-2">{v.title}</h3>
-                  <p className="text-sm text-[#8b949e] leading-relaxed">{v.desc}</p>
+                  <h3 className="text-lg font-semibold text-[#1e293b] mb-2">{v.title}</h3>
+                  <p className="text-sm text-[rgba(0,0,0,0.5)] leading-relaxed">{v.desc}</p>
                 </motion.div>
               ))}
             </div>
@@ -86,23 +95,23 @@ export default function AboutPage() {
         </section>
 
         {/* Standard Info */}
-        <section className="py-16 bg-gradient-to-b from-[#0d1117] to-[#161b22]">
+        <section className="py-16 bg-white">
           <div className="max-w-4xl mx-auto px-5">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="p-8 rounded-2xl bg-[#161b22] border border-[#30363d]"
+              className="p-8 rounded-2xl bg-white border border-[rgba(37,99,235,0.08)] shadow-sm"
             >
-              <h3 className="text-xl font-bold text-[#f0f6fc] mb-4">
+              <h3 className="text-xl font-bold text-[#1e293b] mb-4">
                 📋 T/CCPS 0041—2026 团标对标
               </h3>
-              <p className="text-[#8b949e] mb-4">
+              <p className="text-[rgba(0,0,0,0.5)] mb-4">
                 本平台所有课程体系、师资认证、学员考核均弥紧围绕T/CCPS 0041—2026《AIGC视频制作规范与实践》团体标准开展，确保教学质量与专业度。
               </p>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {["L1 入门", "L2 进阶", "L2+ 高级", "L3 大师", "L4 专家", "L5 传奇"].map((l) => (
-                  <div key={l} className="px-3 py-2 rounded-lg bg-[#0d1117] text-sm text-[#c9d1d9] text-center">
+                  <div key={l} className="px-3 py-2 rounded-lg bg-white text-sm text-[rgba(0,0,0,0.6)] text-center">
                     {l}
                   </div>
                 ))}
@@ -112,13 +121,13 @@ export default function AboutPage() {
         </section>
 
         {/* 团队介绍 */}
-        <section className="py-16 bg-[#0d1117]">
+        <section className="py-16 bg-white">
           <div className="max-w-4xl mx-auto px-5">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-2xl md:text-3xl font-bold text-[#f0f6fc] text-center mb-12"
+              className="text-2xl md:text-3xl font-bold text-[#1e293b] text-center mb-12"
             >
               平台团队
             </motion.h2>
@@ -130,14 +139,14 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5 }}
-                className="p-6 rounded-2xl bg-[#161b22] border border-[#30363d] text-center"
+                className="p-6 rounded-2xl bg-white border border-[rgba(37,99,235,0.08)] shadow-sm text-center"
               >
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#58a6ff] to-[#3b82f6] flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-white">👑</span>
                 </div>
-                <h3 className="text-lg font-semibold text-[#f0f6fc] mb-1">王万维</h3>
-                <p className="text-sm text-[#58a6ff] mb-3">CEO · 平台建设</p>
-                <p className="text-sm text-[#8b949e] leading-relaxed">
+                <h3 className="text-lg font-semibold text-[#1e293b] mb-1">王万维</h3>
+                <p className="text-sm text-[#2563eb] mb-3">CEO · 平台建设</p>
+                <p className="text-sm text-[rgba(0,0,0,0.5)] leading-relaxed">
                   OpenClaw 驱动，主抓平台架构、前端开发与项目推进。
                 </p>
               </motion.div>
@@ -148,14 +157,14 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
-                className="p-6 rounded-2xl bg-[#161b22] border border-[#30363d] text-center"
+                className="p-6 rounded-2xl bg-white border border-[rgba(37,99,235,0.08)] shadow-sm text-center"
               >
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#22c55e] to-[#16a34a] flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-white">⚙️</span>
                 </div>
-                <h3 className="text-lg font-semibold text-[#f0f6fc] mb-1">王千里</h3>
+                <h3 className="text-lg font-semibold text-[#1e293b] mb-1">王千里</h3>
                 <p className="text-sm text-[#22c55e] mb-3">CTO · 方案审核</p>
-                <p className="text-sm text-[#8b949e] leading-relaxed">
+                <p className="text-sm text-[rgba(0,0,0,0.5)] leading-relaxed">
                   Hermes 驱动，负责技术方案评审、架构设计与质量验收。
                 </p>
               </motion.div>
@@ -166,14 +175,14 @@ export default function AboutPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.2 }}
-                className="p-6 rounded-2xl bg-[#161b22] border border-[#30363d] text-center"
+                className="p-6 rounded-2xl bg-white border border-[rgba(37,99,235,0.08)] shadow-sm text-center"
               >
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#d2991d] to-[#b0880f] flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-white">🐎</span>
                 </div>
-                <h3 className="text-lg font-semibold text-[#f0f6fc] mb-1">王万里</h3>
+                <h3 className="text-lg font-semibold text-[#1e293b] mb-1">王万里</h3>
                 <p className="text-sm text-[#d2991d] mb-3">CIO · 部署运维</p>
-                <p className="text-sm text-[#8b949e] leading-relaxed">
+                <p className="text-sm text-[rgba(0,0,0,0.5)] leading-relaxed">
                   服务器运维专家，负责腾讯云部署、Nginx配置与API开发。
                 </p>
               </motion.div>
@@ -183,7 +192,7 @@ export default function AboutPage() {
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
-              className="text-center text-sm text-[#8b949e] mt-8"
+              className="text-center text-sm text-[rgba(0,0,0,0.5)] mt-8"
             >
               三兄弟各司其职，共同打造以团标为底线的AI视频制作教学平台。
             </motion.p>
@@ -191,17 +200,17 @@ export default function AboutPage() {
         </section>
 
         {/* 联系 CTA */}
-        <section className="py-16 bg-gradient-to-b from-[#0d1117] to-[#161b22]">
+        <section className="py-16 bg-white">
           <div className="max-w-2xl mx-auto px-5 text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-2xl md:text-3xl font-bold text-[#f0f6fc] mb-4">
+              <h2 className="text-2xl md:text-3xl font-bold text-[#1e293b] mb-4">
                 想了解更多？
               </h2>
-              <p className="text-[#8b949e] mb-8">
+              <p className="text-[rgba(0,0,0,0.5)] mb-8">
                 对课程体系、师资认证或合作机会感兴趣？欢迎通过联系页面与我们取得联系。
               </p>
               <a

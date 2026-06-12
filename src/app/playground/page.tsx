@@ -248,13 +248,19 @@ export default function PlaygroundPage() {
     <>
       <Navbar />
       <main className="flex-1 pt-16">
-        <section className="py-12 bg-gradient-to-b from-[#161b22] to-[#0d1117]">
+        <section className="py-12"
+          style={{
+            background:
+              "radial-gradient(ellipse 80% 60% at 15% 20%, rgba(37,99,235,0.04) 0%, transparent 60%), " +
+              "radial-gradient(ellipse 60% 50% at 85% 60%, rgba(14,165,233,0.03) 0%, transparent 60%), " +
+              "#f8fafc",
+          }}>
           <div className="max-w-5xl mx-auto px-5">
             <div className="text-center mb-8">
-              <h1 className="text-3xl md:text-4xl font-bold text-[#f0f6fc] mb-3">
+              <h1 className="text-3xl md:text-4xl font-bold mb-3" style={{ color: "#1e293b" }}>
                 AI 实操工坊
               </h1>
-              <p className="text-[#8b949e]">
+              <p style={{ color: "rgba(0,0,0,0.45)" }}>
                 输入提示词 → Kimi 优化 → AI 生成，零代码体验多平台 AI 创作全流程
               </p>
             </div>
@@ -357,7 +363,7 @@ export default function PlaygroundPage() {
           </div>
         </section>
 
-        <section className="py-8 bg-[#0d1117]">
+        <section className="py-8" style={{ background: "#f1f5f9" }}>
           <div className="max-w-5xl mx-auto px-5">
             {tasks.length === 0 ? (
               <div className="text-center py-16 text-[#8b949e]">

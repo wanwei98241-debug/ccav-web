@@ -214,7 +214,7 @@ export default function GalleryPage() {
     return (
       <div className={`${isPrimary ? 'mb-3' : 'mb-2 last:mb-0'}`}>
         <div className="flex items-center gap-2 mb-1.5">
-          <span className={`${isPrimary ? 'text-xs' : 'text-[11px]'} text-white/30 font-medium whitespace-nowrap`}>
+          <span className={`${isPrimary ? 'text-xs' : 'text-[11px]'} font-medium whitespace-nowrap`} style={{ color: "rgba(0,0,0,0.3)" }}>
             {label}
           </span>
         </div>
@@ -231,10 +231,10 @@ export default function GalleryPage() {
                   'px-2.5 py-1 rounded-md border transition-all duration-150',
                   isPrimary ? 'text-sm' : 'text-xs',
                   isActive
-                    ? 'bg-indigo-600/20 text-indigo-400 border-indigo-500/40'
+                    ? 'bg-blue-600/10 text-blue-600 border-blue-500/30'
                     : disabled
-                      ? 'text-zinc-700 border-zinc-800/40 cursor-not-allowed'
-                      : 'text-zinc-500 border-zinc-700/30 hover:text-zinc-300 hover:border-zinc-600/50',
+                      ? 'text-zinc-300 border-zinc-200/30 cursor-not-allowed'
+                      : 'text-zinc-400 border-zinc-300/30 hover:text-zinc-600 hover:border-zinc-400/50',
                 ].join(' ')}
               >
                 {tag}
@@ -249,24 +249,25 @@ export default function GalleryPage() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen" style={{ background: "#0d0d0d" }}>
+      <div className="min-h-screen"
+        style={{
+          background:
+            "radial-gradient(ellipse 80% 60% at 15% 20%, rgba(37,99,235,0.04) 0%, transparent 60%), " +
+            "radial-gradient(ellipse 60% 50% at 85% 60%, rgba(14,165,233,0.03) 0%, transparent 60%), " +
+            "#f8fafc",
+        }}>
         {/* Hero */}
         <section className="relative pt-20 pb-16 px-4 text-center overflow-hidden">
-          <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
-            style={{
-              background: "radial-gradient(circle at 50% 0%, #c8b898 0%, transparent 70%)",
-            }}
-          />
-          <h1 className="text-3xl md:text-5xl font-bold text-[#c8b898] mb-4 serif tracking-wide">
+          <h1 className="text-3xl md:text-5xl font-bold mb-4" style={{ color: "#1e293b" }}>
             作品墙
           </h1>
-          <p className="text-white/40 text-sm md:text-base max-w-xl mx-auto">
+          <p className="text-sm md:text-base max-w-xl mx-auto" style={{ color: "rgba(0,0,0,0.45)" }}>
             学员AI作品展示区 · 用AI创造文化之美
           </p>
 
           {/* ── 四维筛选面板（全部展开，视觉降权） ── */}
-          <div className="max-w-2xl mx-auto mt-6 p-4 rounded-xl border border-white/5"
-            style={{ background: "rgba(255,255,255,0.02)" }}>
+          <div className="max-w-2xl mx-auto mt-6 p-4 rounded-xl"
+            style={{ background: "#ffffff", border: "1px solid rgba(37,99,235,0.08)" }}>
             {renderTagRow('tech')}
             {renderTagRow('scene')}
             {renderTagRow('style')}
