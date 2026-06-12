@@ -1,162 +1,235 @@
 "use client";
 
-import Navbar from "@/components/layout/Navbar";
 import { useState } from "react";
+import { motion } from "framer-motion";
+import { Check, ArrowLeft, Loader2 } from "lucide-react";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import Link from "next/link";
 
 export default function PartnerApplyPage() {
-  const [submitted, setSubmitted] = useState(false);
+  const [step, setStep] = useState<"form" | "success">("form");
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // 表单数据收集
-    const form = e.target as HTMLFormElement;
-    const data = new FormData(form);
-    console.log(Object.fromEntries(data));
-    setSubmitted(true);
+    setSubmitting(true);
+    await new Promise((r) => setTimeout(r, 1500));
+    setSubmitting(false);
+    setStep("success");
   };
-
-  if (submitted) {
-    return (
-      <>
-        <Navbar />
-        <main className="max-w-xl mx-auto px-4 py-24 text-center relative z-10">
-          <div className="text-5xl mb-4">✅</div>
-          <h1 className="text-2xl serif font-bold text-[#1e293b] mb-3">申请已提交</h1>
-          <p className="text-[rgba(0,0,0,0.55)] mb-6">
-            感谢您的申请！我们的渠道经理将在3个工作日内与您联系。
-          </p>
-          <a href="/partner" className="text-sm text-[#2563eb] hover:underline">
-            返回合作介绍页
-          </a>
-        </main>
-      </>
-    );
-  }
 
   return (
     <>
       <Navbar />
-      <main className="max-w-xl mx-auto px-4 py-12 relative z-10">
-        <div className="text-center mb-8">
-          <div className="inline-block px-4 py-1.5 rounded-full border border-[rgba(37,99,235,0.15)] text-xs text-[#2563eb] mb-3">
-            合作教学点申请
+      <main className="flex-1 pt-16">
+        {/* 顶部导航 */}
+        <div className="bg-white border-b border-[rgba(37,99,235,0.08)] py-3">
+          <div className="max-w-4xl mx-auto px-5">
+            <Link
+              href="/partner/"
+              className="inline-flex items-center gap-1.5 text-sm text-[rgba(0,0,0,0.45)] hover:text-[#2563eb] transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              返回合作招募
+            </Link>
           </div>
-          <h1 className="text-2xl md:text-3xl serif font-bold text-[#1e293b] mb-2">
-            申请成为合作教学点
-          </h1>
-          <p className="text-sm text-[rgba(0,0,0,0.5)]">
-            填写合作意向表，我们的渠道经理将在3个工作日内与您联系。
-          </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="ink-card p-6 space-y-5">
-          {/* 机构/联系人姓名 */}
-          <div>
-            <label className="block text-xs font-medium text-[rgba(0,0,0,0.5)] mb-1.5">
-              机构/联系人姓名 <span className="text-red-400">*</span>
-            </label>
-            <input
-              type="text"
-              name="name"
-              required
-              className="w-full px-3 py-2 border border-[rgba(0,0,0,0.12)] rounded-lg text-sm text-[#1e293b] bg-white focus:outline-none focus:border-[#2563eb] transition"
-              placeholder="请输入您的姓名或机构名称"
-            />
-          </div>
+        {step === "form" && (
+          <>
+            {/* Hero */}
+            <section className="py-12 bg-gradient-to-b from-white to-[rgba(37,99,235,0.03)]">
+              <div className="max-w-4xl mx-auto px-5 text-center">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <div className="inline-block px-4 py-1.5 rounded-full border border-[rgba(37,99,235,0.15)] text-xs text-[#2563eb] mb-4">
+                    CCAV 合作教学点申请
+                  </div>
+                  <h1 className="text-3xl md:text-4xl font-bold text-[#1e293b] mb-4">
+                    合作教学点申请表
+                  </h1>
+                  <p className="text-[rgba(0,0,0,0.5)] max-w-xl mx-auto">
+                    填写以下信息，我们的渠道经理将在 3 个工作日内与您联系，
+                    沟通合作细节及签约事宜。
+                  </p>
+                </motion.div>
+              </div>
+            </section>
 
-          {/* 手机号码 */}
-          <div>
-            <label className="block text-xs font-medium text-[rgba(0,0,0,0.5)] mb-1.5">
-              手机号码 <span className="text-red-400">*</span>
-            </label>
-            <input
-              type="tel"
-              name="phone"
-              required
-              pattern="[0-9]{11}"
-              className="w-full px-3 py-2 border border-[rgba(0,0,0,0.12)] rounded-lg text-sm text-[#1e293b] bg-white focus:outline-none focus:border-[#2563eb] transition"
-              placeholder="请输入11位手机号"
-            />
-          </div>
+            {/* 表单 */}
+            <section className="py-12 bg-white">
+              <div className="max-w-2xl mx-auto px-5">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* 机构名称 */}
+                  <div>
+                    <label className="block text-sm font-semibold text-[#1e293b] mb-1.5">
+                      机构名称 <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="请输入机构全称"
+                      className="w-full px-4 py-2.5 rounded-lg border border-[rgba(0,0,0,0.12)] text-sm text-[#1e293b] placeholder-[rgba(0,0,0,0.3)] focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb]/20 transition-all"
+                    />
+                  </div>
 
-          {/* 邮箱 */}
-          <div>
-            <label className="block text-xs font-medium text-[rgba(0,0,0,0.5)] mb-1.5">
-              电子邮箱
-            </label>
-            <input
-              type="email"
-              name="email"
-              className="w-full px-3 py-2 border border-[rgba(0,0,0,0.12)] rounded-lg text-sm text-[#1e293b] bg-white focus:outline-none focus:border-[#2563eb] transition"
-              placeholder="选填"
-            />
-          </div>
+                  {/* 联系人 */}
+                  <div>
+                    <label className="block text-sm font-semibold text-[#1e293b] mb-1.5">
+                      联系人姓名 <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="请输入联系人姓名"
+                      className="w-full px-4 py-2.5 rounded-lg border border-[rgba(0,0,0,0.12)] text-sm text-[#1e293b] placeholder-[rgba(0,0,0,0.3)] focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb]/20 transition-all"
+                    />
+                  </div>
 
-          {/* 所在城市 */}
-          <div>
-            <label className="block text-xs font-medium text-[rgba(0,0,0,0.5)] mb-1.5">
-              所在城市 <span className="text-red-400">*</span>
-            </label>
-            <input
-              type="text"
-              name="city"
-              required
-              className="w-full px-3 py-2 border border-[rgba(0,0,0,0.12)] rounded-lg text-sm text-[#1e293b] bg-white focus:outline-none focus:border-[#2563eb] transition"
-              placeholder="如：上海市浦东新区"
-            />
-          </div>
+                  {/* 手机号 */}
+                  <div>
+                    <label className="block text-sm font-semibold text-[#1e293b] mb-1.5">
+                      手机号 <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      placeholder="请输入手机号"
+                      className="w-full px-4 py-2.5 rounded-lg border border-[rgba(0,0,0,0.12)] text-sm text-[#1e293b] placeholder-[rgba(0,0,0,0.3)] focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb]/20 transition-all"
+                    />
+                  </div>
 
-          {/* 意向合作级别 */}
-          <div>
-            <label className="block text-xs font-medium text-[rgba(0,0,0,0.5)] mb-1.5">
-              意向合作级别 <span className="text-red-400">*</span>
-            </label>
-            <select
-              name="partnerLevel"
-              required
-              className="w-full px-3 py-2 border border-[rgba(0,0,0,0.12)] rounded-lg text-sm text-[#1e293b] bg-white focus:outline-none focus:border-[#2563eb] transition"
-            >
-              <option value="">请选择</option>
-              <option value="授权教学点">授权教学点（¥5-10万/年）</option>
-              <option value="标准教学中心">标准教学中心（¥15-25万/年）</option>
-              <option value="城市运营中心">城市运营中心（区域协商）</option>
-            </select>
-          </div>
+                  {/* 邮箱 */}
+                  <div>
+                    <label className="block text-sm font-semibold text-[#1e293b] mb-1.5">
+                      邮箱
+                    </label>
+                    <input
+                      type="email"
+                      placeholder="选填"
+                      className="w-full px-4 py-2.5 rounded-lg border border-[rgba(0,0,0,0.12)] text-sm text-[#1e293b] placeholder-[rgba(0,0,0,0.3)] focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb]/20 transition-all"
+                    />
+                  </div>
 
-          {/* 机构简介 */}
-          <div>
-            <label className="block text-xs font-medium text-[rgba(0,0,0,0.5)] mb-1.5">
-              机构简介
-            </label>
-            <textarea
-              name="intro"
-              rows={3}
-              className="w-full px-3 py-2 border border-[rgba(0,0,0,0.12)] rounded-lg text-sm text-[#1e293b] bg-white focus:outline-none focus:border-[#2563eb] transition resize-none"
-              placeholder="简要介绍您的机构情况（如有办学资质请说明）"
-            />
-          </div>
+                  {/* 所在城市 */}
+                  <div>
+                    <label className="block text-sm font-semibold text-[#1e293b] mb-1.5">
+                      所在城市 <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="如：上海市浦东新区"
+                      className="w-full px-4 py-2.5 rounded-lg border border-[rgba(0,0,0,0.12)] text-sm text-[#1e293b] placeholder-[rgba(0,0,0,0.3)] focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb]/20 transition-all"
+                    />
+                  </div>
 
-          {/* 备注 */}
-          <div>
-            <label className="block text-xs font-medium text-[rgba(0,0,0,0.5)] mb-1.5">备注</label>
-            <textarea
-              name="notes"
-              rows={2}
-              className="w-full px-3 py-2 border border-[rgba(0,0,0,0.12)] rounded-lg text-sm text-[#1e293b] bg-white focus:outline-none focus:border-[#2563eb] transition resize-none"
-              placeholder="其他需要说明的情况（选填）"
-            />
-          </div>
+                  {/* 合作意向 */}
+                  <div>
+                    <label className="block text-sm font-semibold text-[#1e293b] mb-1.5">
+                      合作意向 <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      required
+                      className="w-full px-4 py-2.5 rounded-lg border border-[rgba(0,0,0,0.12)] text-sm text-[#1e293b] focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb]/20 transition-all appearance-none bg-white"
+                      style={{
+                        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='rgba(0,0,0,0.4)' viewBox='0 0 16 16'%3E%3Cpath d='M4.646 5.646a.5.5 0 0 1 .708 0L8 8.293l2.646-2.647a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E\")`,
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "right 12px center",
+                      }}
+                    >
+                      <option value="">请选择意向合作模式</option>
+                      <option value="auth">授权教学点（¥5-10万/年）</option>
+                      <option value="standard">标准教学中心（¥15-25万/年）</option>
+                      <option value="city">城市运营中心（¥30万+/年）</option>
+                      <option value="undecided">暂不确定，由顾问推荐</option>
+                    </select>
+                  </div>
 
-          <button type="submit" className="ink-btn w-full">
-            提交合作申请
-          </button>
-        </form>
+                  {/* 备注 */}
+                  <div>
+                    <label className="block text-sm font-semibold text-[#1e293b] mb-1.5">
+                      备注
+                    </label>
+                    <textarea
+                      rows={3}
+                      placeholder="机构规模、现有场地、生源情况等（选填）"
+                      className="w-full px-4 py-2.5 rounded-lg border border-[rgba(0,0,0,0.12)] text-sm text-[#1e293b] placeholder-[rgba(0,0,0,0.3)] focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb]/20 transition-all resize-none"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full py-3 rounded-lg font-semibold text-sm transition-all duration-300 disabled:opacity-60"
+                    style={{
+                      background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
+                      color: "white",
+                    }}
+                  >
+                    {submitting ? (
+                      <span className="inline-flex items-center gap-2">
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        提交中…
+                      </span>
+                    ) : (
+                      "提交申请"
+                    )}
+                  </button>
+
+                  <p className="text-xs text-center text-[rgba(0,0,0,0.35)]">
+                    提交即表示您同意我们收集上述信息用于处理合作申请事宜。
+                  </p>
+                </form>
+              </div>
+            </section>
+          </>
+        )}
+
+        {step === "success" && (
+          <section className="py-20 bg-white">
+            <div className="max-w-lg mx-auto px-5 text-center">
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.4 }}
+              >
+                <div className="w-16 h-16 rounded-full bg-[#3fb950]/10 flex items-center justify-center mx-auto mb-6">
+                  <Check className="w-8 h-8 text-[#3fb950]" />
+                </div>
+                <h2 className="text-2xl font-bold text-[#1e293b] mb-3">
+                  申请已提交
+                </h2>
+                <p className="text-[rgba(0,0,0,0.55)] mb-8">
+                  感谢您的合作意向！我们的渠道经理将在 3 个工作日内与您联系，
+                  沟通合作细节。请保持手机畅通。
+                </p>
+                <div className="flex flex-wrap gap-3 justify-center">
+                  <Link
+                    href="/partner/"
+                    className="inline-block px-6 py-2.5 rounded-lg font-semibold text-sm transition-all"
+                    style={{ background: "rgba(37,99,235,0.08)", color: "#2563eb" }}
+                  >
+                    返回合作招募
+                  </Link>
+                  <Link
+                    href="/"
+                    className="inline-block px-6 py-2.5 rounded-lg font-semibold text-sm transition-all"
+                    style={{ background: "#2563eb", color: "white" }}
+                  >
+                    返回首页
+                  </Link>
+                </div>
+              </motion.div>
+            </div>
+          </section>
+        )}
       </main>
-
-      <footer className="border-t border-[rgba(37,99,235,0.08)] py-8 text-center relative z-10">
-        <p className="text-sm text-[rgba(0,0,0,0.5)] mb-2 serif">CCAV — AI视频创作教育机构</p>
-        <p className="text-xs text-[rgba(0,0,0,0.45)]">以 T/CCPS 0041—2026 团体标准为核心的AI视频创作教育体系 · © 2026</p>
-      </footer>
+      <Footer />
     </>
   );
 }
