@@ -31,7 +31,7 @@ export default function Home() {
           以项目实训形成作品能力，以能力认证完成学习闭环。
         </p>
         <div className="flex flex-wrap gap-4 justify-center">
-          <Link href="/teacher-training" className="ink-btn inline-block">教师培训报名</Link>
+          <Link href="/teacher-training/apply/" className="ink-btn inline-block">教师培训报名</Link>
           <Link href="/partner"
             className="inline-block px-7 py-2.5 rounded-lg font-semibold cursor-pointer transition duration-300"
             style={{

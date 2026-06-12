@@ -20,7 +20,7 @@ export default function TeacherTrainingPage() {
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <a
-              href="/contact/"
+              href="/teacher-training/apply/"
               className="ink-btn inline-block"
             >
               立即报名
@@ -134,7 +134,7 @@ export default function TeacherTrainingPage() {
             <h2 className="text-2xl serif font-bold text-[#1e293b] mb-4">立即报名</h2>
             <p className="text-[rgba(0,0,0,0.55)] mb-6">点击下方按钮，填写报名信息。我们的课程顾问将在1个工作日内与您联系。</p>
             <a
-              href="/contact/"
+              href="/teacher-training/apply/"
               className="ink-btn inline-block"
             >
               填写报名表
