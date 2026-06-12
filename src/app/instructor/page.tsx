@@ -24,22 +24,22 @@ export default function InstructorPage() {
       <Navbar />
       <main className="flex-1 pt-16">
         {/* Hero */}
-        <section className="py-20 bg-gradient-to-b from-[#161b22] to-[#0d1117]">
+        <section className="py-20 bg-gradient-to-b from-white to-[rgba(37,99,235,0.03)]">
           <div className="max-w-4xl mx-auto px-5 text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <h1 className="text-3xl md:text-5xl font-bold text-[#f0f6fc] mb-6">
+              <h1 className="text-3xl md:text-5xl font-bold text-[#1e293b] mb-6">
                 成为ccav.com认证讲师
               </h1>
-              <p className="text-lg text-[#8b949e] max-w-2xl mx-auto mb-8">
+              <p className="text-lg text-[rgba(0,0,0,0.5)] max-w-2xl mx-auto mb-8">
                 加入我们的讲师团队，将你的AI视频制作经验传授给更多学员
               </p>
               <a
                 href="mailto:contact@ccav.com"
-                className="group inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#e53e3e] to-[#c53030] text-white font-semibold text-lg hover:shadow-lg hover:shadow-[#e53e3e]/20 transition-all"
+                className="group inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-#2563eb to-[#1d4ed8] text-[#1e293b] font-semibold text-lg hover:shadow-lg hover:shadow-#2563eb/20 transition-all"
               >
                 <Mail className="w-5 h-5" />
                 邮件申请
@@ -50,27 +50,27 @@ export default function InstructorPage() {
         </section>
 
         {/* 创始人简介 */}
-        <section className="py-16 bg-[#0d1117]">
+        <section className="py-16 bg-white">
           <div className="max-w-4xl mx-auto px-5">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="p-8 rounded-2xl bg-[#161b22] border border-[#30363d]"
+              className="p-8 rounded-2xl bg-white border border-[rgba(37,99,235,0.08)]"
             >
               <div className="flex flex-col md:flex-row items-start gap-6">
                 {/* Avatar placeholder */}
-                <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#58a6ff] to-[#bc8cff] flex items-center justify-center shrink-0">
-                  <User className="w-12 h-12 text-white" />
+                <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#2563eb] to-[#8b5cf6] flex items-center justify-center shrink-0">
+                  <User className="w-12 h-12 text-[#1e293b]" />
                 </div>
                 <div className="flex-1">
-                  <h2 className="text-2xl font-bold text-[#f0f6fc] mb-1">Jin Wang</h2>
-                  <p className="text-[#58a6ff] mb-4">ccav.com 创始人 · AI视频制作专家</p>
-                  <p className="text-[#c9d1d9] leading-relaxed mb-4">
+                  <h2 className="text-2xl font-bold text-[#1e293b] mb-1">Jin Wang</h2>
+                  <p className="text-[#2563eb] mb-4">ccav.com 创始人 · AI视频制作专家</p>
+                  <p className="text-[rgba(0,0,0,0.6)] leading-relaxed mb-4">
                     深耕AI视频制作与教学领域，致力于将AIGC技术转化为普通人也能掌握的实际技能。
                     从零代码提示词到全流程AI视频制作，在实践中总结出一套「学得会、用得上、教得出去」的教学体系。
                   </p>
-                  <p className="text-[#8b949e] text-sm">
+                  <p className="text-[rgba(0,0,0,0.5)] text-sm">
                     核心方向：AI视频创作、提示词工程、AI教学工具研发、师培训练营
                   </p>
                 </div>
@@ -80,13 +80,13 @@ export default function InstructorPage() {
         </section>
 
         {/* Requirements */}
-        <section className="py-16 bg-[#0d1117]">
+        <section className="py-16 bg-white">
           <div className="max-w-4xl mx-auto px-5">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-2xl md:text-3xl font-bold text-[#f0f6fc] text-center mb-10"
+              className="text-2xl md:text-3xl font-bold text-[#1e293b] text-center mb-10"
             >
               申请条件
             </motion.h2>
@@ -99,12 +99,12 @@ export default function InstructorPage() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: i * 0.1 }}
-                  className="flex items-start gap-4 p-4 rounded-xl bg-[#161b22] border border-[#30363d]"
+                  className="flex items-start gap-4 p-4 rounded-xl bg-white border border-[rgba(37,99,235,0.08)]"
                 >
-                  <div className="w-6 h-6 rounded-full bg-[#3fb950]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <CheckCircle className="w-4 h-4 text-[#3fb950]" />
+                  <div className="w-6 h-6 rounded-full bg-[#22c55e]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <CheckCircle className="w-4 h-4 text-[#22c55e]" />
                   </div>
-                  <p className="text-[#c9d1d9]">{req}</p>
+                  <p className="text-[rgba(0,0,0,0.6)]">{req}</p>
                 </motion.div>
               ))}
             </div>
@@ -112,13 +112,13 @@ export default function InstructorPage() {
         </section>
 
         {/* Benefits */}
-        <section className="py-16 bg-gradient-to-b from-[#0d1117] to-[#161b22]">
+        <section className="py-16 bg-gradient-to-b from-white to-[rgba(37,99,235,0.03)]">
           <div className="max-w-6xl mx-auto px-5">
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-2xl md:text-3xl font-bold text-[#f0f6fc] text-center mb-10"
+              className="text-2xl md:text-3xl font-bold text-[#1e293b] text-center mb-10"
             >
               讲师权益
             </motion.h2>
@@ -131,13 +131,13 @@ export default function InstructorPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="p-6 rounded-2xl bg-[#161b22] border border-[#30363d] text-center hover:border-[#58a6ff]/30 transition-all"
+                  className="p-6 rounded-2xl bg-white border border-[rgba(37,99,235,0.08)] text-center hover:border-[#58a6ff]/30 transition-all"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-[#58a6ff]/10 flex items-center justify-center mx-auto mb-4">
-                    <b.icon className="w-6 h-6 text-[#58a6ff]" />
+                  <div className="w-12 h-12 rounded-xl bg-[#2563eb]/10 flex items-center justify-center mx-auto mb-4">
+                    <b.icon className="w-6 h-6 text-[#2563eb]" />
                   </div>
-                  <h3 className="text-lg font-semibold text-[#f0f6fc] mb-2">{b.title}</h3>
-                  <p className="text-sm text-[#8b949e]">{b.desc}</p>
+                  <h3 className="text-lg font-semibold text-[#1e293b] mb-2">{b.title}</h3>
+                  <p className="text-sm text-[rgba(0,0,0,0.5)]">{b.desc}</p>
                 </motion.div>
               ))}
             </div>

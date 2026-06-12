@@ -23,8 +23,8 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
       <>
         <Navbar />
         <main className="flex-1 pt-32 text-center">
-          <h1 className="text-2xl text-[#f0f6fc]">课程不存在</h1>
-          <Link href="/courses/" className="text-[#58a6ff] mt-4 inline-block">
+          <h1 className="text-2xl text-[#1e293b]">课程不存在</h1>
+          <Link href="/courses/" className="text-[#2563eb] mt-4 inline-block">
             返回课程列表
           </Link>
         </main>
@@ -79,15 +79,15 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
         </section>
 
         {/* ===== Content ===== */}
-        <section className="py-12 bg-[#0d1117]">
+        <section className="py-12 bg-white">
           <div className="max-w-4xl mx-auto px-5">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* --- Main --- */}
               <div className="lg:col-span-2 space-y-10">
                 {/* 课程介绍 */}
-                <div className="p-6 rounded-2xl bg-[#161b22] border border-[#30363d]">
-                  <h2 className="text-xl font-semibold text-[#f0f6fc] mb-4">课程介绍</h2>
-                  <p className="text-[#c9d1d9] leading-relaxed">{course.description}</p>
+                <div className="p-6 rounded-2xl bg-white border border-[rgba(37,99,235,0.08)]">
+                  <h2 className="text-xl font-semibold text-[#1e293b] mb-4">课程介绍</h2>
+                  <p className="text-[rgba(0,0,0,0.6)] leading-relaxed">{course.description}</p>
                 </div>
 
                 {/* 模块 & 每节课详情 */}
@@ -95,22 +95,22 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
                   <div key={module.title} className="space-y-4">
                     {/* 模块标题 */}
                     <div className="flex items-center justify-between">
-                      <h2 className="text-xl font-semibold text-[#f0f6fc]">
-                        <span className="text-[#58a6ff] mr-2">
+                      <h2 className="text-xl font-semibold text-[#1e293b]">
+                        <span className="text-[#2563eb] mr-2">
                           {String(index + 1).padStart(2, "0")}
                         </span>
                         {module.title}
                       </h2>
-                      <span className="text-sm text-[#8b949e] bg-[#161b22] px-3 py-1 rounded-full">
+                      <span className="text-sm text-[rgba(0,0,0,0.5)] bg-white px-3 py-1 rounded-full">
                         {module.duration}
                       </span>
                     </div>
 
                     {/* 模块内容列表 */}
-                    <div className="p-5 rounded-xl bg-[#161b22] border border-[#30363d]">
+                    <div className="p-5 rounded-xl bg-white border border-[rgba(37,99,235,0.08)]">
                       <ul className="space-y-2">
                         {module.content.map((item, i) => (
-                          <li key={i} className="flex items-start gap-2 text-sm text-[#c9d1d9]">
+                          <li key={i} className="flex items-start gap-2 text-sm text-[rgba(0,0,0,0.6)]">
                             {item.startsWith("🔥") ? (
                               <Flame className="w-4 h-4 text-[#d2991d] mt-0.5 shrink-0" />
                             ) : (
@@ -157,12 +157,12 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
                 ))}
 
                 {/* 学习成果 */}
-                <div className="p-6 rounded-2xl bg-[#161b22] border border-[#30363d]">
-                  <h2 className="text-xl font-semibold text-[#f0f6fc] mb-4">学习成果</h2>
+                <div className="p-6 rounded-2xl bg-white border border-[rgba(37,99,235,0.08)]">
+                  <h2 className="text-xl font-semibold text-[#1e293b] mb-4">学习成果</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {course.outcomes.map((outcome, i) => (
-                      <div key={i} className="flex items-center gap-2 text-[#c9d1d9]">
-                        <Award className="w-5 h-5 text-[#58a6ff]" />
+                      <div key={i} className="flex items-center gap-2 text-[rgba(0,0,0,0.6)]">
+                        <Award className="w-5 h-5 text-[#2563eb]" />
                         {outcome}
                       </div>
                     ))}
@@ -172,9 +172,9 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
 
               {/* --- Sidebar --- */}
               <div className="space-y-6">
-                <div className="p-6 rounded-2xl bg-[#161b22] border border-[#30363d] sticky top-24">
-                  <div className="text-3xl font-bold text-[#f0f6fc] mb-2">{course.price}</div>
-                  <div className="text-sm text-[#8b949e] mb-6">含证书费用</div>
+                <div className="p-6 rounded-2xl bg-white border border-[rgba(37,99,235,0.08)] sticky top-24">
+                  <div className="text-3xl font-bold text-[#1e293b] mb-2">{course.price}</div>
+                  <div className="text-sm text-[rgba(0,0,0,0.5)] mb-6">含证书费用</div>
 
                   <div className="space-y-3">
                     <a
@@ -186,28 +186,28 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
                     </a>
                     <a
                       href="#"
-                      className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-[#0d1117] border border-[#30363d] text-[#c9d1d9] font-semibold hover:border-[#58a6ff]/50 transition-all"
+                      className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-white border border-[rgba(37,99,235,0.08)] text-[rgba(0,0,0,0.6)] font-semibold hover:border-[#2563eb]/50 transition-all"
                     >
                       <MessageCircle className="w-4 h-4" />
                       在线咨询（即将上线）
                     </a>
                   </div>
 
-                  <div className="mt-6 pt-6 border-t border-[#30363d] space-y-3 text-sm">
-                    <div className="flex justify-between text-[#c9d1d9]">
-                      <span className="text-[#8b949e]">目标学员</span>
+                  <div className="mt-6 pt-6 border-t border-[rgba(37,99,235,0.08)] space-y-3 text-sm">
+                    <div className="flex justify-between text-[rgba(0,0,0,0.6)]">
+                      <span className="text-[rgba(0,0,0,0.5)]">目标学员</span>
                       <span className="text-right ml-4">{course.targetAudience}</span>
                     </div>
-                    <div className="flex justify-between text-[#c9d1d9]">
-                      <span className="text-[#8b949e]">学习形式</span>
+                    <div className="flex justify-between text-[rgba(0,0,0,0.6)]">
+                      <span className="text-[rgba(0,0,0,0.5)]">学习形式</span>
                       <span>{course.format}</span>
                     </div>
-                    <div className="flex justify-between text-[#c9d1d9]">
-                      <span className="text-[#8b949e]">课程时长</span>
+                    <div className="flex justify-between text-[rgba(0,0,0,0.6)]">
+                      <span className="text-[rgba(0,0,0,0.5)]">课程时长</span>
                       <span>{course.duration}</span>
                     </div>
-                    <div className="flex justify-between text-[#c9d1d9]">
-                      <span className="text-[#8b949e]">证书</span>
+                    <div className="flex justify-between text-[rgba(0,0,0,0.6)]">
+                      <span className="text-[rgba(0,0,0,0.5)]">证书</span>
                       <span>{course.certification}</span>
                     </div>
                   </div>

@@ -9,20 +9,20 @@ export default function TextbooksPage() {
       <main className="max-w-5xl mx-auto px-4 py-12 relative z-10">
         {/* Hero */}
         <section className="text-center mb-16">
-          <div className="inline-block px-4 py-1.5 rounded-full border border-[#c8b898]/20 text-xs text-[#c8b898] mb-4">
+          <div className="inline-block px-4 py-1.5 rounded-full border border-[rgba(37,99,235,0.15)] text-xs text-[#2563eb] mb-4">
             团体标准配套教材
           </div>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl serif font-bold text-white mb-4">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl serif font-bold text-[#1e293b] mb-4">
             标准教材体系
           </h1>
-          <p className="text-white/40 max-w-2xl mx-auto mb-8">
+          <p className="text-[rgba(0,0,0,0.55)] max-w-2xl mx-auto mb-8">
             教材不是孤立出版物，而是"课程、教案、作业、考评、认证"的标准化依据。
           </p>
         </section>
 
         {/* 教材体系 */}
         <section className="mb-16">
-          <h2 className="text-2xl serif font-bold text-white mb-6">教材体系</h2>
+          <h2 className="text-2xl serif font-bold text-[#1e293b] mb-6">教材体系</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
@@ -65,14 +65,14 @@ export default function TextbooksPage() {
               <div key={i} className="ink-card p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="text-3xl">{item.icon}</div>
-                  <span className="text-[10px] text-[#c8b898] bg-[#c8b898]/10 border border-[#c8b898]/20 px-2 py-0.5 rounded-full">{item.status}</span>
+                  <span className="text-[10px] text-[#2563eb] bg-[#2563eb]/10 border border-[#2563eb]/20 px-2 py-0.5 rounded-full">{item.status}</span>
                 </div>
-                <h3 className="text-lg font-bold text-white mb-1">{item.title}</h3>
-                <p className="text-[#c8b898]/60 text-sm mb-4">{item.desc}</p>
+                <h3 className="text-lg font-bold text-[#1e293b] mb-1">{item.title}</h3>
+                <p className="text-[#2563eb]/60 text-sm mb-4">{item.desc}</p>
                 <ul className="space-y-2">
                   {item.features.map((f, j) => (
-                    <li key={j} className="text-xs text-white/30 flex items-start gap-1.5">
-                      <span className="text-[#c8b898] mt-0.5">✦</span>
+                    <li key={j} className="text-xs text-[rgba(0,0,0,0.5)] flex items-start gap-1.5">
+                      <span className="text-[#2563eb] mt-0.5">✦</span>
                       <span>{f}</span>
                     </li>
                   ))}
@@ -84,7 +84,7 @@ export default function TextbooksPage() {
 
         {/* 教辅资源 */}
         <section className="mb-16">
-          <h2 className="text-2xl serif font-bold text-white mb-6">配套教辅资源</h2>
+          <h2 className="text-2xl serif font-bold text-[#1e293b] mb-6">配套教辅资源</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[
               "课件PPT", "作业模板", "项目案例库",
@@ -92,7 +92,7 @@ export default function TextbooksPage() {
               "题库系统", "考试系统",
             ].map((item, i) => (
               <div key={i} className="ink-card p-4 text-center">
-                <div className="text-sm text-[#c8b898]/80">{item}</div>
+                <div className="text-sm text-[#2563eb]/80">{item}</div>
               </div>
             ))}
           </div>
@@ -101,12 +101,12 @@ export default function TextbooksPage() {
         {/* 出版信息 */}
         <section className="mb-16">
           <div className="ink-card p-6 md:p-8">
-            <h2 className="text-2xl serif font-bold text-white mb-4">出版信息</h2>
-            <p className="text-white/30 text-sm mb-4">
+            <h2 className="text-2xl serif font-bold text-[#1e293b] mb-4">出版信息</h2>
+            <p className="text-[rgba(0,0,0,0.5)] text-sm mb-4">
               本教材由CCAV教育机构组织编写，依据《人工智能视频制作人员要求》（T/CCPS 0041—2026）团体标准制定。
               教材既是学习资源，也是教学指南与考评依据。
             </p>
-            <p className="text-white/30 text-sm">
+            <p className="text-[rgba(0,0,0,0.5)] text-sm">
               适用对象：职业院校学生、AI视频创作学习者、企业培训学员。
               教材定位为"学生教材、教师用书、考评手册一体化"，满足院校教学、企业培训和个人自学等多种场景。
             </p>
@@ -116,8 +116,8 @@ export default function TextbooksPage() {
         {/* CTA */}
         <section className="text-center mb-16">
           <div className="ink-card p-8 md:p-12">
-            <h2 className="text-2xl serif font-bold text-white mb-4">获取教材</h2>
-            <p className="text-white/40 mb-6">批量采购、院校合作、网点配套教材采购请联系我们。</p>
+            <h2 className="text-2xl serif font-bold text-[#1e293b] mb-4">获取教材</h2>
+            <p className="text-[rgba(0,0,0,0.55)] mb-6">批量采购、院校合作、网点配套教材采购请联系我们。</p>
             <a
               href="/contact"
               className="ink-btn inline-block"
@@ -128,9 +128,9 @@ export default function TextbooksPage() {
         </section>
       </main>
 
-      <footer className="border-t border-white/5 py-8 text-center relative z-10">
-        <p className="text-sm text-white/50 mb-2 serif">CCAV — AI视频创作教育机构</p>
-        <p className="text-xs text-white/35">以 T/CCPS 0041—2026 团体标准为核心的AI视频创作教育体系 · © 2026</p>
+      <footer className="border-t border-[rgba(37,99,235,0.08)] py-8 text-center relative z-10">
+        <p className="text-sm text-[rgba(0,0,0,0.5)] mb-2 serif">CCAV — AI视频创作教育机构</p>
+        <p className="text-xs text-[rgba(0,0,0,0.35)]">以 T/CCPS 0041—2026 团体标准为核心的AI视频创作教育体系 · © 2026</p>
       </footer>
     </>
   );

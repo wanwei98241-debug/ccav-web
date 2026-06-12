@@ -248,29 +248,29 @@ export default function ToolsPage() {
       <Navbar />
       <main className="flex-1 pt-16">
         {/* Hero */}
-        <section className="py-12 bg-gradient-to-b from-[#161b22] to-[#0d1117]">
+        <section className="py-12 bg-gradient-to-b from-white to-[rgba(37,99,235,0.03)]">
           <div className="max-w-5xl mx-auto px-5 text-center">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#58a6ff]/10 border border-[#58a6ff]/20 text-[#58a6ff] text-sm mb-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#2563eb]/8 border border-[#58a6ff]/20 text-[#2563eb] text-sm mb-6">
                 <Wand2 className="w-4 h-4" />
                 AI Tools · 持续更新
               </div>
-              <h1 className="text-3xl md:text-5xl font-bold text-[#f0f6fc] mb-4">
+              <h1 className="text-3xl md:text-5xl font-bold text-[#1e293b] mb-4">
                 AI 工具矩阵
               </h1>
-              <p className="text-lg text-[#8b949e] max-w-2xl mx-auto mb-8">
+              <p className="text-lg text-[rgba(0,0,0,0.5)] max-w-2xl mx-auto mb-8">
                 精选AI视频制作全流程工具，图像→音频→视频→剪辑，一条龙指导
               </p>
 
               {/* 搜索 */}
               <div className="max-w-md mx-auto relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#484f58]" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[rgba(0,0,0,0.35)]" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="搜索工具名称、功能或标签..."
-                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#161b22] border border-[#30363d] text-sm text-[#c9d1d9] placeholder-[#484f58] focus:border-[#58a6ff] focus:outline-none"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl bg-white border border-[rgba(37,99,235,0.08)] text-sm text-[rgba(0,0,0,0.6)] placeholder-[rgba(0,0,0,0.35)] focus:border-[#58a6ff] focus:outline-none"
                 />
               </div>
             </motion.div>
@@ -278,7 +278,7 @@ export default function ToolsPage() {
         </section>
 
         {/* 分类 Filter */}
-        <section className="py-6 bg-[#0d1117] sticky top-16 z-40 border-b border-[#21262d]">
+        <section className="py-6 bg-white sticky top-16 z-40 border-b border-[rgba(37,99,235,0.08)]">
           <div className="max-w-5xl mx-auto px-5">
             <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none">
               {categories.map((cat) => (
@@ -287,8 +287,8 @@ export default function ToolsPage() {
                   onClick={() => setActiveCategory(cat.id)}
                   className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
                     activeCategory === cat.id
-                      ? "bg-[#58a6ff]/15 text-[#58a6ff] border border-[#58a6ff]/30"
-                      : "bg-[#161b22] text-[#8b949e] border border-[#30363d] hover:border-[#58a6ff]/30"
+                      ? "bg-[#2563eb]/10 text-[#2563eb] border border-[#58a6ff]/30"
+                      : "bg-white text-[rgba(0,0,0,0.5)] border border-[rgba(37,99,235,0.08)] hover:border-[#2563eb]/30"
                   }`}
                 >
                   {cat.icon}
@@ -300,12 +300,12 @@ export default function ToolsPage() {
         </section>
 
         {/* 工具列表 */}
-        <section className="py-8 bg-[#0d1117] min-h-[50vh]">
+        <section className="py-8 bg-white min-h-[50vh]">
           <div className="max-w-5xl mx-auto px-5">
             {activeCategory === "all" && !searchQuery && (
               <>
                 {/* 推荐工具 */}
-                <h2 className="text-lg font-semibold text-[#f0f6fc] mb-4 flex items-center gap-2">
+                <h2 className="text-lg font-semibold text-[#1e293b] mb-4 flex items-center gap-2">
                   <Star className="w-5 h-5 text-[#d29922]" />
                   推荐工具
                 </h2>
@@ -314,7 +314,7 @@ export default function ToolsPage() {
                     <ToolCard key={tool.id} tool={tool} index={i} />
                   ))}
                 </div>
-                <h2 className="text-lg font-semibold text-[#f0f6fc] mb-4">全部工具</h2>
+                <h2 className="text-lg font-semibold text-[#1e293b] mb-4">全部工具</h2>
               </>
             )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -323,7 +323,7 @@ export default function ToolsPage() {
               ))}
             </div>
             {filtered.length === 0 && (
-              <div className="text-center py-16 text-[#484f58]">
+              <div className="text-center py-16 text-[rgba(0,0,0,0.35)]">
                 <Search className="w-12 h-12 mx-auto mb-4 opacity-30" />
                 <p className="text-lg">没有找到匹配的工具</p>
                 <p className="text-sm mt-1">试试其他关键词</p>
@@ -349,13 +349,13 @@ function ToolCard({ tool, index }: { tool: Tool; index: number }) {
       transition={{ duration: 0.4, delay: index * 0.05 }}
       className={`group p-5 rounded-xl border transition-all hover:-translate-y-1 block ${
         tool.highlight
-          ? "bg-gradient-to-br from-[#1c2333] to-[#161b22] border-[#30363d] hover:border-[#58a6ff]/40"
-          : "bg-[#161b22] border-[#21262d] hover:border-[#30363d]"
+          ? "bg-white border-[rgba(37,99,235,0.08)] hover:border-[#2563eb]/40"
+          : "bg-white border-[rgba(37,99,235,0.08)] hover:border-[rgba(37,99,235,0.08)]"
       }`}
     >
       <div className="flex items-start gap-3">
         <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${
-          tool.category === "image" ? "bg-[#58a6ff]/15 text-[#58a6ff]" :
+          tool.category === "image" ? "bg-[#2563eb]/10 text-[#2563eb]" :
           tool.category === "video" ? "bg-[#bc8cff]/15 text-[#bc8cff]" :
           tool.category === "audio" ? "bg-[#3fb950]/15 text-[#3fb950]" :
           tool.category === "text" ? "bg-[#d29922]/15 text-[#d29922]" :
@@ -365,29 +365,29 @@ function ToolCard({ tool, index }: { tool: Tool; index: number }) {
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <h3 className="font-semibold text-[#f0f6fc] group-hover:text-[#58a6ff] transition-colors truncate">
+            <h3 className="font-semibold text-[#1e293b] group-hover:text-[#2563eb] transition-colors truncate">
               {tool.name}
             </h3>
             {tool.free && (
               <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#3fb950]/15 text-[#3fb950] flex-shrink-0">免费</span>
             )}
             {tool.difficulty === "beginner" && (
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#58a6ff]/15 text-[#58a6ff] flex-shrink-0">入门</span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#2563eb]/10 text-[#2563eb] flex-shrink-0">入门</span>
             )}
             {tool.difficulty === "advanced" && (
               <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#f78166]/15 text-[#f78166] flex-shrink-0">进阶</span>
             )}
           </div>
-          <p className="text-xs text-[#8b949e] line-clamp-2">{tool.description}</p>
+          <p className="text-xs text-[rgba(0,0,0,0.5)] line-clamp-2">{tool.description}</p>
           <div className="flex flex-wrap gap-1.5 mt-2">
             {tool.tags.map((tag) => (
-              <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded bg-[#21262d] text-[#484f58]">
+              <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded bg-[rgba(37,99,235,0.08)] text-[rgba(0,0,0,0.35)]">
                 {tag}
               </span>
             ))}
           </div>
         </div>
-        <ExternalLink className="w-4 h-4 text-[#484f58] flex-shrink-0 mt-1 group-hover:text-[#58a6ff] transition-colors" />
+        <ExternalLink className="w-4 h-4 text-[rgba(0,0,0,0.35)] flex-shrink-0 mt-1 group-hover:text-[#2563eb] transition-colors" />
       </div>
     </motion.a>
   );

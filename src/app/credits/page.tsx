@@ -36,7 +36,7 @@ export default function CreditsPage() {
           <div className="mb-6">
             <Link
               href="/playground"
-              className="inline-flex items-center gap-2 text-sm text-[#8b949e] hover:text-[#58a6ff] transition-colors"
+              className="inline-flex items-center gap-2 text-sm text-[rgba(0,0,0,0.5)] hover:text-[#2563eb] transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               返回 AI 工坊
@@ -49,14 +49,14 @@ export default function CreditsPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-10"
           >
-            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-[#238636]/10 text-[#3fb950] text-sm font-medium mb-4">
+            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-[#22c55e]/10 text-[#22c55e] text-sm font-medium mb-4">
               <Coins className="w-5 h-5" />
               积分系统
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold text-[#f0f6fc] mb-3">
+            <h1 className="text-3xl md:text-4xl font-bold text-[#1e293b] mb-3">
               积分获取与消耗规则
             </h1>
-            <p className="text-[#8b949e] max-w-2xl mx-auto">
+            <p className="text-[rgba(0,0,0,0.5)] max-w-2xl mx-auto">
               平台采用积分机制管理 AI 服务资源
             </p>
           </motion.div>
@@ -66,18 +66,18 @@ export default function CreditsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="mb-8 rounded-2xl bg-[#161b22] border border-[#30363d] overflow-hidden"
+            className="mb-8 rounded-2xl bg-white border border-[rgba(37,99,235,0.08)] overflow-hidden"
           >
-            <div className="px-6 py-4 border-b border-[#30363d] flex items-center gap-3">
-              <TrendingUp className="w-5 h-5 text-[#3fb950]" />
-              <h2 className="text-lg font-bold text-[#f0f6fc]">获取积分</h2>
+            <div className="px-6 py-4 border-b border-[rgba(37,99,235,0.08)] flex items-center gap-3">
+              <TrendingUp className="w-5 h-5 text-[#22c55e]" />
+              <h2 className="text-lg font-bold text-[#1e293b]">获取积分</h2>
             </div>
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {Object.entries(EARNING).map(([key, val]) => (
                   <div
                     key={key}
-                    className="flex items-center justify-between p-3 rounded-xl bg-[#0d1117] border border-[#30363d]"
+                    className="flex items-center justify-between p-3 rounded-xl bg-white border border-[rgba(37,99,235,0.08)]"
                   >
                     <div className="flex items-center gap-3">
                       <span className="text-lg">
@@ -92,7 +92,7 @@ export default function CreditsPage() {
                         }[key] || "💎"}
                       </span>
                       <div>
-                        <p className="text-sm text-[#c9d1d9] font-medium">
+                        <p className="text-sm text-[rgba(0,0,0,0.6)] font-medium">
                           {{
                             daily_checkin: "每日签到",
                             complete_lesson: "完成一节课",
@@ -105,7 +105,7 @@ export default function CreditsPage() {
                         </p>
                       </div>
                     </div>
-                    <span className="text-[#3fb950] font-bold text-lg">
+                    <span className="text-[#22c55e] font-bold text-lg">
                       +{val}
                     </span>
                   </div>
@@ -119,18 +119,18 @@ export default function CreditsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="mb-8 rounded-2xl bg-[#161b22] border border-[#30363d] overflow-hidden"
+            className="mb-8 rounded-2xl bg-white border border-[rgba(37,99,235,0.08)] overflow-hidden"
           >
-            <div className="px-6 py-4 border-b border-[#30363d] flex items-center gap-3">
+            <div className="px-6 py-4 border-b border-[rgba(37,99,235,0.08)] flex items-center gap-3">
               <TrendingDown className="w-5 h-5 text-[#d2991d]" />
-              <h2 className="text-lg font-bold text-[#f0f6fc]">消耗积分</h2>
+              <h2 className="text-lg font-bold text-[#1e293b]">消耗积分</h2>
             </div>
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {Object.entries(COST).map(([key, val]) => (
                   <div
                     key={key}
-                    className="flex items-center justify-between p-3 rounded-xl bg-[#0d1117] border border-[#30363d]"
+                    className="flex items-center justify-between p-3 rounded-xl bg-white border border-[rgba(37,99,235,0.08)]"
                   >
                     <div className="flex items-center gap-3">
                       <span className="text-lg">
@@ -142,7 +142,7 @@ export default function CreditsPage() {
                         }[key] || "⚡"}
                       </span>
                       <div>
-                        <p className="text-sm text-[#c9d1d9] font-medium">
+                        <p className="text-sm text-[rgba(0,0,0,0.6)] font-medium">
                           {{
                             prompt_optimize: "提示词优化",
                             text_to_image: "文生图",
@@ -150,7 +150,7 @@ export default function CreditsPage() {
                             image_to_video: "图生视频",
                           }[key] || key}
                         </p>
-                        <p className="text-xs text-[#8b949e]">
+                        <p className="text-xs text-[rgba(0,0,0,0.5)]">
                           基准价 · 不同模型有倍率
                         </p>
                       </div>
@@ -163,15 +163,15 @@ export default function CreditsPage() {
               </div>
 
               {/* 模型倍率 */}
-              <div className="mt-5 p-4 rounded-xl bg-[#0d1117] border border-[#30363d]">
-                <p className="text-sm text-[#8b949e] mb-3 font-medium">
+              <div className="mt-5 p-4 rounded-xl bg-white border border-[rgba(37,99,235,0.08)]">
+                <p className="text-sm text-[rgba(0,0,0,0.5)] mb-3 font-medium">
                   模型倍率（消耗 = 基准分 × 倍率）
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {Object.entries(MODEL_MULTIPLIER).filter(([k]) => k !== "default").map(([model, multiplier]) => (
                     <span
                       key={model}
-                      className="px-3 py-1.5 rounded-lg bg-[#161b22] border border-[#30363d] text-xs text-[#c9d1d9]"
+                      className="px-3 py-1.5 rounded-lg bg-white border border-[rgba(37,99,235,0.08)] text-xs text-[rgba(0,0,0,0.6)]"
                     >
                       {{
                         kling: "🇨🇳 可灵",
@@ -193,29 +193,29 @@ export default function CreditsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="mb-8 rounded-2xl bg-[#161b22] border border-[#30363d] overflow-hidden"
+            className="mb-8 rounded-2xl bg-white border border-[rgba(37,99,235,0.08)] overflow-hidden"
           >
-            <div className="px-6 py-4 border-b border-[#30363d] flex items-center gap-3">
+            <div className="px-6 py-4 border-b border-[rgba(37,99,235,0.08)] flex items-center gap-3">
               <Gift className="w-5 h-5 text-[#bc8cff]" />
-              <h2 className="text-lg font-bold text-[#f0f6fc]">初始积分</h2>
+              <h2 className="text-lg font-bold text-[#1e293b]">初始积分</h2>
             </div>
             <div className="p-6">
-              <p className="text-sm text-[#8b949e] mb-4">
+              <p className="text-sm text-[rgba(0,0,0,0.5)] mb-4">
                 注册时根据用户身份一次性发放：
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {Object.entries(INITIAL_CREDITS).map(([key, val]) => (
                   <div
                     key={key}
-                    className="p-4 rounded-xl bg-[#0d1117] border border-[#30363d] text-center"
+                    className="p-4 rounded-xl bg-white border border-[rgba(37,99,235,0.08)] text-center"
                   >
-                    <p className="text-sm text-[#c9d1d9] font-medium">
+                    <p className="text-sm text-[rgba(0,0,0,0.6)] font-medium">
                       {LEVEL_LABELS[key] || key}
                     </p>
                     <p className="text-2xl font-bold text-[#bc8cff] mt-1">
                       {val}
                     </p>
-                    <p className="text-xs text-[#8b949e] mt-1">初始积分</p>
+                    <p className="text-xs text-[rgba(0,0,0,0.5)] mt-1">初始积分</p>
                   </div>
                 ))}
               </div>
@@ -227,27 +227,27 @@ export default function CreditsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="rounded-2xl bg-gradient-to-br from-[#1c2333] to-[#161b22] border border-[#30363d] overflow-hidden"
+            className="rounded-2xl bg-gradient-to-br from-white to-[rgba(37,99,235,0.03)] border border-[rgba(37,99,235,0.08)] overflow-hidden"
           >
-            <div className="px-6 py-4 border-b border-[#30363d] flex items-center gap-3">
+            <div className="px-6 py-4 border-b border-[rgba(37,99,235,0.08)] flex items-center gap-3">
               <Zap className="w-5 h-5 text-[#d2991d]" />
-              <h2 className="text-lg font-bold text-[#f0f6fc]">积分使用技巧</h2>
+              <h2 className="text-lg font-bold text-[#1e293b]">积分使用技巧</h2>
             </div>
             <div className="p-6 space-y-3">
-              <div className="flex items-start gap-3 text-sm text-[#c9d1d9]">
-                <CheckCircle className="w-5 h-5 text-[#3fb950] shrink-0 mt-0.5" />
+              <div className="flex items-start gap-3 text-sm text-[rgba(0,0,0,0.6)]">
+                <CheckCircle className="w-5 h-5 text-[#22c55e] shrink-0 mt-0.5" />
                 <p>每日签到是稳定获取积分的方式，别忘了每天来打卡</p>
               </div>
-              <div className="flex items-start gap-3 text-sm text-[#c9d1d9]">
-                <CheckCircle className="w-5 h-5 text-[#3fb950] shrink-0 mt-0.5" />
+              <div className="flex items-start gap-3 text-sm text-[rgba(0,0,0,0.6)]">
+                <CheckCircle className="w-5 h-5 text-[#22c55e] shrink-0 mt-0.5" />
                 <p>选择国内模型（可灵）消耗积分更少，性价比高</p>
               </div>
-              <div className="flex items-start gap-3 text-sm text-[#c9d1d9]">
-                <CheckCircle className="w-5 h-5 text-[#3fb950] shrink-0 mt-0.5" />
+              <div className="flex items-start gap-3 text-sm text-[rgba(0,0,0,0.6)]">
+                <CheckCircle className="w-5 h-5 text-[#22c55e] shrink-0 mt-0.5" />
                 <p>完成课程考核可获得大量积分，还能提升等级</p>
               </div>
-              <div className="flex items-start gap-3 text-sm text-[#c9d1d9]">
-                <CheckCircle className="w-5 h-5 text-[#3fb950] shrink-0 mt-0.5" />
+              <div className="flex items-start gap-3 text-sm text-[rgba(0,0,0,0.6)]">
+                <CheckCircle className="w-5 h-5 text-[#22c55e] shrink-0 mt-0.5" />
                 <p>邀请好友注册，双方都能获得积分加成</p>
               </div>
             </div>

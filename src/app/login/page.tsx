@@ -98,7 +98,7 @@ export default function LoginPage() {
           <div className="relative">
             {/* 装饰光晕 */}
             <div className="absolute -top-20 -right-16 w-40 h-40 rounded-full bg-[#e53e3e]/20 blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-12 -left-16 w-36 h-36 rounded-full bg-[#58a6ff]/15 blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-12 -left-16 w-36 h-36 rounded-full bg-[#2563eb]/15 blur-3xl pointer-events-none" />
 
             <div
               className="relative p-8 rounded-3xl border border-white/[0.15] shadow-2xl"
@@ -113,12 +113,12 @@ export default function LoginPage() {
               {/* Logo / 标题 */}
               <div className="text-center mb-8">
                 <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-[#e53e3e] to-[#ff6b6b] flex items-center justify-center shadow-lg shadow-[#e53e3e]/30">
-                  <DoorOpen className="w-8 h-8 text-white" />
+                  <DoorOpen className="w-8 h-8 text-[#1e293b]" />
                 </div>
-                <h1 className="text-2xl font-bold text-[#f0f6fc] tracking-tight">
+                <h1 className="text-2xl font-bold text-[#1e293b] tracking-tight">
                   {mode === "login" ? "欢迎回来" : "注册账号"}
                 </h1>
-                <p className="text-sm text-[#8b949e] mt-1.5">
+                <p className="text-sm text-[rgba(0,0,0,0.5)] mt-1.5">
                   {mode === "login"
                     ? "登录后继续学习课程"
                     : "注册ccav.com账号，开启AI视频学习之旅"}
@@ -129,9 +129,9 @@ export default function LoginPage() {
               <form onSubmit={handleSubmit} className="space-y-5">
                 {/* 手机号 */}
                 <div>
-                  <label className="block text-xs text-[#8b949e] mb-1.5 font-medium">手机号</label>
+                  <label className="block text-xs text-[rgba(0,0,0,0.5)] mb-1.5 font-medium">手机号</label>
                   <div className="relative group">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8b949e] group-focus-within:text-[#e53e3e] transition-colors z-10 flex items-center gap-1">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[rgba(0,0,0,0.5)] group-focus-within:text-[#e53e3e] transition-colors z-10 flex items-center gap-1">
                       <User className="w-4 h-4" />
                       <span className="text-xs">+86</span>
                     </div>
@@ -140,7 +140,7 @@ export default function LoginPage() {
                       value={phone}
                       onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 11))}
                       placeholder="请输入手机号"
-                      className="w-full pl-[4.8rem] pr-4 py-3 rounded-xl bg-[#0d1117]/80 border border-[#30363d] text-sm text-[#c9d1d9] placeholder-[#484f58] focus:border-[#e53e3e] focus:ring-1 focus:ring-[#e53e3e]/30 focus:outline-none transition-all"
+                      className="w-full pl-[4.8rem] pr-4 py-3 rounded-xl bg-white/80 border border-[rgba(37,99,235,0.08)] text-sm text-[rgba(0,0,0,0.6)] placeholder-[rgba(0,0,0,0.35)] focus:border-[#e53e3e] focus:ring-1 focus:ring-[#e53e3e]/30 focus:outline-none transition-all"
                       required
                     />
                   </div>
@@ -149,7 +149,7 @@ export default function LoginPage() {
                 {/* 验证码（注册模式） */}
                 {mode === "register" && (
                   <div>
-                    <label className="block text-xs text-[#8b949e] mb-1.5 font-medium">验证码</label>
+                    <label className="block text-xs text-[rgba(0,0,0,0.5)] mb-1.5 font-medium">验证码</label>
                     <div className="flex gap-2">
                       <input
                         type="text"
@@ -157,7 +157,7 @@ export default function LoginPage() {
                         onChange={(e) => setCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
                         placeholder="6位验证码"
                         maxLength={6}
-                        className="flex-1 px-4 py-3 rounded-xl bg-[#0d1117]/80 border border-[#30363d] text-sm text-[#c9d1d9] placeholder-[#484f58] focus:border-[#e53e3e] focus:ring-1 focus:ring-[#e53e3e]/30 focus:outline-none transition-all"
+                        className="flex-1 px-4 py-3 rounded-xl bg-white/80 border border-[rgba(37,99,235,0.08)] text-sm text-[rgba(0,0,0,0.6)] placeholder-[rgba(0,0,0,0.35)] focus:border-[#e53e3e] focus:ring-1 focus:ring-[#e53e3e]/30 focus:outline-none transition-all"
                         required
                       />
                       <button
@@ -166,7 +166,7 @@ export default function LoginPage() {
                         disabled={codeCountdown > 0}
                         className={`px-5 py-3 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${
                           codeCountdown > 0
-                            ? "bg-[#21262d] text-[#484f58] cursor-not-allowed"
+                            ? "bg-[rgba(37,99,235,0.08)] text-[rgba(0,0,0,0.35)] cursor-not-allowed"
                             : "bg-[#e53e3e]/10 text-[#e53e3e] hover:bg-[#e53e3e]/20 border border-[#e53e3e]/30"
                         }`}
                       >
@@ -180,22 +180,22 @@ export default function LoginPage() {
                 {/* 昵称（注册模式） */}
                 {mode === "register" && (
                   <div>
-                    <label className="block text-xs text-[#8b949e] mb-1.5 font-medium">昵称（选填）</label>
+                    <label className="block text-xs text-[rgba(0,0,0,0.5)] mb-1.5 font-medium">昵称（选填）</label>
                     <input
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="给自己取个名字吧"
-                      className="w-full px-4 py-3 rounded-xl bg-[#0d1117]/80 border border-[#30363d] text-sm text-[#c9d1d9] placeholder-[#484f58] focus:border-[#e53e3e] focus:ring-1 focus:ring-[#e53e3e]/30 focus:outline-none transition-all"
+                      className="w-full px-4 py-3 rounded-xl bg-white/80 border border-[rgba(37,99,235,0.08)] text-sm text-[rgba(0,0,0,0.6)] placeholder-[rgba(0,0,0,0.35)] focus:border-[#e53e3e] focus:ring-1 focus:ring-[#e53e3e]/30 focus:outline-none transition-all"
                     />
                   </div>
                 )}
 
                 {/* 密码 */}
                 <div>
-                  <label className="block text-xs text-[#8b949e] mb-1.5 font-medium">密码</label>
+                  <label className="block text-xs text-[rgba(0,0,0,0.5)] mb-1.5 font-medium">密码</label>
                   <div className="relative group">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8b949e] group-focus-within:text-[#e53e3e] transition-colors z-10">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-[rgba(0,0,0,0.5)] group-focus-within:text-[#e53e3e] transition-colors z-10">
                       <KeyRound className="w-4 h-4" />
                     </div>
                     <input
@@ -204,13 +204,13 @@ export default function LoginPage() {
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder={mode === "login" ? "输入密码" : "设置密码（至少6位）"}
                       minLength={6}
-                      className="w-full pl-10 pr-10 py-3 rounded-xl bg-[#0d1117]/80 border border-[#30363d] text-sm text-[#c9d1d9] placeholder-[#484f58] focus:border-[#e53e3e] focus:ring-1 focus:ring-[#e53e3e]/30 focus:outline-none transition-all"
+                      className="w-full pl-10 pr-10 py-3 rounded-xl bg-white/80 border border-[rgba(37,99,235,0.08)] text-sm text-[rgba(0,0,0,0.6)] placeholder-[rgba(0,0,0,0.35)] focus:border-[#e53e3e] focus:ring-1 focus:ring-[#e53e3e]/30 focus:outline-none transition-all"
                       required
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#484f58] hover:text-[#8b949e] transition-colors"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[rgba(0,0,0,0.35)] hover:text-[rgba(0,0,0,0.5)] transition-colors"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -237,7 +237,7 @@ export default function LoginPage() {
                   disabled={loading}
                   className={`w-full py-3.5 rounded-xl font-semibold text-sm tracking-wide transition-all flex items-center justify-center gap-2 ${
                     loading
-                      ? "bg-[#21262d] text-[#484f58] cursor-not-allowed"
+                      ? "bg-[rgba(37,99,235,0.08)] text-[rgba(0,0,0,0.35)] cursor-not-allowed"
                       : "bg-[#e53e3e] text-white hover:bg-[#c53030] active:bg-[#9b2c2c] shadow-lg shadow-[#e53e3e]/25 hover:shadow-xl hover:shadow-[#e53e3e]/30"
                   }`}
                 >
@@ -270,7 +270,7 @@ export default function LoginPage() {
           </div>
 
           {/* 测试账号提示 — 美化后 */}
-          <div className="mt-5 p-4 rounded-2xl bg-[#161b22]/60 border border-[#30363d]/60 backdrop-blur-sm"
+          <div className="mt-5 p-4 rounded-2xl bg-white/60 border border-[rgba(37,99,235,0.08)]/60 backdrop-blur-sm"
             style={{
               backdropFilter: "blur(8px)",
               WebkitBackdropFilter: "blur(8px)",
@@ -282,11 +282,11 @@ export default function LoginPage() {
               <div>
                 <p className="text-xs text-[#d29922] font-semibold mb-1">🔑 测试账号信息</p>
                 <div className="space-y-0.5">
-                  <p className="text-xs text-[#8b949e]">
-                    <span className="text-[#c9d1d9]">手机：</span>13800138000
+                  <p className="text-xs text-[rgba(0,0,0,0.5)]">
+                    <span className="text-[rgba(0,0,0,0.6)]">手机：</span>13800138000
                   </p>
-                  <p className="text-xs text-[#8b949e]">
-                    <span className="text-[#c9d1d9]">密码：</span>123456
+                  <p className="text-xs text-[rgba(0,0,0,0.5)]">
+                    <span className="text-[rgba(0,0,0,0.6)]">密码：</span>123456
                   </p>
                 </div>
               </div>

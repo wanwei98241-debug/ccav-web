@@ -27,7 +27,7 @@ export default function AccountPage() {
       <main className="flex-1 pt-24 pb-16">
         <div className="max-w-3xl mx-auto px-4">
           {/* 用户信息头部 */}
-          <div className="p-6 rounded-2xl bg-gradient-to-br from-[#161b22] to-[#1c2333] border border-[#30363d] mb-6">
+          <div className="p-6 rounded-2xl bg-gradient-to-br from-white to-[#f1f5f9] border border-[rgba(37,99,235,0.08)] mb-6">
             <div className="flex items-start gap-4">
               <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#58a6ff] to-[#bc8cff] flex items-center justify-center flex-shrink-0">
                 <span className="text-2xl font-bold text-white">
@@ -35,13 +35,13 @@ export default function AccountPage() {
                 </span>
               </div>
               <div className="flex-1 min-w-0">
-                <h1 className="text-xl font-bold text-[#f0f6fc] truncate">
+                <h1 className="text-xl font-bold text-[#1e293b] truncate">
                   {user?.display_name || "学员"}
                 </h1>
-                <p className="text-sm text-[#8b949e] mt-0.5">
+                <p className="text-sm text-[rgba(0,0,0,0.5)] mt-0.5">
                   {user?.role === "instructor" ? "讲师" : "学员"} · ccav.com
                 </p>
-                <div className="flex items-center gap-4 mt-3 text-xs text-[#484f58]">
+                <div className="flex items-center gap-4 mt-3 text-xs text-[rgba(0,0,0,0.35)]">
                   {user?.phone && (
                     <span className="flex items-center gap-1">
                       <Phone className="w-3 h-3" />
@@ -58,23 +58,23 @@ export default function AccountPage() {
 
             {/* 积分与进度卡片 */}
             <div className="grid grid-cols-3 gap-3 mt-5">
-              <div className="p-3 rounded-xl bg-[#0d1117] border border-[#21262d] text-center">
+              <div className="p-3 rounded-xl bg-white border border-[rgba(37,99,235,0.08)] text-center">
                 <div className="text-lg font-bold text-[#d29922]">{user?.credits ?? 0}</div>
-                <div className="text-xs text-[#484f58] mt-0.5">积分</div>
+                <div className="text-xs text-[rgba(0,0,0,0.35)] mt-0.5">积分</div>
               </div>
-              <div className="p-3 rounded-xl bg-[#0d1117] border border-[#21262d] text-center">
+              <div className="p-3 rounded-xl bg-white border border-[rgba(37,99,235,0.08)] text-center">
                 <div className="text-lg font-bold text-[#3fb950]">0</div>
-                <div className="text-xs text-[#484f58] mt-0.5">已学课程</div>
+                <div className="text-xs text-[rgba(0,0,0,0.35)] mt-0.5">已学课程</div>
               </div>
-              <div className="p-3 rounded-xl bg-[#0d1117] border border-[#21262d] text-center">
-                <div className="text-lg font-bold text-[#58a6ff]">0</div>
-                <div className="text-xs text-[#484f58] mt-0.5">证书</div>
+              <div className="p-3 rounded-xl bg-white border border-[rgba(37,99,235,0.08)] text-center">
+                <div className="text-lg font-bold text-[#2563eb]">0</div>
+                <div className="text-xs text-[rgba(0,0,0,0.35)] mt-0.5">证书</div>
               </div>
             </div>
           </div>
 
           {/* 快捷入口 */}
-          <h2 className="text-sm font-semibold text-[#f0f6fc] mb-3 px-1">快捷入口</h2>
+          <h2 className="text-sm font-semibold text-[#1e293b] mb-3 px-1">快捷入口</h2>
           <div className="grid grid-cols-2 gap-3 mb-6">
             <QuickLink
               icon={<BookOpen className="w-5 h-5" />}
@@ -107,7 +107,7 @@ export default function AccountPage() {
           </div>
 
           {/* 菜单列表 */}
-          <div className="rounded-2xl border border-[#30363d] bg-[#161b22] overflow-hidden divide-y divide-[#21262d]">
+          <div className="rounded-2xl border border-[rgba(37,99,235,0.08)] bg-white overflow-hidden divide-y divide-[rgba(37,99,235,0.08)]">
             <MenuItem icon={<History className="w-4 h-4" />} title="浏览历史" href="#" />
             <MenuItem icon={<Settings className="w-4 h-4" />} title="账号设置" href="#" />
             <MenuItem icon={<Shield className="w-4 h-4" />} title="隐私与安全" href="#" />
@@ -145,13 +145,13 @@ function QuickLink({
   return (
     <Link
       href={href}
-      className="p-4 rounded-xl bg-[#161b22] border border-[#30363d] hover:border-[#58a6ff]/40 transition-all group"
+      className="p-4 rounded-xl bg-white border border-[rgba(37,99,235,0.08)] hover:border-[#2563eb]/40 transition-all group"
     >
       <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${color} flex items-center justify-center mb-3`}>
         {icon}
       </div>
-      <h3 className="text-sm font-semibold text-[#f0f6fc] group-hover:text-[#58a6ff] transition-colors">{title}</h3>
-      <p className="text-xs text-[#484f58] mt-0.5">{subtitle}</p>
+      <h3 className="text-sm font-semibold text-[#1e293b] group-hover:text-[#2563eb] transition-colors">{title}</h3>
+      <p className="text-xs text-[rgba(0,0,0,0.35)] mt-0.5">{subtitle}</p>
     </Link>
   );
 }
@@ -161,13 +161,13 @@ function MenuItem({ icon, title, href }: { icon: React.ReactNode; title: string;
   return (
     <Link
       href={href}
-      className="flex items-center justify-between px-5 py-3.5 text-sm text-[#c9d1d9] hover:bg-[#1c2333] transition-colors"
+      className="flex items-center justify-between px-5 py-3.5 text-sm text-[rgba(0,0,0,0.6)] hover:bg-[#1c2333] transition-colors"
     >
       <div className="flex items-center gap-3">
-        <span className="text-[#484f58]">{icon}</span>
+        <span className="text-[rgba(0,0,0,0.35)]">{icon}</span>
         {title}
       </div>
-      <ChevronRight className="w-4 h-4 text-[#484f58]" />
+      <ChevronRight className="w-4 h-4 text-[rgba(0,0,0,0.35)]" />
     </Link>
   );
 }

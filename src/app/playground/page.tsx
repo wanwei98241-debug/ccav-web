@@ -277,7 +277,7 @@ export default function PlaygroundPage() {
               {/* 积分规则链接 */}
               <Link
                 href="/credits"
-                className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-[#161b22] border border-[#30363d] text-[#d2991d] text-sm font-medium hover:bg-[#1c2333] hover:border-[#d2991d] transition-all"
+                className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-white border border-[rgba(37,99,235,0.08)] text-[#d2991d] text-sm font-medium hover:bg-[#1c2333] hover:border-[#d2991d] transition-all"
               >
                 <Coins className="w-4 h-4" />
                 积分规则
@@ -291,8 +291,8 @@ export default function PlaygroundPage() {
                   onClick={() => setTaskType("image")}
                   className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all border ${
                     taskType === "image"
-                      ? "bg-[#58a6ff]/10 border-[#58a6ff] text-[#58a6ff]"
-                      : "bg-[#161b22] border-[#30363d] text-[#8b949e] hover:border-[#58a6ff]/30"
+                      ? "bg-[#2563eb]/10 border-[#58a6ff] text-[#2563eb]"
+                      : "bg-white border-[rgba(37,99,235,0.08)] text-[rgba(0,0,0,0.5)] hover:border-[#2563eb]/30"
                   }`}
                 >
                   <ImageIcon className="w-4 h-4" /> 文生图
@@ -302,12 +302,12 @@ export default function PlaygroundPage() {
                   className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all border ${
                     taskType === "video"
                       ? "bg-[#e53e3e]/10 border-[#e53e3e] text-[#e53e3e]"
-                      : "bg-[#161b22] border-[#30363d] text-[#8b949e] hover:border-[#e53e3e]/30"
+                      : "bg-white border-[rgba(37,99,235,0.08)] text-[rgba(0,0,0,0.5)] hover:border-[#e53e3e]/30"
                   }`}
                 >
                   <VideoIcon className="w-4 h-4" /> 文生视频
                 </button>
-                <div className="flex items-center gap-1 rounded-xl bg-[#161b22] border border-[#30363d] p-0.5">
+                <div className="flex items-center gap-1 rounded-xl bg-white border border-[rgba(37,99,235,0.08)] p-0.5">
                   {(["auto", "kling", "replicate"] as ProviderType[]).map((p) => (
                     <button
                       key={p}
@@ -315,19 +315,19 @@ export default function PlaygroundPage() {
                       className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                         provider === p
                           ? "bg-[#bc8cff]/20 text-[#bc8cff]"
-                          : "text-[#8b949e] hover:text-[#c9d1d9]"
+                          : "text-[rgba(0,0,0,0.5)] hover:text-[rgba(0,0,0,0.6)]"
                       }`}
                     >
                       {p === "auto" ? "🚀 自动" : p === "kling" ? "🇨🇳 可灵" : "🌍 Replicate"}
                     </button>
                   ))}
                 </div>
-                <label className="ml-auto flex items-center gap-2 text-sm text-[#8b949e] cursor-pointer select-none">
+                <label className="ml-auto flex items-center gap-2 text-sm text-[rgba(0,0,0,0.5)] cursor-pointer select-none">
                   <input
                     type="checkbox"
                     checked={useKimiOptimize}
                     onChange={(e) => setUseKimiOptimize(e.target.checked)}
-                    className="rounded border-[#30363d] bg-[#161b22] text-[#58a6ff] focus:ring-[#58a6ff]"
+                    className="rounded border-[rgba(37,99,235,0.08)] bg-white text-[#2563eb] focus:ring-[#58a6ff]"
                   />
                   <Wand2 className="w-4 h-4" /> Kimi 优化
                 </label>
@@ -344,7 +344,7 @@ export default function PlaygroundPage() {
                       : "描述你想要的视频，例如：一只橘猫缓缓走过樱花树下..."
                   }
                   rows={4}
-                  className="w-full px-5 py-4 pr-14 rounded-2xl bg-[#161b22] border border-[#30363d] text-[#c9d1d9] placeholder:text-[#8b949e] focus:border-[#58a6ff] outline-none resize-none transition-colors"
+                  className="w-full px-5 py-4 pr-14 rounded-2xl bg-white border border-[rgba(37,99,235,0.08)] text-[rgba(0,0,0,0.6)] placeholder:text-[rgba(0,0,0,0.5)] focus:border-[#58a6ff] outline-none resize-none transition-colors"
                 />
                 <button
                   onClick={handleGenerate}
@@ -354,7 +354,7 @@ export default function PlaygroundPage() {
                   {optimizing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                 </button>
               </div>
-              <p className="mt-2 text-xs text-[#8b949e]">
+              <p className="mt-2 text-xs text-[rgba(0,0,0,0.5)]">
                 按 Cmd/Ctrl + Enter 快速发送 · 
                 本次消耗 <span className="text-[#d2991d] font-medium">{computeCost(taskType === "image" ? "text_to_image" : "text_to_video", "kling")}</span> 积分
                 {useKimiOptimize && <> · Kimi 优化 <span className="text-[#d2991d] font-medium">+{COST.prompt_optimize}</span> 分</>}
@@ -366,7 +366,7 @@ export default function PlaygroundPage() {
         <section className="py-8" style={{ background: "#f1f5f9" }}>
           <div className="max-w-5xl mx-auto px-5">
             {tasks.length === 0 ? (
-              <div className="text-center py-16 text-[#8b949e]">
+              <div className="text-center py-16 text-[rgba(0,0,0,0.5)]">
                 <Sparkles className="w-12 h-12 mx-auto mb-4 opacity-30" />
                 <p>还没有生成记录，在上方输入提示词开始创作吧</p>
               </div>
@@ -377,36 +377,36 @@ export default function PlaygroundPage() {
                     key={task.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="rounded-2xl bg-[#161b22] border border-[#30363d] overflow-hidden"
+                    className="rounded-2xl bg-white border border-[rgba(37,99,235,0.08)] overflow-hidden"
                   >
-                    <div className="px-5 py-3 border-b border-[#30363d] flex items-center justify-between">
+                    <div className="px-5 py-3 border-b border-[rgba(37,99,235,0.08)] flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        {task.type === "image" ? <ImageIcon className="w-4 h-4 text-[#58a6ff]" /> : <VideoIcon className="w-4 h-4 text-[#e53e3e]" />}
-                        <span className="text-sm text-[#c9d1d9]">{task.type === "image" ? "文生图" : "文生视频"}</span>
+                        {task.type === "image" ? <ImageIcon className="w-4 h-4 text-[#2563eb]" /> : <VideoIcon className="w-4 h-4 text-[#e53e3e]" />}
+                        <span className="text-sm text-[rgba(0,0,0,0.6)]">{task.type === "image" ? "文生图" : "文生视频"}</span>
                       </div>
                       <StatusBadge status={task.status} />
                     </div>
                     <div className="p-5 space-y-3">
                       <div>
-                        <p className="text-xs text-[#8b949e] mb-1">原始提示词</p>
-                        <p className="text-sm text-[#c9d1d9]">{task.prompt}</p>
+                        <p className="text-xs text-[rgba(0,0,0,0.5)] mb-1">原始提示词</p>
+                        <p className="text-sm text-[rgba(0,0,0,0.6)]">{task.prompt}</p>
                       </div>
                       {task.optimizedPrompt && (
-                        <div className="p-3 rounded-xl bg-[#0d1117] border border-[#30363d]">
-                          <p className="text-xs text-[#58a6ff] mb-1 flex items-center gap-1">
+                        <div className="p-3 rounded-xl bg-white border border-[rgba(37,99,235,0.08)]">
+                          <p className="text-xs text-[#2563eb] mb-1 flex items-center gap-1">
                             <Sparkles className="w-3 h-3" /> Kimi 优化后
                           </p>
-                          <p className="text-sm text-[#c9d1d9]">{task.optimizedPrompt}</p>
+                          <p className="text-sm text-[rgba(0,0,0,0.6)]">{task.optimizedPrompt}</p>
                         </div>
                       )}
                       {(task.status === "optimizing" || task.status === "queued" || task.status === "generating") && (
                         <div className="py-8 text-center">
-                          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-3 text-[#58a6ff]" />
-                          <p className="text-sm text-[#8b949e]">
+                          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-3 text-[#2563eb]" />
+                          <p className="text-sm text-[rgba(0,0,0,0.5)]">
                             {task.status === "optimizing" ? "Kimi 正在优化提示词..." : task.status === "queued" ? "排队中..." : `${task.provider === 'replicate' ? 'Replicate' : '可灵'}正在生成中，请稍候...`}
                           </p>
                           {task.progress !== undefined && (
-                            <div className="mt-3 max-w-xs mx-auto h-1.5 rounded-full bg-[#0d1117] overflow-hidden">
+                            <div className="mt-3 max-w-xs mx-auto h-1.5 rounded-full bg-white overflow-hidden">
                               <div className="h-full bg-gradient-to-r from-[#58a6ff] to-[#bc8cff] transition-all duration-500" style={{ width: `${task.progress}%` }} />
                             </div>
                           )}
@@ -429,7 +429,7 @@ export default function PlaygroundPage() {
                             <a href={task.resultUrl} target="_blank" download className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#238636] text-white text-sm font-medium hover:bg-[#2ea043] transition-colors">
                               <Download className="w-4 h-4" /> 下载
                             </a>
-                            <button onClick={() => { setPrompt(task.optimizedPrompt || task.prompt); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#30363d] text-[#c9d1d9] text-sm hover:bg-[#484f58] transition-colors">
+                            <button onClick={() => { setPrompt(task.optimizedPrompt || task.prompt); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#30363d] text-[rgba(0,0,0,0.6)] text-sm hover:bg-[#484f58] transition-colors">
                               <RotateCcw className="w-4 h-4" /> 再试一次
                             </button>
                           </div>
@@ -451,18 +451,18 @@ export default function PlaygroundPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-[#0d1117]/90 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-white/90 backdrop-blur-sm"
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="text-center px-8 py-10 rounded-3xl bg-[#161b22] border border-[#30363d] shadow-2xl max-w-sm w-full"
+              className="text-center px-8 py-10 rounded-3xl bg-white border border-[rgba(37,99,235,0.08)] shadow-2xl max-w-sm w-full"
             >
               {/* 类型图标 */}
               <div className="mb-5">
                 {activeTask.type === "image" ? (
-                  <ImageIcon className="w-10 h-10 mx-auto text-[#58a6ff]" />
+                  <ImageIcon className="w-10 h-10 mx-auto text-[#2563eb]" />
                 ) : (
                   <VideoIcon className="w-10 h-10 mx-auto text-[#e53e3e]" />
                 )}
@@ -470,34 +470,34 @@ export default function PlaygroundPage() {
 
               {/* 旋转动画 */}
               <div className="relative mx-auto w-20 h-20 mb-5">
-                <div className="absolute inset-0 rounded-full border-[3px] border-[#30363d]" />
+                <div className="absolute inset-0 rounded-full border-[3px] border-[rgba(37,99,235,0.08)]" />
                 <div className="absolute inset-0 rounded-full border-[3px] border-transparent border-t-[#58a6ff] animate-spin" />
-                <div className="absolute inset-2 rounded-full bg-[#161b22] flex items-center justify-center">
-                  <Loader2 className="w-6 h-6 text-[#58a6ff] animate-spin" />
+                <div className="absolute inset-2 rounded-full bg-white flex items-center justify-center">
+                  <Loader2 className="w-6 h-6 text-[#2563eb] animate-spin" />
                 </div>
               </div>
 
               {/* 标题 */}
-              <h2 className="text-lg font-bold text-[#f0f6fc] mb-1">
+              <h2 className="text-lg font-bold text-[#1e293b] mb-1">
                 {activeTask.status === "optimizing"
                   ? "Kimi 正在优化提示词..."
                   : activeTask.status === "queued"
                   ? "排队等待中..."
                   : "AI 正在创作中..."}
               </h2>
-              <p className="text-sm text-[#8b949e] mb-4">
+              <p className="text-sm text-[rgba(0,0,0,0.5)] mb-4">
                 {activeTask.type === "image" ? "文生图" : "文生视频"} · 请耐心等候
               </p>
 
               {/* 进度条 */}
               <div className="mb-4">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-[#8b949e]">完成度</span>
-                  <span className="text-sm font-bold text-[#58a6ff]">
+                  <span className="text-sm text-[rgba(0,0,0,0.5)]">完成度</span>
+                  <span className="text-sm font-bold text-[#2563eb]">
                     {activeTask.progress !== undefined ? `${Math.round(activeTask.progress)}%` : "—"}
                   </span>
                 </div>
-                <div className="w-full h-2 rounded-full bg-[#0d1117] overflow-hidden">
+                <div className="w-full h-2 rounded-full bg-white overflow-hidden">
                   <motion.div
                     className="h-full bg-gradient-to-r from-[#58a6ff] to-[#bc8cff]"
                     initial={{ width: 0 }}
@@ -508,7 +508,7 @@ export default function PlaygroundPage() {
               </div>
 
               {/* 计时器 */}
-              <div className="flex items-center justify-center gap-2 text-sm text-[#8b949e]">
+              <div className="flex items-center justify-center gap-2 text-sm text-[rgba(0,0,0,0.5)]">
                 <span>⏱</span>
                 <span>
                   {Math.floor(elapsed / 60)}:{(elapsed % 60).toString().padStart(2, "0")}
@@ -519,9 +519,9 @@ export default function PlaygroundPage() {
               </p>
 
               {/* 提示词预览 */}
-              <div className="mt-5 pt-4 border-t border-[#30363d] text-left">
-                <p className="text-xs text-[#8b949e] mb-1">提示词</p>
-                <p className="text-sm text-[#c9d1d9] line-clamp-2">
+              <div className="mt-5 pt-4 border-t border-[rgba(37,99,235,0.08)] text-left">
+                <p className="text-xs text-[rgba(0,0,0,0.5)] mb-1">提示词</p>
+                <p className="text-sm text-[rgba(0,0,0,0.6)] line-clamp-2">
                   {activeTask.optimizedPrompt || activeTask.prompt}
                 </p>
               </div>
@@ -541,7 +541,7 @@ function CreditsDisplay() {
 
   if (loading) {
     return (
-      <span className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-[#0d1117] border border-[#30363d] text-[#8b949e] text-sm">
+      <span className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-white border border-[rgba(37,99,235,0.08)] text-[rgba(0,0,0,0.5)] text-sm">
         <Loader2 className="w-4 h-4 animate-spin" />
         加载中...
       </span>
@@ -552,7 +552,7 @@ function CreditsDisplay() {
     return (
       <Link
         href="/login"
-        className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-[#161b22] border border-[#30363d] text-[#8b949e] text-sm font-medium hover:text-[#58a6ff] hover:border-[#58a6ff] transition-all"
+        className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-white border border-[rgba(37,99,235,0.08)] text-[rgba(0,0,0,0.5)] text-sm font-medium hover:text-[#2563eb] hover:border-[#2563eb] transition-all"
       >
         <UserIcon className="w-4 h-4" />
         登录后可查看积分
@@ -564,22 +564,22 @@ function CreditsDisplay() {
   const level = credits >= 5000 ? "高级" : credits >= 2000 ? "中级" : credits >= 500 ? "初级" : "注册";
 
   return (
-    <span className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-[#161b22] border border-[#30363d] text-[#c9d1d9] text-sm font-medium">
+    <span className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-white border border-[rgba(37,99,235,0.08)] text-[rgba(0,0,0,0.6)] text-sm font-medium">
       <Coins className="w-4 h-4 text-[#d2991d]" />
       <span>
         <span className="text-[#d2991d] font-bold">{credits}</span>
-        <span className="text-[#8b949e] ml-1">积分</span>
+        <span className="text-[rgba(0,0,0,0.5)] ml-1">积分</span>
       </span>
       <span className="text-[#30363d]">|</span>
-      <span className="text-[#8b949e] text-xs">{level}学员</span>
+      <span className="text-[rgba(0,0,0,0.5)] text-xs">{level}学员</span>
     </span>
   );
 }
 
 function StatusBadge({ status }: { status: TaskStatus }) {
   const map: Record<TaskStatus, { text: string; className: string; icon: React.ReactNode }> = {
-    idle: { text: "待开始", className: "bg-[#30363d] text-[#8b949e]", icon: null },
-    optimizing: { text: "优化中", className: "bg-[#58a6ff]/10 text-[#58a6ff]", icon: <Loader2 className="w-3 h-3 animate-spin" /> },
+    idle: { text: "待开始", className: "bg-[#30363d] text-[rgba(0,0,0,0.5)]", icon: null },
+    optimizing: { text: "优化中", className: "bg-[#2563eb]/10 text-[#2563eb]", icon: <Loader2 className="w-3 h-3 animate-spin" /> },
     queued: { text: "排队中", className: "bg-[#d2991d]/10 text-[#d2991d]", icon: <Loader2 className="w-3 h-3 animate-spin" /> },
     generating: { text: "生成中", className: "bg-[#bc8cff]/10 text-[#bc8cff]", icon: <Loader2 className="w-3 h-3 animate-spin" /> },
     done: { text: "已完成", className: "bg-[#238636]/10 text-[#3fb950]", icon: <CheckCircle className="w-3 h-3" /> },

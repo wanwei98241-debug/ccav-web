@@ -9,13 +9,13 @@ export default function PartnerPage() {
       <main className="max-w-5xl mx-auto px-4 py-12 relative z-10">
         {/* Hero */}
         <section className="text-center mb-16">
-          <div className="inline-block px-4 py-1.5 rounded-full border border-[#c8b898]/20 text-xs text-[#c8b898] mb-4">
+          <div className="inline-block px-4 py-1.5 rounded-full border border-[rgba(37,99,235,0.15)] text-xs text-[#2563eb] mb-4">
             CCAV 合作招募
           </div>
-          <h1 className="text-3xl md:text-4xl lg:text-5xl serif font-bold text-white mb-4">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl serif font-bold text-[#1e293b] mb-4">
             CCAV 全国合作教学点招募
           </h1>
-          <p className="text-white/40 max-w-2xl mx-auto mb-8">
+          <p className="text-[rgba(0,0,0,0.55)] max-w-2xl mx-auto mb-8">
             以团体标准为依据，以标准教材为核心，以教师培训为启动点，面向全国招募线下教学合作伙伴。
           </p>
           <a
@@ -30,7 +30,7 @@ export default function PartnerPage() {
 
         {/* 合作模式 */}
         <section className="mb-16">
-          <h2 className="text-2xl serif font-bold text-white mb-6">合作模式</h2>
+          <h2 className="text-2xl serif font-bold text-[#1e293b] mb-6">合作模式</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
               {
@@ -55,19 +55,19 @@ export default function PartnerPage() {
                 fee: "区域协商",
               },
             ].map((item, i) => (
-              <div key={i} className="ink-card p-6 hover:border-[#c8b898]/30 transition">
+              <div key={i} className="ink-card p-6 hover:border-[#2563eb]/30 transition">
                 <div className="text-3xl mb-3">{item.icon}</div>
-                <div className="inline-block px-2 py-0.5 bg-[#c8b898]/10 border border-[#c8b898]/20 rounded text-[10px] text-[#c8b898] mb-2">{item.level}</div>
-                <p className="text-white/30 text-xs mb-4">适合：{item.for}</p>
+                <div className="inline-block px-2 py-0.5 bg-[#2563eb]/10 border border-[#2563eb]/20 rounded text-[10px] text-[#2563eb] mb-2">{item.level}</div>
+                <p className="text-[rgba(0,0,0,0.5)] text-xs mb-4">适合：{item.for}</p>
                 <div className="space-y-2 mb-4">
                   {item.permissions.map((p, j) => (
-                    <div key={j} className="flex items-center gap-1.5 text-xs text-white/40">
+                    <div key={j} className="flex items-center gap-1.5 text-xs text-[rgba(0,0,0,0.55)]">
                       <span className="text-green-500/70">✓</span>
                       <span>{p}</span>
                     </div>
                   ))}
                 </div>
-                <div className="text-[#c8b898] text-sm font-bold">{item.fee}</div>
+                <div className="text-[#2563eb] text-sm font-bold">{item.fee}</div>
               </div>
             ))}
           </div>
@@ -75,7 +75,7 @@ export default function PartnerPage() {
 
         {/* 总部支持 */}
         <section className="mb-16">
-          <h2 className="text-2xl serif font-bold text-white mb-6">总部支持</h2>
+          <h2 className="text-2xl serif font-bold text-[#1e293b] mb-6">总部支持</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               { icon: "🏷️", title: "品牌支持", items: ["CCAV品牌授权", "统一宣传模板", "宣传册/海报/易拉宝"] },
@@ -85,10 +85,10 @@ export default function PartnerPage() {
             ].map((item, i) => (
               <div key={i} className="ink-card p-5">
                 <div className="text-2xl mb-2">{item.icon}</div>
-                <h3 className="text-base font-bold text-white mb-3">{item.title}</h3>
+                <h3 className="text-base font-bold text-[#1e293b] mb-3">{item.title}</h3>
                 <ul className="space-y-1">
                   {item.items.map((s, j) => (
-                    <li key={j} className="text-xs text-white/30">✦ {s}</li>
+                    <li key={j} className="text-xs text-[rgba(0,0,0,0.5)]">✦ {s}</li>
                   ))}
                 </ul>
               </div>
@@ -98,7 +98,7 @@ export default function PartnerPage() {
 
         {/* 准入条件 */}
         <section className="mb-16">
-          <h2 className="text-2xl serif font-bold text-white mb-6">准入条件</h2>
+          <h2 className="text-2xl serif font-bold text-[#1e293b] mb-6">准入条件</h2>
           <div className="ink-card p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
@@ -110,8 +110,8 @@ export default function PartnerPage() {
                 "认可CCAV课程体系与教学标准",
                 "接受总部统一培训与督导",
               ].map((item, i) => (
-                <div key={i} className="flex items-center gap-2 text-sm text-white/40">
-                  <span className="text-[#c8b898]">✦</span>
+                <div key={i} className="flex items-center gap-2 text-sm text-[rgba(0,0,0,0.55)]">
+                  <span className="text-[#2563eb]">✦</span>
                   <span>{item}</span>
                 </div>
               ))}
@@ -121,11 +121,11 @@ export default function PartnerPage() {
 
         {/* 合作流程 */}
         <section className="mb-16">
-          <h2 className="text-2xl serif font-bold text-white mb-6">合作流程</h2>
+          <h2 className="text-2xl serif font-bold text-[#1e293b] mb-6">合作流程</h2>
           <div className="flex flex-wrap items-center justify-center gap-2">
             {["合作咨询", "资质审核", "签署协议", "教师培训", "配发教材", "开通平台", "公开课", "正式开班"].map((step, i) => (
               <div key={i} className="flex items-center gap-2">
-                <div className="ink-card px-4 py-2 text-sm text-white/50">{step}</div>
+                <div className="ink-card px-4 py-2 text-sm text-[rgba(0,0,0,0.5)]">{step}</div>
                 {i < 7 && <span className="text-[#206683]">→</span>}
               </div>
             ))}
@@ -135,8 +135,8 @@ export default function PartnerPage() {
         {/* CTA */}
         <section className="text-center mb-16">
           <div className="ink-card p-8 md:p-12">
-            <h2 className="text-2xl serif font-bold text-white mb-4">立即申请合作</h2>
-            <p className="text-white/40 mb-6">填写合作意向表，我们的渠道经理将在3个工作日内与您联系。</p>
+            <h2 className="text-2xl serif font-bold text-[#1e293b] mb-4">立即申请合作</h2>
+            <p className="text-[rgba(0,0,0,0.55)] mb-6">填写合作意向表，我们的渠道经理将在3个工作日内与您联系。</p>
             <a
               href="https://jinshuju.net/f/xxxxx"
               target="_blank"
@@ -149,9 +149,9 @@ export default function PartnerPage() {
         </section>
       </main>
 
-      <footer className="border-t border-white/5 py-8 text-center relative z-10">
-        <p className="text-sm text-white/50 mb-2 serif">CCAV — AI视频创作教育机构</p>
-        <p className="text-xs text-white/35">以 T/CCPS 0041—2026 团体标准为核心的AI视频创作教育体系 · © 2026</p>
+      <footer className="border-t border-[rgba(37,99,235,0.08)] py-8 text-center relative z-10">
+        <p className="text-sm text-[rgba(0,0,0,0.5)] mb-2 serif">CCAV — AI视频创作教育机构</p>
+        <p className="text-xs text-[rgba(0,0,0,0.45)]">以 T/CCPS 0041—2026 团体标准为核心的AI视频创作教育体系 · © 2026</p>
       </footer>
     </>
   );
