@@ -3,12 +3,12 @@ import "./globals.css";
 import Providers from "@/components/Providers";
 
 export const metadata: Metadata = {
-  title: "ccav.com — AI视频制作规范与实践",
-  description: "以国家团标为核心的AI视频制作教学平台，覆盖T/CCPS 0041—2026能力等级L1-L6，从文生图到AIGC视频制作全流程。",
-  keywords: "AI视频, AIGC, 视频制作, 教学平台, 团标, T/CCPS 0041",
+  title: "CCAV — AI视频创作教育机构",
+  description: "以团体标准为依据、以标准教材为核心、以教师培训为启动点、以线下网点为落地渠道的AI视频创作教育运营平台。",
+  keywords: "AI视频, AIGC, 视频创作, 教育机构, 团体标准, 教师培训, 能力认证, CCAV",
   openGraph: {
-    title: "ccav.com — AI视频制作规范与实践",
-    description: "以国家团标为核心的AI视频制作教学平台",
+    title: "CCAV — AI视频创作教育机构",
+    description: "标准教材 + 线上平台 + 线下网点 + 教师培训 + 项目实训 + 能力认证",
     type: "website",
   },
 };
