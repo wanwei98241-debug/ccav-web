@@ -84,15 +84,6 @@ export default function CoursesPage() {
           {/* CTA 按钮 */}
           <div className="flex gap-4 justify-center mt-8">
             <Link
-              href="/courses/part1/"
-              className="inline-block px-7 py-[10px] rounded-lg font-semibold text-white transition-all"
-              style={{
-                background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
-              }}
-            >
-              探索课程
-            </Link>
-            <Link
               href="/playground/"
               className="inline-block px-7 py-[10px] rounded-lg font-semibold text-white transition-all"
               style={{
