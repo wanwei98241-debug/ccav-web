@@ -159,7 +159,7 @@ export default function CertificationPage() {
 
       <footer className="border-t border-white/5 py-8 text-center relative z-10">
         <p className="text-sm text-white/50 mb-2 serif">CCAV — AI视频创作教育机构</p>
-        <p className="text-xs text-white/35">以 T/CCPS 000X—2026 团体标准为核心的AI视频创作教育体系 · © 2026</p>
+        <p className="text-xs text-white/35">以 T/CCPS 0041—2026 团体标准为核心的AI视频创作教育体系 · © 2026</p>
       </footer>
     </>
   );

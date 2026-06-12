@@ -30,7 +30,7 @@ export default function TextbooksPage() {
                 desc: "《AIGC视频制作规范与实践》",
                 icon: "📖",
                 features: [
-                  "对标T/CCPS 000X—2026团体标准",
+                  "对标T/CCPS 0041—2026团体标准",
                   "六大部分、98课时，覆盖L1-L6能力等级",
                   "提示词→图像→视频→配音→剪辑→项目的完整流程",
                   "含作业模板、项目案例、提示词模板",
@@ -103,7 +103,7 @@ export default function TextbooksPage() {
           <div className="ink-card p-6 md:p-8">
             <h2 className="text-2xl serif font-bold text-white mb-4">出版信息</h2>
             <p className="text-white/30 text-sm mb-4">
-              本教材由CCAV教育机构组织编写，依据《人工智能视频制作人员要求》（T/CCPS 000X—2026）团体标准制定。
+              本教材由CCAV教育机构组织编写，依据《人工智能视频制作人员要求》（T/CCPS 0041—2026）团体标准制定。
               教材既是学习资源，也是教学指南与考评依据。
             </p>
             <p className="text-white/30 text-sm">
@@ -130,7 +130,7 @@ export default function TextbooksPage() {
 
       <footer className="border-t border-white/5 py-8 text-center relative z-10">
         <p className="text-sm text-white/50 mb-2 serif">CCAV — AI视频创作教育机构</p>
-        <p className="text-xs text-white/35">以 T/CCPS 000X—2026 团体标准为核心的AI视频创作教育体系 · © 2026</p>
+        <p className="text-xs text-white/35">以 T/CCPS 0041—2026 团体标准为核心的AI视频创作教育体系 · © 2026</p>
       </footer>
     </>
   );

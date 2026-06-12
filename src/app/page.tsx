@@ -60,7 +60,7 @@ export default function Home() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
-            { icon: "📜", title: "以团体标准为依据", desc: "《人工智能视频制作人员要求》T/CCPS 000X—2026" },
+            { icon: "📜", title: "以团体标准为依据", desc: "《人工智能视频制作人员要求》T/CCPS 0041—2026" },
             { icon: "📚", title: "以标准教材为核心", desc: "学生用书、教师用书、考评手册一体化体系" },
             { icon: "🎓", title: "以教师培训为启动点", desc: "建立认证讲师体系，解决AI教育『没人会教』的问题" },
             { icon: "🏛️", title: "以线下网点为落地渠道", desc: "全国线下教学网点，让学习有教室、有老师、有氛围" },
@@ -110,7 +110,7 @@ export default function Home() {
             </div>
             <div className="flex-1">
               <span className="text-xs px-2 py-0.5 rounded" style={{ background: "rgba(0,0,0,0.04)", color: "rgba(0,0,0,0.5)" }}>团体标准</span>
-              <h2 className="text-xl font-bold mt-2 mb-2" style={{ color: "#1e293b" }}>《人工智能视频制作人员要求》T/CCPS 000X—2026</h2>
+              <h2 className="text-xl font-bold mt-2 mb-2" style={{ color: "#1e293b" }}>《人工智能视频制作人员要求》T/CCPS 0041—2026</h2>
               <p className="text-sm leading-relaxed mb-4" style={{ color: "rgba(0,0,0,0.5)" }}>
                 本标准由CCAV教育机构牵头制定，适用于从事人工智能视觉内容创作、图像生成、视频合成、数字艺术设计等岗位人员。
                 可用于企业招聘、人才培养、职业能力评价与职业发展规划。
@@ -130,7 +130,7 @@ export default function Home() {
       <section className="max-w-4xl mx-auto px-4 pb-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { num: "1", label: "团体标准", sub: "T/CCPS 000X—2026" },
+            { num: "1", label: "团体标准", sub: "T/CCPS 0041—2026" },
             { num: "3", label: "标准教材", sub: "学生/教师/考评" },
             { num: "3", label: "认证等级", sub: "初级→中级→高级" },
             { num: "10+", label: "项目案例", sub: "10大AI视频项目库" },
@@ -167,7 +167,7 @@ export default function Home() {
       {/* 页脚 */}
       <footer className="border-t py-8 text-center" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
         <p className="text-sm mb-2 serif" style={{ color: "rgba(0,0,0,0.5)" }}>CCAV — AI视频创作教育机构</p>
-        <p className="text-xs" style={{ color: "rgba(0,0,0,0.35)" }}>以 T/CCPS 000X—2026团体标准为核心的AI视频创作教育运营平台 · © 2026</p>
+        <p className="text-xs" style={{ color: "rgba(0,0,0,0.35)" }}>以 T/CCPS 0041—2026团体标准为核心的AI视频创作教育运营平台 · © 2026</p>
         <div className="flex items-center justify-center gap-4 mt-3 text-xs" style={{ color: "rgba(0,0,0,0.3)" }}>
           <a href="/about" className="hover:transition" style={{ color: "inherit", textDecoration: "none" }}>关于CCAV</a>
           <a href="/contact" className="hover:transition" style={{ color: "inherit", textDecoration: "none" }}>联系我们</a>
