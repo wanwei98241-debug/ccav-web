@@ -84,7 +84,7 @@ export default function CoursesPage() {
           {/* CTA 按钮 */}
           <div className="flex gap-4 justify-center mt-8">
             <Link
-              href="/courses/"
+              href="/courses/part1/"
               className="inline-block px-7 py-[10px] rounded-lg font-semibold text-white transition-all"
               style={{
                 background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
@@ -298,7 +298,7 @@ export default function CoursesPage() {
                     ¥3,999
                   </span>
                   <Link
-                    href="/training/"
+                    href="/teacher-training/"
                     className="inline-block px-7 py-[10px] rounded-lg font-semibold text-white text-sm transition-all"
                     style={{
                       background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
