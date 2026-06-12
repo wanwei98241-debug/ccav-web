@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 
 export default function PartnerPage() {
@@ -18,14 +19,9 @@ export default function PartnerPage() {
           <p className="text-[rgba(0,0,0,0.55)] max-w-2xl mx-auto mb-8">
             以团体标准为依据，以标准教材为核心，以教师培训为启动点，面向全国招募线下教学合作伙伴。
           </p>
-          <a
-            href="https://jinshuju.net/f/xxxxx"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="ink-btn inline-block"
-          >
+          <Link href="/partner/apply/" className="ink-btn inline-block">
             申请成为合作教学点
-          </a>
+          </Link>
         </section>
 
         {/* 合作模式 */}
@@ -137,14 +133,9 @@ export default function PartnerPage() {
           <div className="ink-card p-8 md:p-12">
             <h2 className="text-2xl serif font-bold text-[#1e293b] mb-4">立即申请合作</h2>
             <p className="text-[rgba(0,0,0,0.55)] mb-6">填写合作意向表，我们的渠道经理将在3个工作日内与您联系。</p>
-            <a
-              href="https://jinshuju.net/f/xxxxx"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="ink-btn inline-block"
-            >
+            <Link href="/partner/apply/" className="ink-btn inline-block">
               申请成为合作教学点
-            </a>
+            </Link>
           </div>
         </section>
       </main>
