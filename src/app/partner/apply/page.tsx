@@ -8,15 +8,42 @@ import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 
 export default function PartnerApplyPage() {
+  const [orgName, setOrgName] = useState("");
+  const [contactName, setContactName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [city, setCity] = useState("");
+  const [intention, setIntention] = useState("");
+  const [remark, setRemark] = useState("");
   const [step, setStep] = useState<"form" | "success">("form");
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    await new Promise((r) => setTimeout(r, 1500));
-    setSubmitting(false);
-    setStep("success");
+    try {
+      const res = await fetch("/api/register/partner", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          org_name: orgName,
+          contact_name: contactName,
+          phone,
+          email: email || "",
+          city,
+          intention,
+          remark: remark || "",
+          source: "partner-apply",
+          time: new Date().toISOString(),
+        }),
+      });
+      if (!res.ok) throw new Error("提交失败");
+      setStep("success");
+    } catch (err) {
+      alert("提交失败，请稍后重试或直接联系我们");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -72,6 +99,8 @@ export default function PartnerApplyPage() {
                     <input
                       type="text"
                       required
+                      value={orgName}
+                      onChange={(e) => setOrgName(e.target.value)}
                       placeholder="请输入机构全称"
                       className="w-full px-4 py-2.5 rounded-lg border border-[rgba(0,0,0,0.12)] text-sm text-[#1e293b] placeholder-[rgba(0,0,0,0.3)] focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb]/20 transition-all"
                     />
@@ -85,6 +114,8 @@ export default function PartnerApplyPage() {
                     <input
                       type="text"
                       required
+                      value={contactName}
+                      onChange={(e) => setContactName(e.target.value)}
                       placeholder="请输入联系人姓名"
                       className="w-full px-4 py-2.5 rounded-lg border border-[rgba(0,0,0,0.12)] text-sm text-[#1e293b] placeholder-[rgba(0,0,0,0.3)] focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb]/20 transition-all"
                     />
@@ -98,6 +129,8 @@ export default function PartnerApplyPage() {
                     <input
                       type="tel"
                       required
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
                       placeholder="请输入手机号"
                       className="w-full px-4 py-2.5 rounded-lg border border-[rgba(0,0,0,0.12)] text-sm text-[#1e293b] placeholder-[rgba(0,0,0,0.3)] focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb]/20 transition-all"
                     />
@@ -110,6 +143,8 @@ export default function PartnerApplyPage() {
                     </label>
                     <input
                       type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       placeholder="选填"
                       className="w-full px-4 py-2.5 rounded-lg border border-[rgba(0,0,0,0.12)] text-sm text-[#1e293b] placeholder-[rgba(0,0,0,0.3)] focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb]/20 transition-all"
                     />
@@ -123,6 +158,8 @@ export default function PartnerApplyPage() {
                     <input
                       type="text"
                       required
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
                       placeholder="如：上海市浦东新区"
                       className="w-full px-4 py-2.5 rounded-lg border border-[rgba(0,0,0,0.12)] text-sm text-[#1e293b] placeholder-[rgba(0,0,0,0.3)] focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb]/20 transition-all"
                     />
@@ -135,6 +172,8 @@ export default function PartnerApplyPage() {
                     </label>
                     <select
                       required
+                      value={intention}
+                      onChange={(e) => setIntention(e.target.value)}
                       className="w-full px-4 py-2.5 rounded-lg border border-[rgba(0,0,0,0.12)] text-sm text-[#1e293b] focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb]/20 transition-all appearance-none bg-white"
                       style={{
                         backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='rgba(0,0,0,0.4)' viewBox='0 0 16 16'%3E%3Cpath d='M4.646 5.646a.5.5 0 0 1 .708 0L8 8.293l2.646-2.647a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 0 1 0-.708z'/%3E%3C/svg%3E\")`,
@@ -157,6 +196,8 @@ export default function PartnerApplyPage() {
                     </label>
                     <textarea
                       rows={3}
+                      value={remark}
+                      onChange={(e) => setRemark(e.target.value)}
                       placeholder="机构规模、现有场地、生源情况等（选填）"
                       className="w-full px-4 py-2.5 rounded-lg border border-[rgba(0,0,0,0.12)] text-sm text-[#1e293b] placeholder-[rgba(0,0,0,0.3)] focus:outline-none focus:border-[#2563eb] focus:ring-1 focus:ring-[#2563eb]/20 transition-all resize-none"
                     />
