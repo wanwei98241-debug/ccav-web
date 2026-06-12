@@ -39,7 +39,7 @@ export default function InstructorPage() {
               </p>
               <a
                 href="mailto:contact@ccav.com"
-                className="group inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-#2563eb to-[#1d4ed8] text-[#1e293b] font-semibold text-lg hover:shadow-lg hover:shadow-#2563eb/20 transition-all"
+                className="group inline-flex items-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-[#2563eb] to-[#1d4ed8] text-white font-semibold text-lg hover:shadow-lg hover:shadow-[#2563eb]/20 transition-all"
               >
                 <Mail className="w-5 h-5" />
                 邮件申请
@@ -61,7 +61,7 @@ export default function InstructorPage() {
               <div className="flex flex-col md:flex-row items-start gap-6">
                 {/* Avatar placeholder */}
                 <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#2563eb] to-[#8b5cf6] flex items-center justify-center shrink-0">
-                  <User className="w-12 h-12 text-[#1e293b]" />
+                  <User className="w-12 h-12 text-white" />
                 </div>
                 <div className="flex-1">
                   <h2 className="text-2xl font-bold text-[#1e293b] mb-1">Jin Wang</h2>
@@ -131,7 +131,7 @@ export default function InstructorPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="p-6 rounded-2xl bg-white border border-[rgba(37,99,235,0.08)] text-center hover:border-[#58a6ff]/30 transition-all"
+                  className="p-6 rounded-2xl bg-white border border-[rgba(37,99,235,0.08)] text-center hover:border-[#2563eb]/30 transition-all"
                 >
                   <div className="w-12 h-12 rounded-xl bg-[#2563eb]/10 flex items-center justify-center mx-auto mb-4">
                     <b.icon className="w-6 h-6 text-[#2563eb]" />

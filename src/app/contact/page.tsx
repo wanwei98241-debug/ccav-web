@@ -39,7 +39,7 @@ export default function ContactPage() {
                 viewport={{ once: true }}
                 className="p-8 rounded-2xl bg-white border border-[rgba(37,99,235,0.08)] text-center hover:border-[#2563eb]/30 transition-all"
               >
-                <div className="w-12 h-12 rounded-xl bg-[#58a6ff]/10 flex items-center justify-center mx-auto mb-4">
+                <div className="w-12 h-12 rounded-xl bg-[#2563eb]/10 flex items-center justify-center mx-auto mb-4">
                   <Mail className="w-6 h-6 text-[#2563eb]" />
                 </div>
                 <h3 className="text-lg font-semibold text-[#1e293b] mb-2">邮件咨询</h3>

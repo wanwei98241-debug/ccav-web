@@ -30,7 +30,7 @@ export default function CertificationPage() {
                 level: "初级",
                 title: "AI视频创作基础能力",
                 icon: "🥇",
-                color: "#c8b898",
+                color: "#2563eb",
                 target: "完成基础课程的学员",
                 method: "理论考试 + 基础实操",
                 outcome: "初级能力证书",
@@ -50,7 +50,7 @@ export default function CertificationPage() {
                 level: "高级",
                 title: "综合创作与商业应用能力",
                 icon: "🏆",
-                color: "#c8b898",
+                color: "#2563eb",
                 target: "专业创作者、教师、企业内容负责人",
                 method: "综合项目 + 答辩展示",
                 outcome: "高级能力证书",
@@ -65,7 +65,7 @@ export default function CertificationPage() {
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <span className="text-lg font-bold text-[#1e293b]">第{item.level}级</span>
-                      <span className="text-[10px] text-[#2563eb] bg-[#c8b898]/10 px-2 py-0.5 rounded-full border border-[rgba(37,99,235,0.15)]/20">{item.target}</span>
+                      <span className="text-[10px] text-white bg-[#2563eb]/80 px-2 py-0.5 rounded-full">{item.target}</span>
                     </div>
                     <h3 className="text-xl font-bold text-[#1e293b] mb-1">{item.title}</h3>
                     <div className="flex flex-wrap items-center gap-3 text-xs text-[rgba(0,0,0,0.5)] mb-4">
@@ -126,7 +126,7 @@ export default function CertificationPage() {
             <p className="text-[rgba(0,0,0,0.55)] mb-6">认证报名、证书查询、合作考点申请，请与我们联系。</p>
             <div className="flex flex-wrap gap-4 justify-center">
               <a href="/contact" className="ink-btn inline-block">认证咨询</a>
-              <a href="#cert-search" className="inline-block px-7 py-2.5 rounded-lg font-semibold cursor-pointer" style={{ border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.5)" }}>
+              <a href="#cert-search" className="inline-block px-7 py-2.5 rounded-lg font-semibold cursor-pointer text-[#2563eb]" style={{ border: "1px solid rgba(37,99,235,0.3)" }}>
                 证书查询
               </a>
             </div>
@@ -144,10 +144,10 @@ export default function CertificationPage() {
                   type="text"
                   placeholder="请输入证书编号或姓名"
                   className="flex-1 px-4 py-2.5 rounded-lg text-sm outline-none"
-                  style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#fff" }}
+                  style={{ background: "rgba(37,99,235,0.04)", border: "1px solid rgba(37,99,235,0.15)", color: "#1e293b" }}
                   disabled
                 />
-                <button className="px-5 py-2.5 rounded-lg text-sm font-medium" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.3)", cursor: "not-allowed" }}>
+                <button className="px-5 py-2.5 rounded-lg text-sm font-medium" style={{ background: "rgba(37,99,235,0.06)", border: "1px solid rgba(37,99,235,0.15)", color: "rgba(0,0,0,0.35)", cursor: "not-allowed" }}>
                   查询
                 </button>
               </div>
@@ -157,7 +157,7 @@ export default function CertificationPage() {
         </section>
       </main>
 
-      <footer className="border-t border-white/5 py-8 text-center relative z-10">
+      <footer className="border-t border-[rgba(37,99,235,0.08)] py-8 text-center relative z-10">
         <p className="text-sm text-[rgba(0,0,0,0.5)] mb-2 serif">CCAV — AI视频创作教育机构</p>
         <p className="text-xs text-[rgba(0,0,0,0.35)]">以 T/CCPS 0041—2026 团体标准为核心的AI视频创作教育体系 · © 2026</p>
       </footer>

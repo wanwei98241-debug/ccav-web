@@ -81,9 +81,9 @@ export default function AboutPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="p-6 rounded-2xl bg-white border border-[rgba(37,99,235,0.08)] shadow-sm hover:border-[#58a6ff]/20 transition-all"
+                  className="p-6 rounded-2xl bg-white border border-[rgba(37,99,235,0.08)] shadow-sm hover:border-[#2563eb]/20 transition-all"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-[#58a6ff]/10 flex items-center justify-center mb-4">
+                  <div className="w-10 h-10 rounded-lg bg-[#2563eb]/10 flex items-center justify-center mb-4">
                     <v.icon className="w-5 h-5 text-[#2563eb]" />
                   </div>
                   <h3 className="text-lg font-semibold text-[#1e293b] mb-2">{v.title}</h3>
@@ -141,7 +141,7 @@ export default function AboutPage() {
                 transition={{ duration: 0.5 }}
                 className="p-6 rounded-2xl bg-white border border-[rgba(37,99,235,0.08)] shadow-sm text-center"
               >
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#58a6ff] to-[#3b82f6] flex items-center justify-center mx-auto mb-4">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#2563eb] to-[#3b82f6] flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl font-bold text-white">👑</span>
                 </div>
                 <h3 className="text-lg font-semibold text-[#1e293b] mb-1">王万维</h3>
@@ -215,7 +215,7 @@ export default function AboutPage() {
               </p>
               <a
                 href="/contact/"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#58a6ff] text-white font-semibold hover:bg-[#4a8fd4] transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#2563eb] text-white font-semibold hover:bg-[#1d4ed8] transition-colors"
               >
                 联系我们
                 <Send className="w-4 h-4" />

@@ -83,12 +83,12 @@ export default function GalleryDetailPage() {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: "#0d0d0d" }}>
+    <div className="min-h-screen">
       <Navbar />
       <main className="max-w-4xl mx-auto px-4 pt-24 pb-20">
         <Link
           href="/gallery"
-          className="inline-flex items-center gap-1.5 text-xs text-white/30 hover:text-[#c8b898] transition mb-6"
+          className="inline-flex items-center gap-1.5 text-xs text-[rgba(0,0,0,0.3)] hover:text-[#2563eb] transition mb-6"
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M19 12H5M12 19l-7-7 7-7" />
@@ -98,18 +98,18 @@ export default function GalleryDetailPage() {
 
         {loading ? (
           <div className="flex items-center justify-center py-32">
-            <div className="w-8 h-8 border-2 border-[#c8b898]/30 border-t-[#c8b898] rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-#2563eb/30 border-t-#2563eb rounded-full animate-spin" />
           </div>
         ) : error ? (
           <div className="text-center py-32">
-            <p className="text-lg text-white/30 mb-2">{error}</p>
-            <Link href="/gallery" className="text-xs text-[#c8b898]/60 hover:text-[#c8b898] transition">
+            <p className="text-lg text-[rgba(0,0,0,0.3)] mb-2">{error}</p>
+            <Link href="/gallery" className="text-xs text-[#2563eb]/60 hover:text-[#2563eb] transition">
               ← 返回作品墙
             </Link>
           </div>
         ) : item ? (
           <div className="space-y-8">
-            <div className="rounded-xl overflow-hidden border border-white/10" style={{ background: "#111" }}>
+            <div className="rounded-xl overflow-hidden border border-[rgba(0,0,0,0.08)]">
               {item.media_type === "video" && item.video_url ? (
                 <video
                   src={item.video_url}
@@ -117,22 +117,22 @@ export default function GalleryDetailPage() {
                   autoPlay
                   muted
                   className="w-full max-h-[70vh] object-contain"
-                  style={{ background: "#0a0a0a" }}
+                 
                 />
               ) : (
                 <img
                   src={item.image_url}
                   alt={item.title}
                   className="w-full max-h-[70vh] object-contain"
-                  style={{ background: "#0a0a0a" }}
+                 
                 />
               )}
 
               <div className="p-6 md:p-8">
                 <div className="flex items-start justify-between flex-wrap gap-4">
                   <div className="min-w-0">
-                    <h1 className="text-2xl md:text-3xl font-bold text-white/90">{item.title}</h1>
-                    <div className="flex items-center gap-2 mt-2 text-xs text-white/40 flex-wrap">
+                    <h1 className="text-2xl md:text-3xl font-bold text-[#1e293b]">{item.title}</h1>
+                    <div className="flex items-center gap-2 mt-2 text-xs text-[rgba(0,0,0,0.4)] flex-wrap">
                       {item.avatar_url && (
                         <img src={item.avatar_url} alt="" className="w-5 h-5 rounded-full" />
                       )}
@@ -140,7 +140,7 @@ export default function GalleryDetailPage() {
                       {item.course_name && (
                         <>
                           <span>·</span>
-                          <span className="text-[#c8b898]/60">{item.course_name}</span>
+                          <span className="text-[#2563eb]/60">{item.course_name}</span>
                         </>
                       )}
                       <span>·</span>
@@ -152,16 +152,16 @@ export default function GalleryDetailPage() {
                     <button
                       onClick={toggleLike}
                       className={`flex items-center gap-1.5 text-sm px-4 py-1.5 rounded-full border transition ${
-                        item.liked ? "bg-[#c8b898]/10" : ""
+                        item.liked ? "bg-[#2563eb]/10" : ""
                       }`}
                       style={{
                         borderColor: item.liked
-                          ? "rgba(200,184,152,0.3)"
-                          : "rgba(255,255,255,0.1)",
-                        color: item.liked ? "#c8b898" : "rgba(255,255,255,0.4)",
+                          ? "rgba(37,99,235,0.3)"
+                          : "rgba(0,0,0,0.08)",
+                        color: item.liked ? "#2563eb" : "rgba(0,0,0,0.4)",
                       }}
                     >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill={item.liked ? "#c8b898" : "none"} stroke="currentColor" strokeWidth="2">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill={item.liked ? "#2563eb" : "none"} stroke="currentColor" strokeWidth="2">
                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                       </svg>
                       {item.likes_count}
@@ -169,16 +169,16 @@ export default function GalleryDetailPage() {
                     <button
                       onClick={toggleDislike}
                       className={`flex items-center gap-1.5 text-sm px-4 py-1.5 rounded-full border transition ${
-                        item.disliked ? "bg-red-900/20" : ""
+                        item.disliked ? "bg-red-500/10" : ""
                       }`}
                       style={{
                         borderColor: item.disliked
-                          ? "rgba(255,80,80,0.3)"
-                          : "rgba(255,255,255,0.1)",
-                        color: item.disliked ? "#ff6666" : "rgba(255,255,255,0.4)",
+                          ? "rgba(239,68,68,0.3)"
+                          : "rgba(0,0,0,0.08)",
+                        color: item.disliked ? "#ef4444" : "rgba(0,0,0,0.4)",
                       }}
                     >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill={item.disliked ? "#ff6666" : "none"} stroke="currentColor" strokeWidth="2">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill={item.disliked ? "#ef4444" : "none"} stroke="currentColor" strokeWidth="2">
                         <path d="M17 14V2M9 18.12l-4-6.3V4h11.2l1.2 5.46a2 2 0 0 1-.24 1.73L12 20" />
                       </svg>
                       {item.dislikes_count}
@@ -186,7 +186,7 @@ export default function GalleryDetailPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 mt-4 text-xs text-white/40">
+                <div className="flex items-center gap-4 mt-4 text-xs text-[rgba(0,0,0,0.4)]">
                   <span className="flex items-center gap-1">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                       <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
@@ -201,7 +201,7 @@ export default function GalleryDetailPage() {
                 {item.tags && item.tags.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-4">
                     {item.tags.map((tag) => (
-                      <span key={tag} className="text-xs px-2.5 py-0.5 rounded-full bg-white/5 text-white/30">
+                      <span key={tag} className="text-xs px-2.5 py-0.5 rounded-full bg-[rgba(37,99,235,0.05)] text-[rgba(0,0,0,0.3)]">
                         #{tag}
                       </span>
                     ))}
@@ -209,26 +209,26 @@ export default function GalleryDetailPage() {
                 )}
 
                 {item.description && (
-                  <p className="mt-5 text-sm text-white/50 leading-relaxed">{item.description}</p>
+                  <p className="mt-5 text-sm text-[rgba(0,0,0,0.5)] leading-relaxed">{item.description}</p>
                 )}
 
                 {(item.tech_type || item.scene || item.style) && (
                   <div className="flex flex-wrap gap-3 mt-6">
                     {item.tech_type && (
-                      <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-md border border-white/10 text-white/40">
+                      <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-md border border-[rgba(0,0,0,0.08)] text-[rgba(0,0,0,0.4)]">
                         <span className="text-[#4ac0d8]/50">⚙</span>
                         {item.tech_type}
                       </span>
                     )}
                     {item.scene && (
-                      <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-md border border-white/10 text-white/40">
-                        <span className="text-[#c8b898]/50">🎬</span>
+                      <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-md border border-[rgba(0,0,0,0.08)] text-[rgba(0,0,0,0.4)]">
+                        <span className="text-[#2563eb]/50">🎬</span>
                         {item.scene}
                       </span>
                     )}
                     {item.style && (
-                      <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-md border border-white/10 text-white/40">
-                        <span className="text-[#c8b898]/50">🎨</span>
+                      <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-md border border-[rgba(0,0,0,0.08)] text-[rgba(0,0,0,0.4)]">
+                        <span className="text-[#2563eb]/50">🎨</span>
                         {item.style}
                       </span>
                     )}
@@ -237,10 +237,10 @@ export default function GalleryDetailPage() {
 
                 {/* Phase C: 积分锁面板 */}
                 {(item.unlock_cost ?? 0) > 0 && !item.unlocked && (
-                  <div className="my-8 p-6 rounded-xl border border-white/5 text-center" style={{ background: "#0a0a0a" }}>
+                  <div className="my-8 p-6 rounded-xl border border-[rgba(0,0,0,0.05)] text-center">
                     <div className="text-4xl mb-3">🔒</div>
-                    <p className="text-sm text-white/50 mb-1">该作品需要解锁才能查看完整内容</p>
-                    <p className="text-xs text-white/30 mb-4">解锁后可查看评论、给作品打分</p>
+                    <p className="text-sm text-[rgba(0,0,0,0.5)] mb-1">该作品需要解锁才能查看完整内容</p>
+                    <p className="text-xs text-[rgba(0,0,0,0.3)] mb-4">解锁后可查看评论、给作品打分</p>
                     <button
                       onClick={async () => {
                         if (unlocking) return;
@@ -260,14 +260,14 @@ export default function GalleryDetailPage() {
                       disabled={unlocking}
                       className="w-full max-w-[280px] mx-auto block text-sm font-medium px-6 py-2.5 rounded-lg transition disabled:opacity-50"
                       style={{
-                        background: unlocking ? "#555" : "linear-gradient(135deg, #c8b898, #a08050)",
-                        color: "#000",
+                        background: unlocking ? "#555" : "linear-gradient(135deg, #2563eb, #1d4ed8)",
+                        color: "#fff",
                       }}
                     >
                       {unlocking ? "解锁中..." : `🔓 ${item.unlock_cost || 50} 积分解锁`}
                     </button>
                     {unlockMsg && (
-                      <p className={`mt-3 text-xs ${unlockMsg.includes("成功") ? "text-green-400" : "text-red-400"}`}>
+                      <p className={`mt-3 text-xs ${unlockMsg.includes("成功") ? "text-[#22c55e]" : "text-[#ef4444]"}`}>
                         {unlockMsg}
                       </p>
                     )}
@@ -276,7 +276,7 @@ export default function GalleryDetailPage() {
 
                 {(item.unlocked || !((item.unlock_cost ?? 0) > 0)) && (
                   <>
-                    <div className="my-6 border-t border-white/5" />
+                    <div className="my-6 border-t border-[rgba(0,0,0,0.05)]" />
                     <CommentsList galleryId={item.id} />
                   </>
                 )}
