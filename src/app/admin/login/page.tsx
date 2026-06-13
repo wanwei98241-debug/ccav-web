@@ -2,14 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
 import {
-  User, KeyRound, LogIn, Loader2, Eye, EyeOff, DoorOpen, ChevronRight, Shield
+  User, KeyRound, LogIn, Loader2, Eye, EyeOff, Shield, ChevronRight
 } from "lucide-react";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/api';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -20,7 +17,6 @@ export default function AdminLoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // 已登录则跳转
   useEffect(() => {
     const token = localStorage.getItem("admin_token");
     if (token) {
@@ -57,141 +53,105 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <>
-      <Navbar />
-      <main
-        className="flex-1 min-h-screen flex items-center justify-center px-4"
-        style={{
-          background:
-            "radial-gradient(ellipse at 50% -20%, rgba(229,62,62,0.15) 0%, transparent 60%), radial-gradient(ellipse at 80% 40%, rgba(88,166,255,0.08) 0%, transparent 50%), #0d1117",
-        }}
-      >
-        <div className="w-full max-w-md">
-          {/* 毛玻璃卡片 */}
-          <div className="relative">
-            <div className="absolute -top-20 -right-16 w-40 h-40 rounded-full bg-[#e53e3e]/20 blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-12 -left-16 w-36 h-36 rounded-full bg-[#2563eb]/15 blur-3xl pointer-events-none" />
+    <main className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+      <div className="w-full max-w-sm">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-8">
+          {/* Logo */}
+          <div className="text-center mb-8">
+            <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-blue-600 flex items-center justify-center shadow-md">
+              <Shield className="w-7 h-7 text-white" />
+            </div>
+            <h1 className="text-xl font-bold text-gray-900">报名管理系统</h1>
+            <p className="text-sm text-gray-400 mt-1">管理员登录</p>
+          </div>
 
-            <div
-              className="relative p-8 rounded-3xl border border-white/[0.15] shadow-2xl"
-              style={{
-                background:
-                  "linear-gradient(135deg, rgba(30,40,55,0.9) 0%, rgba(20,28,40,0.85) 100%)",
-                backdropFilter: "blur(24px)",
-                WebkitBackdropFilter: "blur(24px)",
-              }}
-            >
-              <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent" />
-
-              {/* 标题 */}
-              <div className="text-center mb-8">
-                <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-gradient-to-br from-[#e53e3e] to-[#ff6b6b] flex items-center justify-center shadow-lg shadow-[#e53e3e]/30">
-                  <Shield className="w-8 h-8 text-white" />
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-xs text-gray-500 mb-1.5 font-medium">用户名</label>
+              <div className="relative">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                  <User className="w-4 h-4" />
                 </div>
-                <h1 className="text-2xl font-bold text-white tracking-tight">
-                  CCAV 报名管理系统
-                </h1>
-                <p className="text-sm text-gray-400 mt-1.5">管理员登录</p>
-              </div>
-
-              {/* 表单 */}
-              <form onSubmit={handleSubmit} className="space-y-5">
-                {/* 用户名 */}
-                <div>
-                  <label className="block text-xs text-gray-400 mb-1.5 font-medium">
-                    用户名
-                  </label>
-                  <div className="relative group">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e53e3e] transition-colors z-10">
-                      <User className="w-4 h-4" />
-                    </div>
-                    <input
-                      type="text"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      placeholder="请输入管理员用户名"
-                      className="w-full pl-10 pr-4 py-3 rounded-xl bg-white/10 border border-white/10 text-sm text-white placeholder-gray-500 focus:border-[#e53e3e] focus:ring-1 focus:ring-[#e53e3e]/30 focus:outline-none transition-all"
-                      required
-                      autoComplete="username"
-                    />
-                  </div>
-                </div>
-
-                {/* 密码 */}
-                <div>
-                  <label className="block text-xs text-gray-400 mb-1.5 font-medium">
-                    密码
-                  </label>
-                  <div className="relative group">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#e53e3e] transition-colors z-10">
-                      <KeyRound className="w-4 h-4" />
-                    </div>
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="请输入密码"
-                      className="w-full pl-10 pr-10 py-3 rounded-xl bg-white/10 border border-white/10 text-sm text-white placeholder-gray-500 focus:border-[#e53e3e] focus:ring-1 focus:ring-[#e53e3e]/30 focus:outline-none transition-all"
-                      required
-                      autoComplete="current-password"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
-                    >
-                      {showPassword ? (
-                        <EyeOff className="w-4 h-4" />
-                      ) : (
-                        <Eye className="w-4 h-4" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-
-                {/* 错误提示 */}
-                {error && (
-                  <div className="p-3 rounded-xl bg-[#f85149]/10 border border-[#f85149]/20 text-sm text-[#f85149]">
-                    {error}
-                  </div>
-                )}
-
-                {/* 登录按钮 */}
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className={`w-full py-3.5 rounded-xl font-semibold text-sm tracking-wide transition-all flex items-center justify-center gap-2 ${
-                    loading
-                      ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                      : "bg-[#e53e3e] text-white hover:bg-[#c53030] active:bg-[#9b2c2c] shadow-lg shadow-[#e53e3e]/25 hover:shadow-xl hover:shadow-[#e53e3e]/30"
-                  }`}
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      登录中...
-                    </>
-                  ) : (
-                    <>
-                      <LogIn className="w-4 h-4" />
-                      登 录
-                      <ChevronRight className="w-4 h-4" />
-                    </>
-                  )}
-                </button>
-              </form>
-
-              {/* 提示信息 */}
-              <div className="mt-5 p-4 rounded-2xl bg-white/5 border border-white/10">
-                <p className="text-xs text-gray-400 text-center">
-                  请联系管理员获取账号信息
-                </p>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="admin"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 focus:bg-white transition-all"
+                  required
+                  autoComplete="username"
+                />
               </div>
             </div>
+
+            <div>
+              <label className="block text-xs text-gray-500 mb-1.5 font-medium">密码</label>
+              <div className="relative">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                  <KeyRound className="w-4 h-4" />
+                </div>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="密码"
+                  className="w-full pl-10 pr-10 py-3 rounded-xl border border-gray-200 bg-gray-50 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 focus:bg-white transition-all"
+                  required
+                  autoComplete="current-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            {error && (
+              <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-600">
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full py-3 rounded-xl font-semibold text-sm transition-all flex items-center justify-center gap-2 ${
+                loading
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 shadow-sm"
+              }`}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  登录中...
+                </>
+              ) : (
+                <>
+                  <LogIn className="w-4 h-4" />
+                  登 录
+                </>
+              )}
+            </button>
+          </form>
+
+          <div className="mt-6 pt-5 border-t border-gray-100">
+            <p className="text-xs text-gray-400 text-center">
+              <span className="text-gray-400">演示账号：</span>
+              admin / admin123
+            </p>
           </div>
         </div>
-      </main>
-      <Footer />
-    </>
+
+        {/* Demo hint */}
+        <p className="text-center text-xs text-gray-400 mt-6">
+          CCAV 报名管理系统 &middot; v1.0
+        </p>
+      </div>
+    </main>
   );
 }
