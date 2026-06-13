@@ -34,8 +34,8 @@ export default function LessonCard({
   const locked = !isCurrentLesson && !completed;
 
   return (
-    <div className={`border rounded-xl overflow-hidden bg-[#161b22] transition-all ${
-      locked ? "border-[#21262d] opacity-60" : "border-[#30363d]"
+    <div className={`border rounded-xl overflow-hidden bg-white transition-all ${
+      locked ? "border-gray-200 opacity-60" : "border-gray-200"
     }`}>
       {/* 标题栏 */}
       <button
@@ -44,27 +44,27 @@ export default function LessonCard({
           setExpanded(!expanded);
         }}
         disabled={locked}
-        className="w-full flex items-center justify-between p-4 hover:bg-[#1c2333] transition-colors text-left disabled:cursor-not-allowed"
+        className="w-full flex items-center justify-between p-4 hover:bg-gray-100 transition-colors text-left disabled:cursor-not-allowed"
       >
         <div className="flex items-center gap-3">
           <span className={`inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold ${
             locked
-              ? "bg-[#21262d] text-[#484f58]"
-              : "bg-[#58a6ff]/20 text-[#58a6ff]"
+              ? "bg-gray-100 text-gray-400"
+              : "bg-indigo-100 text-indigo-600"
           }`}>
             {locked ? <Lock className="w-3.5 h-3.5" /> : index}
           </span>
           <div>
-            <span className={`font-medium ${locked ? "text-[#484f58]" : "text-[#f0f6fc]"}`}>
+            <span className={`font-medium ${locked ? "text-gray-400" : "text-gray-900"}`}>
               {locked ? "🔒 " : ""}{lesson.title}
             </span>
             {lesson.isPractical && (
-              <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded bg-[#d2991d]/20 text-[#d2991d]">
+              <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded bg-yellow-100 text-yellow-600">
                 实操
               </span>
             )}
             {completed && !locked && (
-              <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded bg-[#3fb950]/20 text-[#3fb950]">
+              <span className="ml-2 text-[10px] px-1.5 py-0.5 rounded bg-green-100 text-green-600">
                 ✅ 已完成
               </span>
             )}
@@ -72,7 +72,7 @@ export default function LessonCard({
         </div>
         {!locked && (
           <svg
-            className={`w-4 h-4 text-[#8b949e] transition-transform ${expanded ? "rotate-180" : ""}`}
+            className={`w-4 h-4 text-gray-500 transition-transform ${expanded ? "rotate-180" : ""}`}
             fill="none" viewBox="0 0 24 24" stroke="currentColor"
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -81,8 +81,8 @@ export default function LessonCard({
       </button>
 
       {locked && (
-        <div className="px-4 pb-4 border-t border-[#21262d]">
-          <div className="pt-3 flex items-center gap-2 text-xs text-[#484f58]">
+        <div className="px-4 pb-4 border-t border-gray-200">
+          <div className="pt-3 flex items-center gap-2 text-xs text-gray-400">
             <Lock className="w-3.5 h-3.5" />
             需完成上一课自测才能解锁
           </div>
@@ -90,42 +90,42 @@ export default function LessonCard({
       )}
 
       {expanded && !locked && (
-        <div className="px-4 pb-5 space-y-4 border-t border-[#30363d] pt-4">
+        <div className="px-4 pb-5 space-y-4 border-t border-gray-200 pt-4">
           {/* ① 课前/自学 */}
           <LayerSection
-            icon={<BookOpenText className="w-4 h-4 text-[#58a6ff]" />}
+            icon={<BookOpenText className="w-4 h-4 text-indigo-600" />}
             label="课前 · 自学层"
-            accent="text-[#58a6ff]"
+            accent="text-indigo-600"
           >
-            <p className="text-sm text-[#c9d1d9] leading-relaxed">{lesson.summary}</p>
+            <p className="text-sm text-gray-700 leading-relaxed">{lesson.summary}</p>
 
-            <div className="mt-3 p-3 rounded-lg bg-[#0d1117] border border-[#30363d]">
+            <div className="mt-3 p-3 rounded-lg bg-gray-50 border border-gray-200">
               <div className="flex items-center gap-2 mb-1">
-                <Lightbulb className="w-4 h-4 text-[#d2991d]" />
-                <span className="text-xs font-medium text-[#d2991d]">关键概念</span>
+                <Lightbulb className="w-4 h-4 text-yellow-600" />
+                <span className="text-xs font-medium text-yellow-600">关键概念</span>
               </div>
               {(() => { const concepts = Array.isArray(lesson.keyConcept) ? lesson.keyConcept : [lesson.keyConcept]; return concepts.map((kc, i) => (
                 <div key={i}>
-                  <div className="text-sm text-[#f0f6fc] font-medium">
+                  <div className="text-sm text-gray-900 font-medium">
                     {kc.icon} {kc.title}
                   </div>
-                  <p className="text-xs text-[#8b949e] mt-1">{kc.description}</p>
+                  <p className="text-xs text-gray-500 mt-1">{kc.description}</p>
                 </div>
               )); })()}
             </div>
 
             {lesson.tryItPrompt && (
-              <div className="mt-3 p-3 rounded-lg bg-gradient-to-r from-[#0d1117] to-[#11181f] border border-[#30363d]">
+              <div className="mt-3 p-3 rounded-lg bg-gradient-to-r from-gray-50 to-gray-100 border border-gray-200">
                 <div className="flex items-center gap-2 mb-1">
-                  <Sparkles className="w-4 h-4 text-[#3fb950]" />
-                  <span className="text-xs font-medium text-[#3fb950]">先动手试试</span>
+                  <Sparkles className="w-4 h-4 text-green-600" />
+                  <span className="text-xs font-medium text-green-600">先动手试试</span>
                 </div>
-                <code className="block text-sm text-[#f0f6fc] mt-1 bg-[#0d1117] p-2 rounded border border-[#21262d]">
+                <code className="block text-sm text-gray-900 mt-1 bg-gray-50 p-2 rounded border border-gray-200">
                   {lesson.tryItPrompt}
                 </code>
                 <a
                   href="/playground"
-                  className="inline-flex items-center gap-1 mt-2 text-xs text-[#58a6ff] hover:underline"
+                  className="inline-flex items-center gap-1 mt-2 text-xs text-indigo-600 hover:underline"
                 >
                   <LinkIcon className="w-3 h-3" />
                   去 Playground 跑一跑
@@ -136,26 +136,26 @@ export default function LessonCard({
 
           {/* ② 课中/直播 */}
           <LayerSection
-            icon={<Play className="w-4 h-4 text-[#d2991d]" />}
+            icon={<Play className="w-4 h-4 text-yellow-600" />}
             label="课中 · 直播互动层"
-            accent="text-[#d2991d]"
+            accent="text-yellow-600"
           >
-            <ul className="space-y-1 text-sm text-[#c9d1d9]">
+            <ul className="space-y-1 text-sm text-gray-700">
               <li className="flex items-start gap-2">
-                <span className="text-[#d2991d] mt-0.5">▸</span>
+                <span className="text-yellow-600 mt-0.5">▸</span>
                 主讲老师现场演示 + 实时跟练
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-[#d2991d] mt-0.5">▸</span>
+                <span className="text-yellow-600 mt-0.5">▸</span>
                 即时答疑 + 作品点评
               </li>
               <li className="flex items-start gap-2">
-                <span className="text-[#d2991d] mt-0.5">▸</span>
+                <span className="text-yellow-600 mt-0.5">▸</span>
                 每节课产出一个可展示作品
               </li>
             </ul>
             {lesson.liveStreamDate && (
-              <p className="mt-2 text-xs text-[#8b949e]">
+              <p className="mt-2 text-xs text-gray-500">
                 直播时间：{lesson.liveStreamDate}
               </p>
             )}
@@ -163,28 +163,28 @@ export default function LessonCard({
 
           {/* ③ 课后/巩固 */}
           <LayerSection
-            icon={<GraduationCap className="w-4 h-4 text-[#3fb950]" />}
+            icon={<GraduationCap className="w-4 h-4 text-green-600" />}
             label="课后 · 巩固层"
-            accent="text-[#3fb950]"
+            accent="text-green-600"
           >
-            <div className="space-y-3 text-sm text-[#c9d1d9]">
+            <div className="space-y-3 text-sm text-gray-700">
               <div>
-                <span className="text-[#8b949e] text-xs font-medium block mb-1">
+                <span className="text-gray-500 text-xs font-medium block mb-1">
                   📝 课后作业
                 </span>
                 <p>{lesson.homework}</p>
               </div>
               {lesson.advancedChallenge && (
                 <div>
-                  <span className="text-[#8b949e] text-xs font-medium block mb-1">
+                  <span className="text-gray-500 text-xs font-medium block mb-1">
                     🔥 进阶挑战（选做）
                   </span>
                   <p>{lesson.advancedChallenge}</p>
                 </div>
               )}
               {lesson.nextPreview && (
-                <div className="pt-2 border-t border-[#30363d]">
-                  <span className="text-[#8b949e] text-xs font-medium block mb-1">
+                <div className="pt-2 border-t border-gray-200">
+                  <span className="text-gray-500 text-xs font-medium block mb-1">
                     📖 下节课预告
                   </span>
                   <p className="italic">{lesson.nextPreview}</p>
@@ -193,7 +193,7 @@ export default function LessonCard({
               {lesson.recordingUrl && (
                 <a
                   href={lesson.recordingUrl}
-                  className="inline-flex items-center gap-1 text-xs text-[#58a6ff] hover:underline"
+                  className="inline-flex items-center gap-1 text-xs text-indigo-600 hover:underline"
                   target="_blank" rel="noopener noreferrer"
                 >
                   <Monitor className="w-3 h-3" />
@@ -273,9 +273,9 @@ function SelfTestSection({
 
   return (
     <LayerSection
-      icon={<HelpCircle className="w-4 h-4 text-[#bc8cff]" />}
+      icon={<HelpCircle className="w-4 h-4 text-purple-500" />}
       label="自测题 · 完成 ≥60% 解锁下一课"
-      accent="text-[#bc8cff]"
+      accent="text-purple-500"
     >
       <div className="space-y-4">
         {questions.map((q, qi) => (
@@ -304,8 +304,8 @@ function SelfTestSection({
           <div className="space-y-3">
             <div className={`p-3 rounded-lg text-center text-sm font-semibold ${
               score >= 60
-                ? "bg-[#3fb950]/20 text-[#3fb950]"
-                : "bg-[#e53e3e]/20 text-[#e53e3e]"
+                ? "bg-green-100 text-green-600"
+                : "bg-[#e53e3e]/20 text-red-600"
             }`}>
               {score >= 60 ? (
                 <span className="flex items-center justify-center gap-2">
@@ -322,7 +322,7 @@ function SelfTestSection({
             </div>
             <button
               onClick={handleReset}
-              className="w-full py-2 rounded-lg border border-[#30363d] text-[#c9d1d9] text-sm hover:bg-[#1c2333] transition-all"
+              className="w-full py-2 rounded-lg border border-gray-200 text-gray-700 text-sm hover:bg-gray-100 transition-all"
             >
               {score >= 60 ? "重新做一遍" : "再试一次"}
             </button>
@@ -358,11 +358,11 @@ function QuestionItem({
 
   const borderColor = showResult
     ? isCorrect
-      ? "border-[#3fb950]"
+      ? "border-green-500"
       : isWrong
-        ? "border-[#e53e3e]"
-        : "border-[#30363d]"
-    : "border-[#30363d]";
+        ? "border-red-500"
+        : "border-gray-200"
+    : "border-gray-200";
 
   const icons: Record<QuestionType, string> = {
     single: "单选",
@@ -372,15 +372,15 @@ function QuestionItem({
   };
 
   return (
-    <div className={`p-3 rounded-lg bg-[#0d1117] border ${borderColor}`}>
+    <div className={`p-3 rounded-lg bg-gray-50 border ${borderColor}`}>
       {/* 题干 */}
       <div className="flex items-start gap-2 mb-2">
-        <span className="text-xs font-bold text-[#bc8cff] mt-0.5 shrink-0">
+        <span className="text-xs font-bold text-purple-500 mt-0.5 shrink-0">
           Q{index + 1}
         </span>
         <div>
-          <span className="text-[10px] text-[#484f58] mr-2">[{icons[question.type]}]</span>
-          <span className="text-sm text-[#f0f6fc]">{question.question}</span>
+          <span className="text-[10px] text-gray-400 mr-2">[{icons[question.type]}]</span>
+          <span className="text-sm text-gray-900">{question.question}</span>
         </div>
       </div>
 
@@ -390,10 +390,10 @@ function QuestionItem({
           {question.options.map((opt, oi) => (
             <label key={oi} className={`flex items-center gap-2 cursor-pointer text-sm py-1 ${
               showResult && opt === question.answer
-                ? "text-[#3fb950]"
+                ? "text-green-600"
                 : showResult && hasValue && String(value) === opt
-                  ? "text-[#e53e3e]"
-                  : "text-[#c9d1d9]"
+                  ? "text-red-600"
+                  : "text-gray-700"
             }`}>
               <input
                 type="radio"
@@ -402,7 +402,7 @@ function QuestionItem({
                 checked={value === opt}
                 onChange={() => onChange(opt)}
                 disabled={showResult}
-                className="accent-[#bc8cff]"
+                className="accent-purple-500"
               />
               {opt}
               {showResult && opt === question.answer && " ✅"}
@@ -419,10 +419,10 @@ function QuestionItem({
             return (
               <label key={oi} className={`flex items-center gap-2 cursor-pointer text-sm py-1 ${
                 showResult && isCorrectOpt
-                  ? "text-[#3fb950]"
+                  ? "text-green-600"
                   : showResult && selected && !isCorrectOpt
-                    ? "text-[#e53e3e]"
-                    : "text-[#c9d1d9]"
+                    ? "text-red-600"
+                    : "text-gray-700"
               }`}>
                 <input
                   type="checkbox"
@@ -436,7 +436,7 @@ function QuestionItem({
                       onChange([...arr, opt]);
                     }
                   }}
-                  className="accent-[#bc8cff]"
+                  className="accent-purple-500"
                 />
                 {opt}
                 {showResult && isCorrectOpt && " ✅"}
@@ -452,10 +452,10 @@ function QuestionItem({
           {["对", "错"].map((opt) => (
             <label key={opt} className={`flex items-center gap-2 cursor-pointer text-sm py-1 ${
               showResult && opt === question.answer
-                ? "text-[#3fb950]"
+                ? "text-green-600"
                 : showResult && hasValue && String(value) === opt
-                  ? "text-[#e53e3e]"
-                  : "text-[#c9d1d9]"
+                  ? "text-red-600"
+                  : "text-gray-700"
             }`}>
               <input
                 type="radio"
@@ -464,7 +464,7 @@ function QuestionItem({
                 checked={value === opt}
                 onChange={() => onChange(opt)}
                 disabled={showResult}
-                className="accent-[#bc8cff]"
+                className="accent-purple-500"
               />
               {opt === "对" ? "✓ 正确" : "✗ 错误"}
               {showResult && opt === question.answer && " ✅"}
@@ -481,8 +481,8 @@ function QuestionItem({
             onChange={(e) => onChange(e.target.value)}
             disabled={showResult}
             placeholder="请输入答案..."
-            className={`w-full px-3 py-1.5 rounded border bg-[#0d1117] text-sm text-[#f0f6fc] placeholder-[#484f58] focus:outline-none focus:border-[#58a6ff] ${
-              showResult ? (isCorrect ? "border-[#3fb950]" : "border-[#e53e3e]") : "border-[#21262d]"
+            className={`w-full px-3 py-1.5 rounded border bg-gray-50 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-indigo-400 ${
+              showResult ? (isCorrect ? "border-green-500" : "border-red-500") : "border-gray-200"
             }`}
           />
         </div>
@@ -491,7 +491,7 @@ function QuestionItem({
       {/* 解析 */}
       {showResult && (
         <div className={`mt-2 ml-5 flex items-start gap-1 text-xs ${
-          isCorrect ? "text-[#3fb950]" : "text-[#e53e3e]"
+          isCorrect ? "text-green-600" : "text-red-600"
         }`}>
           <AlertCircle className="w-3 h-3 mt-0.5 shrink-0" />
           <span>{question.explanation}</span>
@@ -514,7 +514,7 @@ function LayerSection({
   children: React.ReactNode;
 }) {
   return (
-    <div className="p-3 rounded-lg bg-[#0d1117] border border-[#21262d]">
+    <div className="p-3 rounded-lg bg-gray-50 border border-gray-200">
       <div className="flex items-center gap-2 mb-2">
         {icon}
         <span className={`text-xs font-semibold uppercase tracking-wider ${accent}`}>

@@ -92,7 +92,7 @@ export default function LoginPage() {
       <Breadcrumbs items={[{ label: "后台管理登录" }]} />
       <main className="flex-1 min-h-screen flex items-center justify-center px-4"
         style={{
-          background: "radial-gradient(ellipse at 50% -20%, rgba(229,62,62,0.15) 0%, transparent 60%), radial-gradient(ellipse at 80% 40%, rgba(88,166,255,0.08) 0%, transparent 50%), #0d1117"
+          background: "radial-gradient(ellipse at 50% -20%, rgba(229,62,62,0.15) 0%, transparent 60%), radial-gradient(ellipse at 80% 40%, rgba(88,166,255,0.08) 0%, transparent 50%), #f9fafb"
         }}>
         <div className="w-full max-w-md">
 

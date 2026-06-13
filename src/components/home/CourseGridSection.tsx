@@ -61,7 +61,7 @@ const courses = [
 
 export default function CourseGridSection() {
   return (
-    <section className="relative z-10 pb-16" style={{ background: "#0d0d0d" }}>
+    <section className="relative z-10 pb-16" style={{ background: "#ffffff" }}>
       <div className="max-w-6xl mx-auto px-4">
         {/* 标题 */}
         <div className="text-center mb-12">

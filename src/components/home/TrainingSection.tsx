@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function TrainingSection() {
   return (
-    <section className="relative z-10 pb-16" style={{ background: "#0d0d0d" }}>
+    <section className="relative z-10 pb-16" style={{ background: "#ffffff" }}>
       <div className="max-w-4xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 30 }}

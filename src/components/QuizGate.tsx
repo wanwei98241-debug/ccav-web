@@ -119,18 +119,18 @@ export default function QuizGate({ courseId, moduleIndex, lessonIndex, nextLesso
 
   if (status === "passed") {
     return (
-      <div className="p-6 rounded-2xl bg-[#3fb950]/5 border border-[#3fb950]/20">
+      <div className="p-6 rounded-2xl bg-green-50 border border-green-200">
         <div className="flex items-center gap-3 mb-3">
-          <Award className="w-6 h-6 text-[#3fb950]" />
+          <Award className="w-6 h-6 text-green-600" />
           <div>
-            <h3 className="font-semibold text-[#3fb950]">✅ 本节已通过</h3>
-            <p className="text-sm text-[#8b949e]">得分：{score}/3</p>
+            <h3 className="font-semibold text-green-600">✅ 本节已通过</h3>
+            <p className="text-sm text-gray-500">得分：{score}/3</p>
           </div>
         </div>
         {nextLessonUrl && (
           <Link
             href={nextLessonUrl}
-            className="inline-flex items-center gap-2 mt-2 px-4 py-2 rounded-lg bg-gradient-to-r from-[#3fb950] to-[#39d2c0] text-white text-sm font-semibold hover:shadow-lg transition-all"
+            className="inline-flex items-center gap-2 mt-2 px-4 py-2 rounded-lg bg-gradient-to-r from-green-500 to-[#39d2c0] text-white text-sm font-semibold hover:shadow-lg transition-all"
           >
             进入下一课 <ArrowRight className="w-4 h-4" />
           </Link>
@@ -140,16 +140,16 @@ export default function QuizGate({ courseId, moduleIndex, lessonIndex, nextLesso
   }
 
   return (
-    <div className="p-6 rounded-2xl bg-[#161b22] border border-[#30363d]">
+    <div className="p-6 rounded-2xl bg-white border border-gray-200">
       <div className="flex items-center gap-2 mb-4">
-        <Lock className="w-5 h-5 text-[#d2991d]" />
-        <h3 className="font-semibold text-[#f0f6fc]">📝 课后考核（{totalQuestions}题 · 答对{passThreshold}题即通过）</h3>
+        <Lock className="w-5 h-5 text-yellow-600" />
+        <h3 className="font-semibold text-gray-900">📝 课后考核（{totalQuestions}题 · 答对{passThreshold}题即通过）</h3>
       </div>
 
       <div className="space-y-5 mb-4">
         {questions.map((q, qi) => (
-          <div key={qi} className="p-4 rounded-xl bg-[#0d1117] border border-[#21262d]">
-            <p className="text-sm font-medium text-[#f0f6fc] mb-3">
+          <div key={qi} className="p-4 rounded-xl bg-gray-50 border border-gray-200">
+            <p className="text-sm font-medium text-gray-900 mb-3">
               {qi + 1}. {q.question}
             </p>
             <div className="space-y-2">
@@ -158,9 +158,9 @@ export default function QuizGate({ courseId, moduleIndex, lessonIndex, nextLesso
                 const isCorrect = submitted && oi === q.correct;
                 const isWrong = submitted && isSelected && oi !== q.correct;
 
-                let borderClass = "border-[#30363d]";
+                let borderClass = "border-gray-200";
                 if (submitted) {
-                  if (isCorrect) borderClass = "border-[#3fb950] bg-[#3fb950]/5";
+                  if (isCorrect) borderClass = "border-[#3fb950] bg-green-50";
                   else if (isWrong) borderClass = "border-[#e53e3e] bg-[#e53e3e]/5";
                 } else if (isSelected) {
                   borderClass = "border-[#58a6ff] bg-[#58a6ff]/10";
@@ -171,11 +171,11 @@ export default function QuizGate({ courseId, moduleIndex, lessonIndex, nextLesso
                     key={oi}
                     onClick={() => handleSelect(qi, oi)}
                     disabled={submitted}
-                    className={`w-full text-left p-3 rounded-lg border ${borderClass} text-sm text-[#c9d1d9] hover:border-[#58a6ff]/30 transition-all flex items-center gap-2`}
+                    className={`w-full text-left p-3 rounded-lg border ${borderClass} text-sm text-gray-700 hover:border-indigo-400/30 transition-all flex items-center gap-2`}
                   >
-                    {submitted && isCorrect && <CheckCircle className="w-4 h-4 text-[#3fb950] shrink-0" />}
+                    {submitted && isCorrect && <CheckCircle className="w-4 h-4 text-green-600 shrink-0" />}
                     {submitted && isWrong && <XCircle className="w-4 h-4 text-[#e53e3e] shrink-0" />}
-                    {!submitted && <span className="w-5 h-5 rounded-full border border-[#30363d] flex items-center justify-center text-xs text-[#484f58] shrink-0">{String.fromCharCode(65 + oi)}</span>}
+                    {!submitted && <span className="w-5 h-5 rounded-full border border-gray-200 flex items-center justify-center text-xs text-gray-400 shrink-0">{String.fromCharCode(65 + oi)}</span>}
                     {opt}
                   </button>
                 );
@@ -191,19 +191,19 @@ export default function QuizGate({ courseId, moduleIndex, lessonIndex, nextLesso
           disabled={!allAnswered}
           className={`w-full py-3 rounded-xl font-semibold text-sm transition-all ${
             allAnswered
-              ? "bg-gradient-to-r from-[#58a6ff] to-[#bc8cff] text-white hover:shadow-lg"
-              : "bg-[#21262d] text-[#484f58] cursor-not-allowed"
+              ? "bg-gradient-to-r from-indigo-500 to-[#bc8cff] text-white hover:shadow-lg"
+              : "bg-gray-100 text-gray-400 cursor-not-allowed"
           }`}
         >
           {allAnswered ? "提交答案" : `请回答全部 ${questions.length} 题`}
         </button>
       ) : (
-        <div className={`p-4 rounded-xl ${passed ? "bg-[#3fb950]/10 border border-[#3fb950]/30" : "bg-[#e53e3e]/10 border border-[#e53e3e]/30"}`}>
+        <div className={`p-4 rounded-xl ${passed ? "bg-green-50 border border-green-300" : "bg-red-50 border border-red-300"}`}>
           <div className="flex items-center gap-2 mb-2">
             {passed ? (
               <>
-                <CheckCircle className="w-5 h-5 text-[#3fb950]" />
-                <span className="font-semibold text-[#3fb950]">恭喜通过！得分 {score}/{totalQuestions}</span>
+                <CheckCircle className="w-5 h-5 text-green-600" />
+                <span className="font-semibold text-green-600">恭喜通过！得分 {score}/{totalQuestions}</span>
               </>
             ) : (
               <>
@@ -215,7 +215,7 @@ export default function QuizGate({ courseId, moduleIndex, lessonIndex, nextLesso
           {passed && nextLessonUrl && (
             <Link
               href={nextLessonUrl}
-              className="inline-flex items-center gap-2 mt-2 px-4 py-2 rounded-lg bg-gradient-to-r from-[#3fb950] to-[#39d2c0] text-white text-sm font-semibold hover:shadow-lg transition-all"
+              className="inline-flex items-center gap-2 mt-2 px-4 py-2 rounded-lg bg-gradient-to-r from-green-500 to-[#39d2c0] text-white text-sm font-semibold hover:shadow-lg transition-all"
             >
               进入下一课 <ArrowRight className="w-4 h-4" />
             </Link>
@@ -223,7 +223,7 @@ export default function QuizGate({ courseId, moduleIndex, lessonIndex, nextLesso
           {!passed && (
             <button
               onClick={() => { setSubmitted(false); setAnswers(new Array(totalQuestions).fill(null)); }}
-              className="mt-2 px-4 py-2 rounded-lg bg-[#21262d] text-[#c9d1d9] text-sm hover:bg-[#30363d] transition-all"
+              className="mt-2 px-4 py-2 rounded-lg bg-gray-100 text-gray-700 text-sm hover:bg-gray-200 transition-all"
             >
               重新答题
             </button>

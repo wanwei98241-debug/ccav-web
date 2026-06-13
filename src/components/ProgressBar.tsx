@@ -21,23 +21,23 @@ export default function ProgressBar({ courseId, moduleIndex, lessonIndex }: Prop
   const percent = getCompletionPercent(courseId, total);
 
   return (
-    <div className="p-5 rounded-2xl bg-[#161b22] border border-[#30363d]">
+    <div className="p-5 rounded-2xl bg-white border border-gray-200">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-[#f0f6fc] flex items-center gap-2">
+        <span className="text-sm font-medium text-gray-900 flex items-center gap-2">
           {status === "passed" ? (
-            <CheckCircle className="w-4 h-4 text-[#3fb950]" />
+            <CheckCircle className="w-4 h-4 text-green-600" />
           ) : status === "unlocked" ? (
-            <Circle className="w-4 h-4 text-[#58a6ff]" />
+            <Circle className="w-4 h-4 text-indigo-600" />
           ) : (
-            <Lock className="w-4 h-4 text-[#484f58]" />
+            <Lock className="w-4 h-4 text-gray-400" />
           )}
           学习进度
         </span>
-        <span className="text-xs text-[#8b949e]">{percent}%</span>
+        <span className="text-xs text-gray-500">{percent}%</span>
       </div>
-      <div className="w-full h-2 bg-[#0d1117] rounded-full overflow-hidden">
+      <div className="w-full h-2 bg-gray-50 rounded-full overflow-hidden">
         <div
-          className="h-full bg-gradient-to-r from-[#3fb950] to-[#39d2c0] rounded-full transition-all duration-500"
+          className="h-full bg-gradient-to-r from-green-500 to-[#39d2c0] rounded-full transition-all duration-500"
           style={{ width: `${percent}%` }}
         />
       </div>

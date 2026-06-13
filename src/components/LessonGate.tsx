@@ -21,27 +21,27 @@ export default function LessonGate({ courseId, moduleIndex, lessonIndex, require
   // ===== 未登录阻止 =====
   if (requireAuth && !isAuthenticated) {
     return (
-      <div className="fixed inset-0 z-50 bg-[#0d1117]/98 backdrop-blur-sm flex items-center justify-center pt-16">
+      <div className="fixed inset-0 z-50 bg-white/98 backdrop-blur-sm flex items-center justify-center pt-16">
         <div className="text-center px-6 max-w-md">
-          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-[#161b22] border-2 border-[#30363d] flex items-center justify-center">
-            <LogIn className="w-10 h-10 text-[#8b949e]" />
+          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gray-100 border-2 border-gray-200 flex items-center justify-center">
+            <LogIn className="w-10 h-10 text-gray-500" />
           </div>
 
-          <h1 className="text-2xl font-bold text-[#f0f6fc] mb-3">🔒 请先登录</h1>
-          <p className="text-[#8b949e] mb-2">学习课程需要登录账号</p>
-          <p className="text-sm text-[#484f58] mb-8">登录后自动记录学习进度和考试结果</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-3">🔒 请先登录</h1>
+          <p className="text-gray-500 mb-2">学习课程需要登录账号</p>
+          <p className="text-sm text-gray-400 mb-8">登录后自动记录学习进度和考试结果</p>
 
           <div className="flex flex-col gap-3 items-center">
             <Link
               href="/admin/login"
-              className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-[#58a6ff] to-[#bc8cff] text-white font-semibold hover:shadow-lg transition-all"
+              className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-[#bc8cff] text-white font-semibold hover:shadow-lg transition-all"
             >
               <LogIn className="w-4 h-4" />
               登录 / 注册
             </Link>
             <Link
               href={`/courses/${courseId}`}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#21262d] border border-[#30363d] text-[#c9d1d9] hover:border-[#58a6ff]/50 transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gray-100 border border-gray-200 text-gray-700 hover:border-indigo-400/50 transition-all"
             >
               <ArrowLeft className="w-4 h-4" />
               返回课程目录
@@ -55,21 +55,21 @@ export default function LessonGate({ courseId, moduleIndex, lessonIndex, require
   // ===== 进度锁定 =====
   if (!unlocked) {
     return (
-      <div className="fixed inset-0 z-50 bg-[#0d1117]/98 backdrop-blur-sm flex items-center justify-center pt-16">
+      <div className="fixed inset-0 z-50 bg-white/98 backdrop-blur-sm flex items-center justify-center pt-16">
         <div className="text-center px-6 max-w-md">
-          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-[#161b22] border-2 border-[#30363d] flex items-center justify-center">
-            <Lock className="w-10 h-10 text-[#8b949e]" />
+          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gray-100 border-2 border-gray-200 flex items-center justify-center">
+            <Lock className="w-10 h-10 text-gray-500" />
           </div>
 
-          <h1 className="text-2xl font-bold text-[#f0f6fc] mb-3">🔒 课程已锁定</h1>
-          <p className="text-[#8b949e] mb-2">请按顺序完成前面课程并通过考核</p>
-          <p className="text-sm text-[#484f58] mb-8">每节课答对 Quiz 后自动解锁下一课</p>
+          <h1 className="text-2xl font-bold text-gray-900 mb-3">🔒 课程已锁定</h1>
+          <p className="text-gray-500 mb-2">请按顺序完成前面课程并通过考核</p>
+          <p className="text-sm text-gray-400 mb-8">每节课答对 Quiz 后自动解锁下一课</p>
 
-          <div className="p-4 rounded-xl bg-[#161b22] border border-[#30363d] mb-6 text-left">
-            <div className="text-xs text-[#484f58] uppercase mb-1">最近解锁可学</div>
+          <div className="p-4 rounded-xl bg-gray-100 border border-gray-200 mb-6 text-left">
+            <div className="text-xs text-gray-400 uppercase mb-1">最近解锁可学</div>
             <Link
               href={findLastUnlockedUrl(courseId, moduleIndex, lessonIndex)}
-              className="text-[#58a6ff] hover:underline text-sm font-medium"
+              className="text-indigo-600 hover:underline text-sm font-medium"
             >
               返回最近可学课程 →
             </Link>
@@ -77,7 +77,7 @@ export default function LessonGate({ courseId, moduleIndex, lessonIndex, require
 
           <Link
             href={`/courses/${courseId}`}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#21262d] border border-[#30363d] text-[#c9d1d9] hover:border-[#58a6ff]/50 transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gray-100 border border-gray-200 text-gray-700 hover:border-indigo-400/50 transition-all"
           >
             <ArrowLeft className="w-4 h-4" />
             返回课程目录

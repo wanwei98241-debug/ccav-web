@@ -26,41 +26,41 @@ export default function LessonLecture({ lecture, lessonTitle }: Props) {
   if (!lecture) return null;
 
   return (
-    <div className="rounded-2xl border border-[#30363d] bg-[#161b22] overflow-hidden">
+    <div className="rounded-2xl border border-gray-200 bg-white overflow-hidden">
       {/* 折叠头部 */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-6 py-4 flex items-center justify-between hover:bg-[#1c2333] transition-colors"
+        className="w-full px-6 py-4 flex items-center justify-between hover:bg-gray-100 transition-colors"
       >
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-[#238636]/15 flex items-center justify-center">
-            <BookOpen className="w-4 h-4 text-[#3fb950]" />
+          <div className="w-8 h-8 rounded-lg bg-green-100 flex items-center justify-center">
+            <BookOpen className="w-4 h-4 text-green-600" />
           </div>
           <div className="text-left">
-            <h3 className="font-semibold text-[#f0f6fc] text-sm">讲师讲义</h3>
-            <p className="text-xs text-[#484f58]">{lecture.duration}</p>
+            <h3 className="font-semibold text-gray-900 text-sm">讲师讲义</h3>
+            <p className="text-xs text-gray-400">{lecture.duration}</p>
           </div>
         </div>
         {isOpen ? (
-          <ChevronUp className="w-4 h-4 text-[#484f58]" />
+          <ChevronUp className="w-4 h-4 text-gray-400" />
         ) : (
-          <ChevronDown className="w-4 h-4 text-[#484f58]" />
+          <ChevronDown className="w-4 h-4 text-gray-400" />
         )}
       </button>
 
       {/* 折叠内容 */}
       {isOpen && (
-        <div className="px-6 pb-6 space-y-6 border-t border-[#21262d] pt-4">
+        <div className="px-6 pb-6 space-y-6 border-t border-gray-200 pt-4">
           {/* 学习目标 */}
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <Target className="w-4 h-4 text-[#d29922]" />
-              <h4 className="text-sm font-semibold text-[#c9d1d9]">学习目标</h4>
+              <Target className="w-4 h-4 text-yellow-600" />
+              <h4 className="text-sm font-semibold text-gray-700">学习目标</h4>
             </div>
             <ul className="space-y-1">
               {lecture.objectives.map((obj, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-[#8b949e]">
-                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#58a6ff] flex-shrink-0" />
+                <li key={i} className="flex items-start gap-2 text-sm text-gray-500">
+                  <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-indigo-500 flex-shrink-0" />
                   {obj}
                 </li>
               ))}
@@ -72,13 +72,13 @@ export default function LessonLecture({ lecture, lessonTitle }: Props) {
             <div key={i}>
               <div className="flex items-center gap-2 mb-2">
                 {i === 0 ? (
-                  <Lightbulb className="w-4 h-4 text-[#d29922]" />
+                  <Lightbulb className="w-4 h-4 text-yellow-600" />
                 ) : (
-                  <FileText className="w-4 h-4 text-[#58a6ff]" />
+                  <FileText className="w-4 h-4 text-indigo-600" />
                 )}
-                <h4 className="text-sm font-semibold text-[#c9d1d9]">{section.title}</h4>
+                <h4 className="text-sm font-semibold text-gray-700">{section.title}</h4>
               </div>
-              <div className="ml-6 text-sm text-[#8b949e] leading-relaxed whitespace-pre-wrap">
+              <div className="ml-6 text-sm text-gray-500 leading-relaxed whitespace-pre-wrap">
                 {section.content}
               </div>
             </div>

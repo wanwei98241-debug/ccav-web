@@ -272,7 +272,7 @@ export default async function LessonDetailPage({ params }: Props) {
             <LessonComments lessonKey={`day${mIdx+1}_lesson${lIdx+1}`} lessonTitle={`「${mod.title}」- ${lesson.title}`} />
 
             {/* ===== 底部导航 ===== */}
-            <div className="flex items-center justify-between pt-4 border-t border-[#21262d]">
+            <div className="flex items-center justify-between pt-4 border-t border-[rgba(37,99,235,0.08)]">
               {prevLesson ? (
                 <Link
                   href={prevLesson}
@@ -321,8 +321,8 @@ function LayerCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className={`rounded-2xl border border-[#21262d] ${bg} border-l-4 ${color} overflow-hidden`}>
-      <div className="px-6 py-4 border-b border-[#21262d]/50">
+    <div className={`rounded-2xl border border-[rgba(37,99,235,0.08)] ${bg} border-l-4 ${color} overflow-hidden`}>
+      <div className="px-6 py-4 border-b border-[rgba(37,99,235,0.04)]">
         <div className="flex items-center gap-3">
           <span className="w-8 h-8 rounded-lg bg-white border border-[rgba(37,99,235,0.08)] flex items-center justify-center text-sm font-bold text-[#1e293b]">
             {number}

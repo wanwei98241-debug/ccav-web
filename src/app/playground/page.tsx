@@ -431,7 +431,7 @@ export default function PlaygroundPage() {
                             <a href={task.resultUrl} target="_blank" download className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#238636] text-white text-sm font-medium hover:bg-[#2ea043] transition-colors">
                               <Download className="w-4 h-4" /> 下载
                             </a>
-                            <button onClick={() => { setPrompt(task.optimizedPrompt || task.prompt); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#30363d] text-[rgba(0,0,0,0.6)] text-sm hover:bg-[#484f58] transition-colors">
+                            <button onClick={() => { setPrompt(task.optimizedPrompt || task.prompt); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gray-200 text-[rgba(0,0,0,0.6)] text-sm hover:bg-gray-300 transition-colors">
                               <RotateCcw className="w-4 h-4" /> 再试一次
                             </button>
                           </div>
@@ -572,7 +572,7 @@ function CreditsDisplay() {
         <span className="text-[#d2991d] font-bold">{credits}</span>
         <span className="text-[rgba(0,0,0,0.5)] ml-1">积分</span>
       </span>
-      <span className="text-[#30363d]">|</span>
+      <span className="text-gray-300">|</span>
       <span className="text-[rgba(0,0,0,0.5)] text-xs">{level}学员</span>
     </span>
   );
@@ -580,7 +580,7 @@ function CreditsDisplay() {
 
 function StatusBadge({ status }: { status: TaskStatus }) {
   const map: Record<TaskStatus, { text: string; className: string; icon: React.ReactNode }> = {
-    idle: { text: "待开始", className: "bg-[#30363d] text-[rgba(0,0,0,0.5)]", icon: null },
+    idle: { text: "待开始", className: "bg-gray-200 text-[rgba(0,0,0,0.5)]", icon: null },
     optimizing: { text: "优化中", className: "bg-[#2563eb]/10 text-[#2563eb]", icon: <Loader2 className="w-3 h-3 animate-spin" /> },
     queued: { text: "排队中", className: "bg-[#d2991d]/10 text-[#d2991d]", icon: <Loader2 className="w-3 h-3 animate-spin" /> },
     generating: { text: "生成中", className: "bg-[#bc8cff]/10 text-[#bc8cff]", icon: <Loader2 className="w-3 h-3 animate-spin" /> },

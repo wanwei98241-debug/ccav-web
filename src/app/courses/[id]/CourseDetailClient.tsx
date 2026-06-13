@@ -16,8 +16,8 @@ export default function CourseDetailClient({ id }: { id: string }) {
       <>
         <Navbar />
         <main className="flex-1 pt-32 text-center">
-          <h1 className="text-2xl text-[#f0f6fc]">课程不存在</h1>
-          <Link href="/courses/" className="text-[#58a6ff] mt-4 inline-block">
+          <h1 className="text-2xl text-gray-900">课程不存在</h1>
+          <Link href="/courses/" className="text-indigo-600 mt-4 inline-block">
             返回课程列表
           </Link>
         </main>
@@ -66,20 +66,20 @@ export default function CourseDetailClient({ id }: { id: string }) {
         </section>
 
         {/* Content */}
-        <section className="py-12 bg-[#0d1117]">
+        <section className="py-12 bg-gray-50">
           <div className="max-w-4xl mx-auto px-5">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Main */}
               <div className="lg:col-span-2 space-y-8">
                 {/* Description */}
-                <div className="p-6 rounded-2xl bg-[#161b22] border border-[#30363d]">
-                  <h2 className="text-xl font-semibold text-[#f0f6fc] mb-4">课程介绍</h2>
-                  <p className="text-[#c9d1d9] leading-relaxed">{course.description}</p>
+                <div className="p-6 rounded-2xl bg-white border border-gray-200">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-4">课程介绍</h2>
+                  <p className="text-gray-700 leading-relaxed">{course.description}</p>
                 </div>
 
                 {/* Modules */}
                 <div className="space-y-4">
-                  <h2 className="text-xl font-semibold text-[#f0f6fc]">课程大纲</h2>
+                  <h2 className="text-xl font-semibold text-gray-900">课程大纲</h2>
                   {course.modules_list.map((module, index) => (
                     <Link
                       key={module.title}
@@ -90,28 +90,28 @@ export default function CourseDetailClient({ id }: { id: string }) {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ delay: index * 0.1 }}
-                        className="group p-5 rounded-xl bg-[#161b22] border border-[#30363d] hover:border-[#58a6ff]/50 hover:bg-[#1a2332] transition-all cursor-pointer"
+                        className="group p-5 rounded-xl bg-white border border-gray-200 hover:border-indigo-400/50 hover:bg-gray-50 transition-all cursor-pointer"
                       >
                         <div className="flex items-center justify-between mb-3">
-                          <h3 className="font-semibold text-[#f0f6fc] group-hover:text-[#58a6ff] transition-colors">{module.title}</h3>
+                          <h3 className="font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors">{module.title}</h3>
                           <div className="flex items-center gap-2">
-                            <span className="text-sm text-[#8b949e]">{module.duration}</span>
-                            <ChevronRight className="w-4 h-4 text-[#484f58] group-hover:text-[#58a6ff] group-hover:translate-x-1 transition-all" />
+                            <span className="text-sm text-gray-500">{module.duration}</span>
+                            <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-indigo-600 group-hover:translate-x-1 transition-all" />
                           </div>
                         </div>
                         <ul className="space-y-2">
                           {module.content.slice(0, 3).map((item, i) => (
-                            <li key={i} className="flex items-start gap-2 text-sm text-[#c9d1d9]">
+                            <li key={i} className="flex items-start gap-2 text-sm text-gray-700">
                               {item.startsWith("🔥") ? (
-                                <Flame className="w-4 h-4 text-[#d2991d] mt-0.5 shrink-0" />
+                                <Flame className="w-4 h-4 text-yellow-600 mt-0.5 shrink-0" />
                               ) : (
-                                <CheckCircle className="w-4 h-4 text-[#3fb950] mt-0.5 shrink-0" />
+                                <CheckCircle className="w-4 h-4 text-green-600 mt-0.5 shrink-0" />
                               )}
                               {item}
                             </li>
                           ))}
                           {module.content.length > 3 && (
-                            <li className="text-xs text-[#58a6ff] pl-6">+{module.content.length - 3} 节课 →</li>
+                            <li className="text-xs text-indigo-600 pl-6">+{module.content.length - 3} 节课 →</li>
                           )}
                         </ul>
                       </motion.div>
@@ -120,12 +120,12 @@ export default function CourseDetailClient({ id }: { id: string }) {
                 </div>
 
                 {/* Outcomes */}
-                <div className="p-6 rounded-2xl bg-[#161b22] border border-[#30363d]">
-                  <h2 className="text-xl font-semibold text-[#f0f6fc] mb-4">学习成果</h2>
+                <div className="p-6 rounded-2xl bg-white border border-gray-200">
+                  <h2 className="text-xl font-semibold text-gray-900 mb-4">学习成果</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {course.outcomes.map((outcome, i) => (
-                      <div key={i} className="flex items-center gap-2 text-[#c9d1d9]">
-                        <Award className="w-5 h-5 text-[#58a6ff]" />
+                      <div key={i} className="flex items-center gap-2 text-gray-700">
+                        <Award className="w-5 h-5 text-indigo-600" />
                         {outcome}
                       </div>
                     ))}
@@ -135,38 +135,38 @@ export default function CourseDetailClient({ id }: { id: string }) {
 
               {/* Sidebar */}
               <div className="space-y-6">
-                <div className="p-6 rounded-2xl bg-[#161b22] border border-[#30363d] lg:sticky lg:top-24">
-                  <div className="text-3xl font-bold text-[#f0f6fc] mb-2">{course.price}</div>
-                  <div className="text-sm text-[#8b949e] mb-6">含证书费用</div>
+                <div className="p-6 rounded-2xl bg-white border border-gray-200 lg:sticky lg:top-24">
+                  <div className="text-3xl font-bold text-gray-900 mb-2">{course.price}</div>
+                  <div className="text-sm text-gray-500 mb-6">含证书费用</div>
                   
                   <div className="space-y-3">
                     <a
                       href="mailto:contact@ccav.com"
-                      className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-gradient-to-r from-[#e53e3e] to-[#c53030] text-white font-semibold hover:shadow-lg hover:shadow-[#e53e3e]/20 transition-all"
+                      className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-gradient-to-r from-[#e53e3e] to-[#c53030] text-white font-semibold hover:shadow-lg hover:shadow-red-400/20 transition-all"
                     >
                       <Mail className="w-4 h-4" />
                       邮件咨询
                     </a>
                     <a
                       href="#"
-                      className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-[#0d1117] border border-[#30363d] text-[#c9d1d9] font-semibold hover:border-[#58a6ff]/50 transition-all"
+                      className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-gray-50 border border-gray-200 text-gray-700 font-semibold hover:border-indigo-400/50 transition-all"
                     >
                       <MessageCircle className="w-4 h-4" />
                       在线咨询（即将上线）
                     </a>
                   </div>
 
-                  <div className="mt-6 pt-6 border-t border-[#30363d] space-y-3 text-sm">
-                    <div className="flex justify-between text-[#c9d1d9]">
-                      <span className="text-[#8b949e]">目标学员</span>
+                  <div className="mt-6 pt-6 border-t border-gray-200 space-y-3 text-sm">
+                    <div className="flex justify-between text-gray-700">
+                      <span className="text-gray-500">目标学员</span>
                       <span className="text-right ml-4">{course.targetAudience}</span>
                     </div>
-                    <div className="flex justify-between text-[#c9d1d9]">
-                      <span className="text-[#8b949e]">学习形式</span>
+                    <div className="flex justify-between text-gray-700">
+                      <span className="text-gray-500">学习形式</span>
                       <span>{course.format}</span>
                     </div>
-                    <div className="flex justify-between text-[#c9d1d9]">
-                      <span className="text-[#8b949e]">认证证书</span>
+                    <div className="flex justify-between text-gray-700">
+                      <span className="text-gray-500">认证证书</span>
                       <span>{course.certification}</span>
                     </div>
                   </div>

@@ -5,7 +5,7 @@ export default function Footer() {
         borderTop: "1px solid rgba(255,255,255,0.05)",
         padding: "32px 0",
         textAlign: "center",
-        background: "#0d0d0d",
+        background: "#1f2937",
       }}
     >
       <p
