@@ -33,7 +33,7 @@ export default function LessonGate({ courseId, moduleIndex, lessonIndex, require
 
           <div className="flex flex-col gap-3 items-center">
             <Link
-              href="/login"
+              href="/admin/login"
               className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-gradient-to-r from-[#58a6ff] to-[#bc8cff] text-white font-semibold hover:shadow-lg transition-all"
             >
               <LogIn className="w-4 h-4" />

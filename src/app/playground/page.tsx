@@ -551,7 +551,7 @@ function CreditsDisplay() {
   if (!isAuthenticated) {
     return (
       <Link
-        href="/login"
+        href="/admin/login"
         className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-white border border-[rgba(37,99,235,0.08)] text-[rgba(0,0,0,0.5)] text-sm font-medium hover:text-[#2563eb] hover:border-[#2563eb] transition-all"
       >
         <UserIcon className="w-4 h-4" />
