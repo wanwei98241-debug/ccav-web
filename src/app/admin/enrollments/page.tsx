@@ -37,7 +37,33 @@ export default function AdminEnrollmentsPage() {
     fetchData();
   }, []);
 
-  async function fetchData() {
+    function exportCSV() {
+    const headers = ["姓名","手机号","邮箱","报名类型","状态","来源","备注","报名时间"];
+    const rows = filtered.map((e) => [
+      e.name,
+      e.phone,
+      e.email || "",
+      courseTypeLabel(e.course_type),
+      statusLabel(e.status),
+      e.source || "",
+      e.notes || "",
+      new Date(e.created_at).toLocaleString("zh-CN"),
+    ]);
+    const csv = [headers.join(","), ...rows.map((r) => r.map((c) => `"${c}"`).join(","))].join("\n");
+    const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `报名数据_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function statusLabel(status: string) {
+    const m: Record<string, string> = { pending: "待处理", new: "新报名", confirmed: "已确认", active: "进行中", cancelled: "已取消", rejected: "已拒绝" };
+    return m[status] || status;
+  }
+
+async function fetchData() {
     setLoading(true);
     setError("");
     const token = localStorage.getItem("admin_token");
@@ -161,6 +187,12 @@ export default function AdminEnrollmentsPage() {
             <option value="confirmed">已确认</option>
             <option value="cancelled">已取消</option>
           </select>
+          <button
+            onClick={exportCSV}
+            className="px-4 py-2.5 rounded-xl bg-[#e53e3e] text-white text-sm font-medium hover:bg-[#c53030] transition-colors flex-shrink-0"
+          >
+            📥 导出CSV
+          </button>
         </div>
 
         {/* Error */}
