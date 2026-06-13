@@ -2,26 +2,28 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import {
-  User, LogOut, Loader2, Shield, ChevronRight, Users, Calendar,
-  BarChart3, BookOpen, Award, Zap, Download, Eye, EyeOff
+  LogOut, Shield, BarChart3, Users, Download, ChevronDown, ChevronUp
 } from "lucide-react";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "/api";
 
-// ---------- Types ----------
+// ---------- Types (匹配后端API实际字段) ----------
 interface Enrollment {
   id: number;
   name: string;
-  phone: string;
-  email?: string;
-  course_type: string;
-  course_name?: string;
+  mobile: string;              // 后端字段：手机号
+  email?: string | null;
+  class_name?: string | null; // 报的班级（初级/中级/高级/师训班）
+  branch_name?: string | null; // 来源/分支机构
+  type: string;                // 报名类型（teacher-training/partner/student）
   status: string;
+  remark?: string | null;      // 备注
   created_at: string;
-  source?: string;
-  notes?: string;
+  updated_at?: string;
+  // 金额字段目前后端没有，先预留
+  total_fee?: number | null;
+  paid_fee?: number | null;
 }
 
 interface DashboardData {
@@ -48,14 +50,14 @@ function statusLabel(status: string): string {
 
 function statusBadge(status: string) {
   const colors: Record<string, string> = {
-    pending:   "bg-yellow-500/20 text-yellow-400 border-yellow-500/30",
-    new:       "bg-blue-500/20 text-blue-400 border-blue-500/30",
-    confirmed: "bg-green-500/20 text-green-400 border-green-500/30",
-    active:    "bg-green-500/20 text-green-400 border-green-500/30",
-    cancelled: "bg-red-500/20 text-red-400 border-red-500/30",
-    rejected:  "bg-red-500/20 text-red-400 border-red-500/30",
+    pending:   "bg-yellow-100 text-yellow-800 border-yellow-300",
+    new:       "bg-blue-100 text-blue-800 border-blue-300",
+    confirmed: "bg-green-100 text-green-800 border-green-300",
+    active:    "bg-green-100 text-green-800 border-green-300",
+    cancelled: "bg-red-100 text-red-800 border-red-300",
+    rejected:  "bg-red-100 text-red-800 border-red-300",
   };
-  const c = colors[status] || "bg-gray-500/20 text-gray-400 border-gray-500/30";
+  const c = colors[status] || "bg-gray-100 text-gray-800 border-gray-300";
   return (
     <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs border ${c}`}>
       {statusLabel(status)}
@@ -63,8 +65,13 @@ function statusBadge(status: string) {
   );
 }
 
-function courseTypeLabel(t: string): string {
-  const m: Record<string, string> = { teacher: "教培师", partner: "合伙人", student: "学员" };
+function typeLabel(t: string): string {
+  const m: Record<string, string> = {
+    "teacher-training": "教培师培训",
+    "partner": "合伙人",
+    "student": "学员",
+    "teacher": "教培师",
+  };
   return m[t] || t;
 }
 
@@ -143,11 +150,11 @@ export default function AdminAccountPage() {
 
       setEnrollments(list);
       setDashboard({
-        total_enrollments:   s.total_enrollments ?? s.total ?? list.length,
-        pending_enrollments: s.pending_enrollments ?? s.pending ?? list.filter((e: Enrollment) => e.status === "pending" || e.status === "new").length,
-        confirmed_enrollments: s.confirmed_enrollments ?? s.confirmed ?? list.filter((e: Enrollment) => e.status === "confirmed" || e.status === "active").length,
-        cancelled_enrollments: s.cancelled_enrollments ?? s.cancelled ?? list.filter((e: Enrollment) => e.status === "cancelled" || e.status === "rejected").length,
-        today_enrollments:   s.today_enrollments ?? s.today ?? 0,
+        total_enrollments:   s.total_enrollments ?? list.length,
+        pending_enrollments: s.pending_enrollments ?? list.filter((e: Enrollment) => e.status === "pending" || e.status === "new").length,
+        confirmed_enrollments: s.confirmed_enrollments ?? list.filter((e: Enrollment) => e.status === "confirmed" || e.status === "active").length,
+        cancelled_enrollments: s.cancelled_enrollments ?? list.filter((e: Enrollment) => e.status === "cancelled" || e.status === "rejected").length,
+        today_enrollments:   s.today_enrollments ?? 0,
         total_courses:       s.total_courses ?? 0,
         total_partners:      s.total_partners ?? 0,
         enrollment_by_type:  s.enrollment_by_type,
@@ -163,11 +170,17 @@ export default function AdminAccountPage() {
 
   // Export CSV
   function exportCSV() {
-    const headers = ["姓名", "手机号", "邮箱", "报名类型", "状态", "来源", "备注", "报名时间"];
+    const headers = ["姓名", "手机号", "报名类型", "班级", "来源/分支机构", "状态", "应付金额", "实付金额", "备注", "报名时间"];
     const rows = filtered.map((e) => [
-      e.name, e.phone, e.email || "",
-      courseTypeLabel(e.course_type), statusLabel(e.status),
-      e.source || "", e.notes || "",
+      e.name,
+      e.mobile,
+      typeLabel(e.type),
+      e.class_name || "",
+      e.branch_name || "",
+      statusLabel(e.status),
+      e.total_fee != null ? String(e.total_fee) : "",
+      e.paid_fee != null ? String(e.paid_fee) : "",
+      e.remark || "",
       new Date(e.created_at).toLocaleString("zh-CN"),
     ]);
     const csv = [headers.join(","), ...rows.map((r) => r.map((c) => `"${c}"`).join(","))].join("\n");
@@ -184,7 +197,7 @@ export default function AdminAccountPage() {
     .filter((e) => {
       if (searchQuery) {
         const q = searchQuery.toLowerCase();
-        if (!e.name?.toLowerCase().includes(q) && !e.phone?.includes(q)) return false;
+        if (!e.name?.toLowerCase().includes(q) && !e.mobile?.includes(q)) return false;
       }
       if (statusFilter && e.status !== statusFilter) return false;
       return true;
@@ -197,9 +210,9 @@ export default function AdminAccountPage() {
   if (authLoading) return null;
 
   return (
-    <main className="min-h-screen bg-[#f8fafc]" style={{ background: "#f8fafc" }}>
+    <main className="min-h-screen bg-gray-50">
       {/* ========= Admin Header ========= */}
-      <header className="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-30">
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-30">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
@@ -239,7 +252,7 @@ export default function AdminAccountPage() {
         )}
 
         {/* ========= Search + Filter + Export ========= */}
-        <div className="flex flex-wrap gap-3 mb-4">
+        <div className="flex flex-wrap gap-3 mb-4 items-center">
           <div className="flex-1 min-w-[200px] relative">
             <input
               type="text"
@@ -277,84 +290,128 @@ export default function AdminAccountPage() {
 
         {/* ========= Error ========= */}
         {error && (
-          <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-600">
+          <div className="mb-4 p-4 rounded-xl bg-red-50 border border-red-200 text-sm text-red-600">
             {error}
           </div>
         )}
 
         {/* ========= Loading ========= */}
         {loading && (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+          <div className="text-center py-12 text-sm text-gray-400">
+            加载中...
           </div>
         )}
 
         {/* ========= Enrollment List ========= */}
-        {!loading && filtered.length === 0 && (
-          <div className="py-16 text-center text-gray-400">暂无报名记录</div>
-        )}
-
-        {!loading && filtered.length > 0 && (
+        {!loading && (
           <div className="space-y-2">
-            <div className="text-xs text-gray-400 mb-2 px-1">共 {filtered.length} 条记录</div>
-            {filtered.map((e) => (
-              <div key={e.id} className="rounded-xl bg-white border border-gray-200 shadow-sm">
-                {/* Row header — click to toggle expand */}
+            {/* Table Header (hidden on mobile) */}
+            <div className="hidden md:grid grid-cols-[40px_1fr_1.5fr_1fr_1fr_1fr_1fr_40px] gap-2 px-4 py-2 text-xs text-gray-400 font-medium bg-white rounded-t-xl border-b border-gray-100">
+              <span>#</span>
+              <span>姓名</span>
+              <span>手机号</span>
+              <span>报名类型</span>
+              <span>班级</span>
+              <span>来源</span>
+              <span>状态</span>
+              <span></span>
+            </div>
+
+            {filtered.length === 0 && !loading && (
+              <div className="text-center py-12 text-sm text-gray-400 bg-white rounded-xl border border-gray-200">
+                暂无报名记录
+              </div>
+            )}
+
+            {filtered.map((e, idx) => (
+              <div key={e.id}>
                 <div
-                  className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition-colors"
                   onClick={() => setDetailId(detailId === e.id ? null : e.id)}
+                  className="bg-white rounded-xl border border-gray-200 px-4 py-3 cursor-pointer hover:border-blue-300 transition-colors"
                 >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-xs font-bold text-blue-600 flex-shrink-0">
-                      {e.name[0]}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold text-gray-900">{e.name}</span>
+                  {/* Mobile view */}
+                  <div className="md:hidden">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span className="text-sm font-medium text-gray-900 truncate">{e.name}</span>
+                        <span className="text-xs text-gray-400 truncate">{e.mobile}</span>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
                         {statusBadge(e.status)}
+                        {detailId === e.id ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
                       </div>
-                      <div className="text-xs text-gray-400 mt-0.5">
-                        {e.phone} | {courseTypeLabel(e.course_type)} | {new Date(e.created_at).toLocaleDateString("zh-CN")}
-                      </div>
+                    </div>
+                    <div className="flex items-center gap-3 mt-1.5 text-xs text-gray-400">
+                      <span>{typeLabel(e.type)}</span>
+                      {e.class_name && <span>· {e.class_name}</span>}
+                      {e.branch_name && <span>· {e.branch_name}</span>}
                     </div>
                   </div>
-                  <span className="text-gray-400 text-sm">{detailId === e.id ? "▲" : "▼"}</span>
+                  {/* Desktop view */}
+                  <div className="hidden md:grid grid-cols-[40px_1fr_1.5fr_1fr_1fr_1fr_1fr_40px] gap-2 items-center">
+                    <span className="text-xs text-gray-400">{idx + 1}</span>
+                    <span className="text-sm font-medium text-gray-900">{e.name}</span>
+                    <span className="text-sm text-gray-600">{e.mobile}</span>
+                    <span className="text-sm text-gray-600">{typeLabel(e.type)}</span>
+                    <span className="text-sm text-gray-600">{e.class_name || '-'}</span>
+                    <span className="text-sm text-gray-600">{e.branch_name || '-'}</span>
+                    <span>{statusBadge(e.status)}</span>
+                    {detailId === e.id ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
+                  </div>
                 </div>
 
-                {/* Detail expand */}
+                {/* ========= Detail Panel ========= */}
                 {detailId === e.id && selected && (
-                  <div className="px-4 pb-4 pt-2 border-t border-gray-100">
-                    <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div className="bg-white border border-t-0 border-gray-200 rounded-b-xl px-4 py-4 -mt-1 mb-2">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                       <div className="p-2.5 rounded-lg bg-gray-50">
-                        <div className="text-xs text-gray-400 mb-0.5">手机号</div>
-                        <div className="text-gray-700">{selected.phone}</div>
+                        <div className="text-xs text-gray-400 mb-0.5">姓名</div>
+                        <div className="text-gray-700 font-medium">{selected.name}</div>
                       </div>
                       <div className="p-2.5 rounded-lg bg-gray-50">
-                        <div className="text-xs text-gray-400 mb-0.5">邮箱</div>
-                        <div className="text-gray-700">{selected.email || "未填写"}</div>
+                        <div className="text-xs text-gray-400 mb-0.5">手机号</div>
+                        <div className="text-gray-700">{selected.mobile}</div>
                       </div>
                       <div className="p-2.5 rounded-lg bg-gray-50">
                         <div className="text-xs text-gray-400 mb-0.5">报名类型</div>
-                        <div className="text-gray-700">{courseTypeLabel(selected.course_type)}</div>
+                        <div className="text-gray-700">{typeLabel(selected.type)}</div>
                       </div>
                       <div className="p-2.5 rounded-lg bg-gray-50">
-                        <div className="text-xs text-gray-400 mb-0.5">报名时间</div>
-                        <div className="text-gray-700">
-                          {new Date(selected.created_at).toLocaleString("zh-CN")}
-                        </div>
+                        <div className="text-xs text-gray-400 mb-0.5">状态</div>
+                        <div>{statusBadge(selected.status)}</div>
                       </div>
-                      {selected.source && (
+                      <div className="p-2.5 rounded-lg bg-gray-50">
+                        <div className="text-xs text-gray-400 mb-0.5">报读班级</div>
+                        <div className="text-gray-700">{selected.class_name || '-'}</div>
+                      </div>
+                      <div className="p-2.5 rounded-lg bg-gray-50">
+                        <div className="text-xs text-gray-400 mb-0.5">来源/分支机构</div>
+                        <div className="text-gray-700">{selected.branch_name || '-'}</div>
+                      </div>
+                      <div className="p-2.5 rounded-lg bg-gray-50">
+                        <div className="text-xs text-gray-400 mb-0.5">应付金额</div>
+                        <div className="text-gray-700">{selected.total_fee != null ? `¥${selected.total_fee}` : '-'}</div>
+                      </div>
+                      <div className="p-2.5 rounded-lg bg-gray-50">
+                        <div className="text-xs text-gray-400 mb-0.5">实付金额</div>
+                        <div className="text-gray-700">{selected.paid_fee != null ? `¥${selected.paid_fee}` : '-'}</div>
+                      </div>
+                      {selected.email && (
                         <div className="p-2.5 rounded-lg bg-gray-50">
-                          <div className="text-xs text-gray-400 mb-0.5">来源</div>
-                          <div className="text-gray-700">{selected.source}</div>
+                          <div className="text-xs text-gray-400 mb-0.5">邮箱</div>
+                          <div className="text-gray-700">{selected.email}</div>
                         </div>
                       )}
-                      {selected.notes && (
-                        <div className={selected.source ? "p-2.5 rounded-lg bg-gray-50" : "col-span-2 p-2.5 rounded-lg bg-gray-50"}>
+                      {selected.remark && (
+                        <div className="md:col-span-2 p-2.5 rounded-lg bg-gray-50">
                           <div className="text-xs text-gray-400 mb-0.5">备注</div>
-                          <div className="text-gray-700">{selected.notes}</div>
+                          <div className="text-gray-700">{selected.remark}</div>
                         </div>
                       )}
+                      <div className="p-2.5 rounded-lg bg-gray-50">
+                        <div className="text-xs text-gray-400 mb-0.5">报名时间</div>
+                        <div className="text-gray-700">{new Date(selected.created_at).toLocaleString("zh-CN")}</div>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -404,7 +461,7 @@ export default function AdminAccountPage() {
                 <div className="space-y-2.5">
                   {Object.entries(dashboard.enrollment_by_type).map(([k, v]) => (
                     <div key={k} className="flex items-center gap-2">
-                      <span className="text-xs text-gray-500 w-16">{courseTypeLabel(k)}</span>
+                      <span className="text-xs text-gray-500 w-16">{typeLabel(k)}</span>
                       <div className="flex-1 h-2 rounded-full bg-gray-100 overflow-hidden">
                         <div
                           className="h-full rounded-full bg-emerald-500 transition-all"
