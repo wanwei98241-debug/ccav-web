@@ -12,6 +12,16 @@ import {
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "/api";
 
+// ========== Date helpers ==========
+function safeDate(dateStr: string | null | undefined): string {
+  if (!dateStr) return "-";
+  // 兼容 "2026-06-13 21:51:10" 格式（无T、无Z）
+  const normalized = dateStr.includes("T") ? dateStr : dateStr.replace(" ", "T");
+  const d = new Date(normalized);
+  if (isNaN(d.getTime())) return dateStr;
+  return d.toLocaleString("zh-CN");
+}
+
 // ========== Types ==========
 interface EnrollmentDetail {
   id: number;
@@ -30,6 +40,19 @@ interface EnrollmentDetail {
   created_at: string;
   updated_at?: string;
   payments?: Payment[];
+  student?: {
+    name: string;
+    mobile?: string | null;
+    email?: string | null;
+    student_no?: string | null;
+  };
+  payment?: {
+    id?: number;
+    paid_amount?: number | null;
+    payment_method?: string | null;
+    remark?: string | null;
+    created_at?: string | null;
+  };
   refunds?: Refund[];
   logs?: LogEntry[];
 }
@@ -181,8 +204,34 @@ export default function AdminEnrollmentDetailPage() {
       }
       if (!res.ok) { setError(`请求失败 (${res.status})`); return; }
       const d = await res.json();
-      const data = d.data || d;
-      setDetail(data);
+      const raw = d.data || d;
+      // 后端返回嵌套结构 { enrollment, student, payment, refunds, logs }
+      // 需要映射成扁平结构供页面组件使用
+      const enrollment = raw.enrollment || raw;
+      const student = raw.student || {};
+      const payment = raw.payment || {};
+      const mapped: EnrollmentDetail = {
+        id: enrollment.id,
+        student_id: enrollment.student_no || enrollment.student_id || '',
+        name: enrollment.name || student.name || '',
+        mobile: enrollment.mobile || student.mobile || '',
+        email: student.email || null,
+        class_name: enrollment.class_name || null,
+        branch_name: enrollment.branch_name || null,
+        type: enrollment.type || '',
+        status: enrollment.status || '',
+        total_fee: enrollment.amount != null ? enrollment.amount : null,
+        paid_fee: enrollment.paid_amount != null ? enrollment.paid_amount : null,
+        refund_fee: enrollment.refund_amount != null ? enrollment.refund_amount : null,
+        remark: enrollment.remark || null,
+        created_at: enrollment.created_at || '',
+        updated_at: enrollment.updated_at || null,
+        student: student,
+        payment: payment,
+        refunds: raw.refunds || [],
+        logs: raw.logs || [],
+      };
+      setDetail(mapped);
     } catch (e: any) {
       setError(e.message || "网络错误");
     } finally {
@@ -348,17 +397,17 @@ export default function AdminEnrollmentDetailPage() {
                 </h3>
                 <div className="space-y-2">
                   <div>
-                    <div className="text-lg font-bold text-gray-900">{detail.name}</div>
+                    <div className="text-lg font-bold text-gray-900">{detail.student?.name || ''}</div>
                     {detail.student_id && (
                       <div className="text-xs text-gray-400 mt-0.5">编号: {detail.student_id}</div>
                     )}
                   </div>
                   <div className="flex items-center gap-1 text-sm text-gray-600">
-                    <Phone className="w-3.5 h-3.5 text-gray-400" /> {detail.mobile}
+                    <Phone className="w-3.5 h-3.5 text-gray-400" /> {detail.student?.mobile || ''}
                   </div>
-                  {detail.email && (
+                  {detail.student?.email && (
                     <div className="flex items-center gap-1 text-sm text-gray-600">
-                      <Mail className="w-3.5 h-3.5 text-gray-400" /> {detail.email}
+                      <Mail className="w-3.5 h-3.5 text-gray-400" /> {detail.student?.email}
                     </div>
                   )}
                   <div className="pt-2">{statusBadge(detail.status)}</div>
@@ -387,7 +436,7 @@ export default function AdminEnrollmentDetailPage() {
                   )}
                   <div className="flex items-center justify-between">
                     <span className="text-gray-500">报名时间</span>
-                    <span className="text-gray-800">{new Date(detail.created_at).toLocaleString("zh-CN")}</span>
+                    <span className="text-gray-800">{safeDate(detail.created_at)}</span>
                   </div>
                   {detail.remark && (
                     <div className="pt-1">
@@ -460,7 +509,7 @@ export default function AdminEnrollmentDetailPage() {
             </div>
 
             {/* ===== Payment History ===== */}
-            {detail.payments && detail.payments.length > 0 && (
+            {detail.payment && detail.payment.paid_amount != null && (
               <div className="mb-6">
                 <h3 className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
                   <CreditCard className="w-4 h-4 text-emerald-500" />
@@ -473,14 +522,12 @@ export default function AdminEnrollmentDetailPage() {
                     <div>备注</div>
                     <div>时间</div>
                   </div>
-                  {detail.payments.map(p => (
-                    <div key={p.id} className="grid grid-cols-1 md:grid-cols-4 gap-1 md:gap-2 px-4 py-3 border-b border-gray-100 last:border-0 text-sm">
-                      <div className="font-medium text-emerald-600">¥{p.paid_amount}</div>
-                      <div className="text-gray-600">{p.payment_method || "-"}</div>
-                      <div className="text-gray-400 text-xs">{p.remark || "-"}</div>
-                      <div className="text-gray-400 text-xs">{new Date(p.created_at).toLocaleString("zh-CN")}</div>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-1 md:gap-2 px-4 py-3 text-sm">
+                      <div className="font-medium text-emerald-600">¥{detail.payment.paid_amount}</div>
+                      <div className="text-gray-600">{detail.payment.payment_method || "-"}</div>
+                      <div className="text-gray-400 text-xs">{detail.payment.remark || "-"}</div>
+                      <div className="text-gray-400 text-xs">{safeDate(detail.payment?.created_at)}</div>
                     </div>
-                  ))}
                 </div>
               </div>
             )}
@@ -512,7 +559,7 @@ export default function AdminEnrollmentDetailPage() {
                           {r.status === "approved" ? "已通过" : r.status === "rejected" ? "已拒绝" : "待审核"}
                         </span>
                       </div>
-                      <div className="text-gray-400 text-xs">{new Date(r.created_at).toLocaleString("zh-CN")}</div>
+                      <div className="text-gray-400 text-xs">{safeDate(r.created_at)}</div>
                     </div>
                   ))}
                 </div>
@@ -534,7 +581,7 @@ export default function AdminEnrollmentDetailPage() {
                         <div className="text-sm text-gray-800">{log.action}</div>
                         {log.detail && <div className="text-xs text-gray-400 mt-0.5">{log.detail}</div>}
                       </div>
-                      <div className="text-xs text-gray-400 whitespace-nowrap">{new Date(log.created_at).toLocaleString("zh-CN")}</div>
+                      <div className="text-xs text-gray-400 whitespace-nowrap">{safeDate(log.created_at)}</div>
                     </div>
                   ))}
                 </div>
