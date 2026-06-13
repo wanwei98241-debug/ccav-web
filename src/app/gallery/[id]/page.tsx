@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import CommentsList from "@/components/gallery/CommentsList";
 import {
   normalizeGalleryItem,
@@ -85,6 +86,7 @@ export default function GalleryDetailPage() {
   return (
     <div className="min-h-screen">
       <Navbar />
+      <Breadcrumbs items={[{ label: "作品展示", href: "/gallery" }, { label: "作品详情" }]} />
       <main className="max-w-4xl mx-auto px-4 pt-24 pb-20">
         <Link
           href="/gallery"

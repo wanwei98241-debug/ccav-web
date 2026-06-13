@@ -1,6 +1,7 @@
 import { ArrowLeft, Flame, Play, Send, ChevronLeft, ChevronRight, Lightbulb, Video, Award, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import Footer from "@/components/layout/Footer";
 import { studentCourses, trainingCourse, type LessonDetail } from "@/lib/courseData";
 import QuizGate from "@/components/QuizGate";
@@ -82,7 +83,8 @@ export default async function LessonDetailPage({ params }: Props) {
   return (
     <LessonGate courseId={id} moduleIndex={mIdx} lessonIndex={lIdx} requireAuth={isStudentCourse}>
       <Navbar />
-      <main className="flex-1 pt-16">
+      <Breadcrumbs items={[{ label: "课程体系", href: "/courses" }, { label: course.title, href: `/courses/${course.id}` }, { label: mod.title, href: `/courses/${course.id}/lessons/${mIdx}` }, { label: lesson.title }]} />
+      <main className="flex-1">
         {/* ===== HEADER ===== */}
         <section className={`py-10 bg-gradient-to-br ${course.gradient}`}>
           <div className="max-w-5xl mx-auto px-5">

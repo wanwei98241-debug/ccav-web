@@ -16,6 +16,7 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import Footer from "@/components/layout/Footer";
 import {
   COST,
@@ -30,6 +31,7 @@ export default function CreditsPage() {
   return (
     <>
       <Navbar />
+      <Breadcrumbs items={[{ label: "积分体系" }]} />
       <main className="flex-1 pt-24 pb-16">
         <div className="max-w-4xl mx-auto px-5">
           {/* 返回链接 */}

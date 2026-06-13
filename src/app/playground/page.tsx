@@ -19,6 +19,7 @@ import {
   User as UserIcon,
 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import Footer from "@/components/layout/Footer";
 import { COST, EARNING, INITIAL_CREDITS, LEVEL_LABELS, computeCost } from "@/lib/credits";
 import { useAuth } from "@/lib/auth";
@@ -247,6 +248,7 @@ export default function PlaygroundPage() {
   return (
     <>
       <Navbar />
+      <Breadcrumbs items={[{ label: "AI 实践工坊" }]} />
       <main className="flex-1 pt-16">
         <section className="py-12"
           style={{

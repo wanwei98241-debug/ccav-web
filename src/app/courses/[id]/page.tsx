@@ -1,6 +1,7 @@
 import { Clock, Users, Award, ArrowLeft, BookOpen, CheckCircle, Flame, Mail, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import Footer from "@/components/layout/Footer";
 import LessonCard from "@/components/courses/LessonCard";
 import { studentCourses, trainingCourse } from "@/lib/courseData";
@@ -22,6 +23,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
     return (
       <>
         <Navbar />
+        <Breadcrumbs items={[{ label: "课程体系", href: "/courses" }, { label: id }]} />
         <main className="flex-1 pt-32 text-center">
           <h1 className="text-2xl text-[#1e293b]">课程不存在</h1>
           <Link href="/courses/" className="text-[#2563eb] mt-4 inline-block">
@@ -36,7 +38,8 @@ export default async function CourseDetailPage({ params }: { params: Promise<{ i
   return (
     <>
       <Navbar />
-      <main className="flex-1 pt-16">
+      <Breadcrumbs items={[{ label: "课程体系", href: "/courses" }, { label: course.title }]} />
+      <main className="flex-1">
         {/* ===== Hero ===== */}
         <section className={`py-16 bg-gradient-to-br ${course.gradient || "from-[#1e1e2e] to-[#181825]"}`}>
           <div className="max-w-4xl mx-auto px-5">

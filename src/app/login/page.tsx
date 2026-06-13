@@ -5,6 +5,7 @@ import { useAuth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import Footer from "@/components/layout/Footer";
 import {
   User, KeyRound, Send, ChevronRight, LogIn, UserPlus,
@@ -88,6 +89,7 @@ export default function LoginPage() {
   return (
     <>
       <Navbar />
+      <Breadcrumbs items={[{ label: "后台管理登录" }]} />
       <main className="flex-1 min-h-screen flex items-center justify-center px-4"
         style={{
           background: "radial-gradient(ellipse at 50% -20%, rgba(229,62,62,0.15) 0%, transparent 60%), radial-gradient(ellipse at 80% 40%, rgba(88,166,255,0.08) 0%, transparent 50%), #0d1117"

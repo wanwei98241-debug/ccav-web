@@ -1,6 +1,7 @@
 import { ArrowLeft, Clock, Flame, Play, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import Footer from "@/components/layout/Footer";
 import { studentCourses, trainingCourse } from "@/lib/courseData";
 import LessonCardLock from "@/components/LessonCardLock";
@@ -54,7 +55,8 @@ export default async function LessonPage({ params }: Props) {
   return (
     <>
       <Navbar />
-      <main className="flex-1 pt-16">
+      <Breadcrumbs items={[{ label: "课程体系", href: "/courses" }, { label: course.title, href: `/courses/${course.id}` }, { label: mod2.title }]} />
+      <main className="flex-1">
         {/* Module Header */}
         <section className={`py-12 bg-gradient-to-br ${course.gradient}`}>
           <div className="max-w-4xl mx-auto px-5">

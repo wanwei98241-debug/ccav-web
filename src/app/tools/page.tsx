@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import Footer from "@/components/layout/Footer";
 import {
   Sparkles, Image, Video, Music, FileText, Code, Wand2,
@@ -246,6 +247,7 @@ export default function ToolsPage() {
   return (
     <>
       <Navbar />
+      <Breadcrumbs items={[{ label: "AI工具导航" }]} />
       <main className="flex-1 pt-16">
         {/* Hero */}
         <section className="py-12 bg-gradient-to-b from-white to-[rgba(37,99,235,0.03)]">

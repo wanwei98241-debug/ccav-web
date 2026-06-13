@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Check, ArrowLeft, Loader2 } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import Footer from "@/components/layout/Footer";
 import Link from "next/link";
 
@@ -49,6 +50,7 @@ export default function PartnerApplyPage() {
   return (
     <>
       <Navbar />
+      <Breadcrumbs items={[{ label: "合作教学点", href: "/partner" }, { label: "在线申请" }]} />
       <main className="flex-1 pt-16">
         {/* 顶部导航 */}
         <div className="bg-white border-b border-[rgba(37,99,235,0.08)] py-3">

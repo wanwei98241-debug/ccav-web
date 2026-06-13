@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { GalleryItem, getGalleryItems, galleryFetch, toggleLike as apiToggleLike, toggleDislike as apiToggleDislike, recordView as apiRecordView } from "@/lib/api";
 import CommentsList from "@/components/gallery/CommentsList";
 import Navbar from "@/components/layout/Navbar";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import Footer from "@/components/layout/Footer";
 
 export default function GalleryPage() {
@@ -249,6 +250,7 @@ export default function GalleryPage() {
   return (
     <>
       <Navbar />
+      <Breadcrumbs items={[{ label: "作品展示" }]} />
       <div className="min-h-screen"
         style={{
           background:

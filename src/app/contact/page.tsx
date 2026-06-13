@@ -3,12 +3,14 @@
 import { motion } from "framer-motion";
 import { Mail, MessageCircle, Clock, MapPin, Send } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import Footer from "@/components/layout/Footer";
 
 export default function ContactPage() {
   return (
     <>
       <Navbar />
+      <Breadcrumbs items={[{ label: "联系我们" }]} />
       <main className="flex-1 pt-16">
         {/* Hero */}
         <section className="py-20 bg-gradient-to-b from-white to-[rgba(37,99,235,0.03)]">

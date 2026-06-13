@@ -1,6 +1,7 @@
 "use client";
 
 import Navbar from "@/components/layout/Navbar";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ChevronRight, Sparkles, Star, Shield, Zap, BookOpen, Target, Award } from "lucide-react";
@@ -21,6 +22,7 @@ export default function CoursesPage() {
   return (
     <>
       <Navbar />
+      <Breadcrumbs items={[{ label: "课程体系" }]} />
       <main className="min-h-screen pb-20"
         style={{
           background:

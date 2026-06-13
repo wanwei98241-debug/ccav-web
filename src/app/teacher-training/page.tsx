@@ -1,11 +1,13 @@
 "use client";
 
 import Navbar from "@/components/layout/Navbar";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 
 export default function TeacherTrainingPage() {
   return (
     <>
       <Navbar />
+      <Breadcrumbs items={[{ label: "教师培训" }]} />
       <main className="max-w-5xl mx-auto px-4 py-12 relative z-10">
         {/* Hero */}
         <section className="text-center mb-16">

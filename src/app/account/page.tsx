@@ -4,6 +4,7 @@ import { useAuth } from "@/lib/auth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import Footer from "@/components/layout/Footer";
 import {
   User, LogOut, ChevronRight, BookOpen, Award, Zap, History,
@@ -24,6 +25,7 @@ export default function AccountPage() {
   return (
     <>
       <Navbar />
+      <Breadcrumbs items={[{ label: "个人中心" }]} />
       <main className="flex-1 pt-24 pb-16">
         <div className="max-w-3xl mx-auto px-4">
           {/* 用户信息头部 */}

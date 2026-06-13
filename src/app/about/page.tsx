@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Shield, Target, Users, Zap, Send } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import Footer from "@/components/layout/Footer";
 
 const values = [
@@ -32,6 +33,7 @@ export default function AboutPage() {
   return (
     <>
       <Navbar />
+      <Breadcrumbs items={[{ label: "关于CCAV" }]} />
       <main className="flex-1 pt-16">
         {/* Hero */}
         <section className="py-20"

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { CheckCircle, ArrowRight, Star, Award, Mail, User } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import Footer from "@/components/layout/Footer";
 
 const requirements = [
@@ -22,6 +23,7 @@ export default function InstructorPage() {
   return (
     <>
       <Navbar />
+      <Breadcrumbs items={[{ label: "认证讲师" }]} />
       <main className="flex-1 pt-16">
         {/* Hero */}
         <section className="py-20 bg-gradient-to-b from-white to-[rgba(37,99,235,0.03)]">

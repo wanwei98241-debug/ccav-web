@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 
 export default function PartnerPage() {
   return (
     <>
       <Navbar />
+      <Breadcrumbs items={[{ label: "合作教学点" }]} />
       <main className="max-w-5xl mx-auto px-4 py-12 relative z-10">
         {/* Hero */}
         <section className="text-center mb-16">

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, CheckCircle, Flame, Mail, MessageCircle, Lightbulb } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
+import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import Footer from "@/components/layout/Footer";
 import { useState, useEffect, useRef } from "react";
 import { getCourse } from "@/lib/api";
@@ -60,6 +61,7 @@ export default function TrainingPage() {
   return (
     <>
       <Navbar />
+      <Breadcrumbs items={[{ label: "面授培训" }]} />
       <main className="min-h-screen"
         style={{
           background:
