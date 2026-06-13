@@ -32,10 +32,7 @@ export default function Navbar() {
           <Link href="/gallery" className="hover:text-[#2563eb] transition no-underline">作品展示</Link>
           <Link href="/about" className="hover:text-[#2563eb] transition no-underline">关于CCAV</Link>
           <Link href="/contact" className="hover:text-[#2563eb] transition no-underline">联系我们</Link>
-          <Link href="/auth/login" className="text-sm px-3 py-1.5 rounded-lg border border-[rgba(37,99,235,0.15)] hover:bg-[#2563eb]/5 transition no-underline" style={{color:"#2563eb"}}>登录</Link>
-          <Link href="/auth/register" className="ink-btn text-xs px-4 py-1.5 no-underline" style={{ animation: "none" }}>
-            注册
-          </Link>
+          <Link href="/auth/login" className="ink-btn text-xs px-4 py-1.5 no-underline" style={{ animation: "none" }}>用户登录/注册</Link>
           <Link
             href="/teacher-training"
             className="ink-btn text-xs px-4 py-1.5 no-underline"
@@ -85,8 +82,7 @@ export default function Navbar() {
             <Link href="/about" className="hover:text-[#2563eb] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>关于CCAV</Link>
             <Link href="/contact" className="hover:text-[#2563eb] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>联系我们</Link>
             <hr className="my-2 border-[rgba(0,0,0,0.06)]" />
-            <Link href="/auth/login" className="hover:text-[#2563eb] transition py-1 no-underline font-medium" style={{color:"#2563eb"}} onClick={() => setMenuOpen(false)}>登录</Link>
-            <Link href="/auth/register" className="hover:text-[#2563eb] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>注册</Link>
+            <Link href="/auth/login" className="ink-btn text-xs px-4 py-1.5 no-underline text-center" style={{ animation: "none", color:"#fff" }} onClick={() => setMenuOpen(false)}>用户登录/注册</Link>
           </div>
         </div>
       )}
