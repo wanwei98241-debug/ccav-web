@@ -122,6 +122,17 @@ export default function CourseDetailClient({ id }: { id: string }) {
         {/* ═══ HERO ═══ */}
         <section className={`py-16 bg-gradient-to-br ${course.gradient}`}>
           <div className="max-w-4xl mx-auto px-5">
+          {/* 🖼️ P1: Hero图/视频占位区 — 临时展示位，后期替换真实素材 */}
+          <div className="relative w-full h-48 md:h-64 bg-black/10 mb-8 overflow-hidden rounded-none">
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="text-center text-white/40">
+                <svg className="w-12 h-12 mx-auto mb-2 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z" />
+                </svg>
+                <span className="text-sm">Hero 占位区（视频 / 大图）</span>
+              </div>
+            </div>
+          </div>
             <Link
               href="/courses/"
               className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
@@ -169,22 +180,35 @@ export default function CourseDetailClient({ id }: { id: string }) {
           </div>
         </section>
 
-        {/* ═══ 讲师介绍卡（前置到Hero下面） ═══ */}
+        {/* ═══ 讲师资格认证卡 — ⑤教师培训 ═══ */}
         {course.level === "第一部" && (
           <section className="bg-white border-b border-gray-100">
             <div className="max-w-4xl mx-auto px-5 py-6">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-xl font-bold shrink-0">
+              <div className="flex items-start gap-4">
+                {/* 讲师头像占位 */}
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-2xl font-bold shrink-0 shadow-sm">
                   👤
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-900 text-sm">AI视频创作讲师团队</h3>
-                  <p className="text-xs text-gray-500 mt-0.5">行业资深从业者 · 累计培训学员 500+</p>
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-semibold text-gray-900">AI视频创作讲师团队</h3>
+                    <span className="text-xs bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full border border-indigo-100">主讲老师</span>
+                    <span className="text-xs bg-amber-50 text-amber-600 px-2 py-0.5 rounded-full border border-amber-100 flex items-center gap-1">
+                      <BadgeCheck className="w-3 h-3" />认证讲师
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-500">行业资深从业者 · 累计培训学员 500+</p>
+                  {/* 资质展示 */}
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {["AIGC 认证讲师", "AI视频创作专家", "5年+行业经验"].map((badge, i) => (
+                      <span key={i} className="inline-flex items-center gap-1 text-[11px] text-gray-500 bg-gray-50 px-2 py-0.5 rounded-full border border-gray-100">
+                        <BadgeCheck className="w-3 h-3 text-indigo-500" />
+                        {badge}
+                      </span>
+                    ))}
+                  </div>
                   {/* TODO: 讲师介绍卡 — 后期接入真实讲师头像、经历、资质数据 */}
                 </div>
-                <span className="text-xs text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full shrink-0">
-                  主讲老师
-                </span>
               </div>
             </div>
           </section>
@@ -216,13 +240,19 @@ export default function CourseDetailClient({ id }: { id: string }) {
                     { icon: Award, label: "结业作品", value: "200+", color: "text-emerald-600 bg-emerald-50" },
                     { icon: Flame, label: "活跃社群", value: "10+ 群", color: "text-rose-600 bg-rose-50" },
                   ].map((stat, i) => (
-                    <div key={i} className="p-4 rounded-xl bg-white border border-gray-200 text-center">
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 16 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.08 }}
+                      className="p-4 rounded-xl bg-white border border-gray-200 text-center hover:shadow-md hover:border-indigo-300/50 transition-all">
                       <div className={`w-9 h-9 mx-auto mb-2 rounded-lg flex items-center justify-center ${stat.color}`}>
                         <stat.icon className="w-4 h-4" />
                       </div>
                       <div className="text-lg font-bold text-gray-900">{stat.value}</div>
                       <div className="text-xs text-gray-500 mt-0.5">{stat.label}</div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
 
@@ -341,19 +371,60 @@ export default function CourseDetailClient({ id }: { id: string }) {
                   <div className="text-3xl font-bold text-gray-900 mb-2">{course.price}</div>
                   <div className="text-sm text-gray-500 mb-6">含证书费用</div>
                   
+
+        {/* ═══ P1: ⑥学员评价卡片框架 ── 大哥做 ═══ */}
+        <section className="py-12 bg-white border-t border-gray-100">
+          <div className="max-w-4xl mx-auto px-5">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+              <Star className="w-5 h-5 text-yellow-500" />
+              学员评价
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[
+                { name: "张同学", title: "AI视频创作者", stars: 5, text: "课程从零基础开始，一步步带我做完整视频，教材配套很系统，推荐！", time: "2周前", initial: "张" },
+                { name: "李同学", title: "自媒体博主", stars: 5, text: "最惊喜的是教材内容很丰富，学到第三篇就能做出商用级别的视频了。", time: "1个月前", initial: "李" },
+                { name: "王同学", title: "培训机构讲师", stars: 4, text: "作为老师来学认证课程，内容实战性强，直接能用到教学中。", time: "3周前", initial: "王" },
+              ].map((review, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 16 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="p-5 rounded-xl bg-gray-50 border border-gray-100 hover:border-indigo-200/50 hover:shadow-sm transition-all">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center text-sm font-bold text-indigo-600 shrink-0">
+                      {review.initial}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-sm text-gray-900">{review.name}</p>
+                      <p className="text-[11px] text-gray-400">{review.title}</p>
+                    </div>
+                    <div className="flex items-center gap-0.5">
+                      {Array.from({ length: 5 }).map((_, si) => (
+                        <Star key={si} className={`w-3 h-3 ${si < review.stars ? "text-yellow-400 fill-yellow-400" : "text-gray-200"}`} />
+                      ))}
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-600 leading-relaxed">&ldquo;{review.text}&rdquo;</p>
+                  <p className="text-[11px] text-gray-400 mt-2">{review.time}</p>
+                </motion.div>
+              ))}
+            </div>
+            {/* TODO: 学员评价 — 后期接入真实评价 API，支持分页加载 */}
+          </div>
+        </section>
                   {/* ⑦ 底部固定报名按钮的侧边栏版本 — ②线上平台 */}
                   <div className="space-y-3">
                     <a
                       href="mailto:contact@ccav.com"
-                      className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-gradient-to-r from-[#e53e3e] to-[#c53030] text-white font-semibold hover:shadow-lg hover:shadow-red-400/20 transition-all"
-                    >
+                      className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-gradient-to-r from-[#e53e3e] to-[#c53030] text-white font-semibold hover:shadow-lg hover:shadow-red-400/20 transition-all">
                       <Mail className="w-4 h-4" />
                       邮件咨询
                     </a>
                     <a
                       href="#"
-                      className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-gray-50 border border-gray-200 text-gray-700 font-semibold hover:border-indigo-400/50 transition-all"
-                    >
+                      className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-gray-50 border border-gray-200 text-gray-700 font-semibold hover:border-indigo-400/50 transition-all">
                       <MessageCircle className="w-4 h-4" />
                       在线咨询（即将上线）
                     </a>
@@ -402,6 +473,23 @@ export default function CourseDetailClient({ id }: { id: string }) {
                       <span className="text-gray-500">认证证书</span>
                       <span>{course.certification}</span>
                     </div>
+                  {/* ── P1: ④教材样章下载入口 — 三弟做（占位区） ── */}
+                  <div className="mt-5 pt-5 border-t border-gray-200">
+                    <div className="flex items-center justify-between mb-3">
+                      <h4 className="text-sm font-semibold text-gray-900 flex items-center gap-1.5">
+                        <BookOpen className="w-4 h-4 text-indigo-500" />
+                        教材样章
+                      </h4>
+                      <span className="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">PDF</span>
+                    </div>
+                    <div className="bg-gray-50 border border-dashed border-gray-300 rounded-xl p-4 text-center">
+                      <BookOpen className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+                      <p className="text-xs text-gray-400 mb-2">教材样章预览 / 下载</p>
+                      <span className="inline-block px-3 py-1 text-[10px] bg-white text-gray-400 border border-gray-300 rounded-full cursor-not-allowed">
+                        🚧 三弟施工中
+                      </span>
+                    </div>
+                  </div>
                   </div>
                 </div>
               </div>
