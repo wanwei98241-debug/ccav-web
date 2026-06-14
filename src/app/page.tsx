@@ -76,6 +76,31 @@ export default function Home() {
         </div>
       </section>
 
+      {/* 专家讲师队伍 */}
+      <section className="max-w-5xl mx-auto px-4 pb-16">
+        <div className="text-center mb-10">
+          <h2 className="text-2xl serif font-bold mb-2" style={{ color: "#1e293b" }}>专家讲师团队</h2>
+          <p className="text-sm" style={{ color: "rgba(0,0,0,0.4)" }}>AI视频创作领域的资深专家，为你的学习保驾护航</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            { initial: "A", name: "陈国良", title: "AI视频创作·行业资深", desc: "拥有15年影视后期与AI视频创作经验，参与多部商业AI短片制作，CCAV标准教材主要编写人之一。" },
+            { initial: "B", name: "李雪飞", title: "AI图像生成·高级讲师", desc: "专注AI图像与视频生成技术，ComfyUI工作流专家，累计培训学员超过2000人。" },
+            { initial: "C", name: "王嘉伟", title: "AI视频剪辑·技术顾问", desc: "前影视后期制作总监，精通AI视频全流程创作，主攻商业广告与品牌宣传方向。" },
+          ].map((t, i) => (
+            <div key={i} className="ink-card p-6 flex flex-col items-center text-center">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-xl font-bold mb-4">{t.initial}</div>
+              <h3 className="text-lg font-bold mb-1" style={{ color: "#1e293b" }}>{t.name}</h3>
+              <p className="text-xs font-medium mb-3" style={{ color: "#2563eb" }}>{t.title}</p>
+              <p className="text-xs leading-relaxed" style={{ color: "rgba(0,0,0,0.45)" }}>{t.desc}</p>
+            </div>
+          ))}
+        </div>
+        <div className="text-center mt-6">
+          <a href="/teacher-training" className="text-sm font-medium" style={{ color: "#2563eb" }}>查看全部师资 →</a>
+        </div>
+      </section>
+
       {/* 六大业务板块 */}
       <section className="max-w-5xl mx-auto px-4 pb-16">
         <div className="text-center mb-10">
