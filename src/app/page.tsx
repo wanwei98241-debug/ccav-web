@@ -76,27 +76,50 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 专家讲师队伍 */}
+      {/* 专家与讲师团队 */}
       <section className="max-w-5xl mx-auto px-4 pb-16">
         <div className="text-center mb-10">
-          <h2 className="text-2xl serif font-bold mb-2" style={{ color: "#1e293b" }}>专家讲师团队</h2>
-          <p className="text-sm" style={{ color: "rgba(0,0,0,0.4)" }}>AI视频创作领域的资深专家，为你的学习保驾护航</p>
+          <h2 className="text-2xl serif font-bold mb-2" style={{ color: "#1e293b" }}>专家与讲师团队</h2>
+          <p className="text-sm" style={{ color: "rgba(0,0,0,0.4)" }}>AI视频创作领域的资深专家与一线讲师，为你的学习保驾护航</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        {/* 专家团队 */}
+        <h3 className="text-base font-bold mb-4" style={{ color: "#1e293b" }}><span className="inline-block w-1 h-4 rounded-sm mr-2 align-middle" style={{ background: "#2563eb" }}/>专家团队</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
           {[
             { initial: "A", name: "陈国良", title: "AI视频创作·行业资深", desc: "拥有15年影视后期与AI视频创作经验，参与多部商业AI短片制作，CCAV标准教材主要编写人之一。" },
             { initial: "B", name: "李雪飞", title: "AI图像生成·高级讲师", desc: "专注AI图像与视频生成技术，ComfyUI工作流专家，累计培训学员超过2000人。" },
-            { initial: "C", name: "王嘉伟", title: "AI视频剪辑·技术顾问", desc: "前影视后期制作总监，精通AI视频全流程创作，主攻商业广告与品牌宣传方向。" },
           ].map((t, i) => (
-            <div key={i} className="ink-card p-6 flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-xl font-bold mb-4">{t.initial}</div>
-              <h3 className="text-lg font-bold mb-1" style={{ color: "#1e293b" }}>{t.name}</h3>
-              <p className="text-xs font-medium mb-3" style={{ color: "#2563eb" }}>{t.title}</p>
-              <p className="text-xs leading-relaxed" style={{ color: "rgba(0,0,0,0.45)" }}>{t.desc}</p>
+            <div key={i} className="ink-card p-5 flex items-start gap-4">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex-shrink-0 flex items-center justify-center text-white text-lg font-bold">{t.initial}</div>
+              <div className="min-w-0">
+                <h4 className="text-base font-bold" style={{ color: "#1e293b" }}>{t.name}</h4>
+                <p className="text-xs font-medium mb-1" style={{ color: "#2563eb" }}>{t.title}</p>
+                <p className="text-xs leading-relaxed" style={{ color: "rgba(0,0,0,0.45)" }}>{t.desc}</p>
+              </div>
             </div>
           ))}
         </div>
-        <div className="text-center mt-6">
+
+        {/* 讲师团队 */}
+        <h3 className="text-base font-bold mb-4" style={{ color: "#1e293b" }}><span className="inline-block w-1 h-4 rounded-sm mr-2 align-middle" style={{ background: "#2563eb" }}/>讲师团队</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          {[
+            { initial: "C", name: "王嘉伟", title: "AI视频剪辑·技术顾问", desc: "前影视后期制作总监，精通AI视频全流程创作，主攻商业广告与品牌宣传方向。" },
+            { initial: "D", name: "赵晓雯", title: "AI短片导演·课程研发", desc: "毕业于中国传媒大学，AI短片导演，创作多部获奖AI作品，负责课程内容研发与教学体系设计。" },
+          ].map((t, i) => (
+            <div key={i} className="ink-card p-5 flex items-start gap-4">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex-shrink-0 flex items-center justify-center text-white text-lg font-bold">{t.initial}</div>
+              <div className="min-w-0">
+                <h4 className="text-base font-bold" style={{ color: "#1e293b" }}>{t.name}</h4>
+                <p className="text-xs font-medium mb-1" style={{ color: "#2563eb" }}>{t.title}</p>
+                <p className="text-xs leading-relaxed" style={{ color: "rgba(0,0,0,0.45)" }}>{t.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="text-center">
           <a href="/teacher-training" className="text-sm font-medium" style={{ color: "#2563eb" }}>查看全部师资 →</a>
         </div>
       </section>
