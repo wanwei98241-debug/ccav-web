@@ -187,7 +187,7 @@ export default function CourseDetailClient({ id }: { id: string }) {
               <div className="flex items-start gap-4">
                 {/* 讲师头像占位 */}
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-2xl font-bold shrink-0 shadow-sm">
-                  👤
+                  A
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
@@ -242,7 +242,7 @@ export default function CourseDetailClient({ id }: { id: string }) {
                   ].map((stat, i) => (
                     <motion.div
                       key={i}
-                      initial={{ opacity: 0, y: 16 }}
+                      initial={{ opacity: 1, y: 0 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ delay: i * 0.08 }}
@@ -473,7 +473,7 @@ export default function CourseDetailClient({ id }: { id: string }) {
                       <span className="text-gray-500">认证证书</span>
                       <span>{course.certification}</span>
                     </div>
-                  {/* ── P1: ④教材样章下载入口 — 三弟做（占位区） ── */}
+                  {/* ── P1: ④教材样章下载入口 — 占位，点击提示素材准备中 ── */}
                   <div className="mt-5 pt-5 border-t border-gray-200">
                     <div className="flex items-center justify-between mb-3">
                       <h4 className="text-sm font-semibold text-gray-900 flex items-center gap-1.5">
@@ -482,13 +482,16 @@ export default function CourseDetailClient({ id }: { id: string }) {
                       </h4>
                       <span className="text-[10px] text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">PDF</span>
                     </div>
-                    <div className="bg-gray-50 border border-dashed border-gray-300 rounded-xl p-4 text-center">
-                      <BookOpen className="w-8 h-8 mx-auto mb-2 text-gray-300" />
-                      <p className="text-xs text-gray-400 mb-2">教材样章预览 / 下载</p>
-                      <span className="inline-block px-3 py-1 text-[10px] bg-white text-gray-400 border border-gray-300 rounded-full cursor-not-allowed">
-                        🚧 三弟施工中
+                    <button
+                      onClick={() => alert("教材样章物料准备中，敬请期待 🚧")}
+                      className="w-full bg-gray-50 border border-dashed border-gray-300 rounded-xl p-4 text-center hover:bg-gray-100 hover:border-gray-400 transition-colors cursor-pointer"
+                    >
+                      <BookOpen className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                      <p className="text-xs text-gray-500 mb-1">下载教材样章（PDF）</p>
+                      <span className="inline-block px-3 py-0.5 text-[10px] bg-gray-200 text-gray-400 rounded-full">
+                        🚧 素材制作中
                       </span>
-                    </div>
+                    </button>
                   </div>
                   </div>
                 </div>
