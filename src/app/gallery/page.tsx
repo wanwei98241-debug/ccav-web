@@ -7,139 +7,172 @@ import Navbar from "@/components/layout/Navbar";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import Footer from "@/components/layout/Footer";
 
-export default function GalleryPage() {
-  // ── 筛选维度定义 ──
-  const DIMS = {
-    tech: { label: '🔑 创作技术', tags: ['全部','文生图','文生视频','图生图','图生视频','AI音乐'] },
-    scene: { label: '📂 应用场景', tags: ['全部','故事短片','AI电影','商业广告','品牌宣传','课程微课','创意混剪','实验艺术','🎤 词曲演唱','🎵 纯音乐/BGM'] },
-    style: { label: '🎨 艺术风格', tags: ['全部','国风水墨','国潮复古','科幻赛博','极简现代','手绘插画','抽象概念'] },
-    stage: { label: '🏆 课程学段', tags: ['全部','L1·基础工坊','L2·进阶工具','L3·超清精修','L4·综合实战','L5·商业交付'] },
-  } as const;
-  type Dim = keyof typeof DIMS;
+// ── 6 维筛选维度定义 ──
+// 单选维度：creation_type, art_style, difficulty
+// 多选维度：application_scenes, tool_chain, secondary_tags
+type Dim = 'creation_type' | 'application_scenes' | 'tool_chain' | 'art_style' | 'secondary_tags' | 'difficulty';
 
+// 维度元信息
+const DIM_META: Record<Dim, { label: string; icon: string; multi: boolean }> = {
+  creation_type:       { label: '创作类型',   icon: '🌐', multi: false },
+  application_scenes:  { label: '应用场景',   icon: '🎬', multi: true },
+  tool_chain:          { label: '工具链',     icon: '🔧', multi: true },
+  art_style:           { label: '艺术风格',   icon: '🎨', multi: false },
+  secondary_tags:      { label: '二级标签',   icon: '🏷️', multi: true },
+  difficulty:          { label: '难度/学段',  icon: '🪜', multi: false },
+};
+
+// 后端值 → 前端标签
+const CREATION_TYPE_LABEL: Record<string, string> = {
+  'ai-image': 'AI图片',
+  'ai-video': 'AI视频',
+  'ai-music': 'AI音乐',
+};
+const CREATION_TYPE_VALUE: Record<string, string> = {
+  'AI图片': 'ai-image',
+  'AI视频': 'ai-video',
+  'AI音乐': 'ai-music',
+};
+
+// 后端旧 tech_type → 前端标签（保留旧兼容）
+const TECH_LABEL: Record<string, string> = {
+  'image': 'AI图片',
+  'video': 'AI视频',
+  'music': 'AI音乐',
+};
+
+// 难度中文标签
+const DIFFICULTY_LABEL: Record<string, string> = {
+  'M1': 'M1·基础工坊',
+  'M2': 'M2·进阶工具',
+  'M3': 'M3·超清精修',
+  'M4': 'M4·综合实战',
+  'M5': 'M5·商业交付',
+};
+
+export default function GalleryPage() {
   // ── 作品数据 ──
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState<GalleryItem | null>(null);
 
+  // ── 后端动态筛选选项 ──
+  const [filterOptions, setFilterOptions] = useState<Record<string, string[]>>({});
 
-  // ── 各维度选中状态（"全部"表示未选） ──
-  const [activeFilters, setActiveFilters] = useState<Record<Dim, string>>({
-    tech: '全部',
-    scene: '全部',
-    style: '全部',
-    stage: '全部',
+  // ── 各维度选中状态 ──
+  // 单选维度：存储选中的值（'' 表示未选）
+  // 多选维度：存储选中的列表 []（空数组表示未选）
+  const [singleFilters, setSingleFilters] = useState<Record<string, string>>({
+    creation_type: '',
+    art_style: '',
+    difficulty: '',
   });
-
-  // ── 后端动态场景/风格选项（用于提交 API 请求的参数回填） ──
-  const [sceneOptions, setSceneOptions] = useState<string[]>([]);
-  const [styleOptions, setStyleOptions] = useState<string[]>([]);
+  const [multiFilters, setMultiFilters] = useState<Record<string, string[]>>({
+    application_scenes: [],
+    tool_chain: [],
+    secondary_tags: [],
+  });
 
   // ── 加载筛选选项 ──
   useEffect(() => {
     galleryFetch('/filters', {}).then((res: any) => {
-      if (res?.scenes) setSceneOptions(res.scenes);
-      if (res?.styles) setStyleOptions(res.styles);
+      if (res) {
+        setFilterOptions(res);
+      }
     }).catch(() => {});
   }, []);
 
-  // ── 标签点击处理器（单选 + 回退"全部"） ──
-  const handleTagClick = (dim: Dim, tag: string) => {
-    setActiveFilters(prev => ({
+  // ── 单选标签点击 ──
+  const handleSingleClick = (dim: string, value: string) => {
+    setSingleFilters(prev => ({
       ...prev,
-      [dim]: prev[dim] === tag ? '全部' : tag,
+      [dim]: prev[dim] === value ? '' : value,
     }));
+  };
+
+  // ── 多选标签点击 ──
+  const handleMultiClick = (dim: string, value: string) => {
+    setMultiFilters(prev => {
+      const current = prev[dim] || [];
+      if (current.includes(value)) {
+        return { ...prev, [dim]: current.filter(v => v !== value) };
+      }
+      return { ...prev, [dim]: [...current, value] };
+    });
   };
 
   // ── 清除所有筛选 ──
   const clearFilters = () => {
-    setActiveFilters({ tech: '全部', scene: '全部', style: '全部', stage: '全部' });
+    setSingleFilters({ creation_type: '', art_style: '', difficulty: '' });
+    setMultiFilters({ application_scenes: [], tool_chain: [], secondary_tags: [] });
   };
 
-  const hasActiveFilters = Object.values(activeFilters).some(v => v !== '全部');
-
-  // ── 哑态灰化检测 ──
-  const isTagDisabled = (dim: Dim, tag: string): boolean => {
-    if (tag === '全部') return false;
-    const current = activeFilters[dim];
-    if (current === tag) return false;
-
-    // 取当前作品在此维度的值
-    const getVal = (it: GalleryItem): string | undefined => {
-      switch (dim) {
-        case 'tech': return mapTechValueToLabel(it.tech_type);
-        case 'scene': return it.scene;
-        case 'style': return it.style;
-        case 'stage': return it.stage;
-      }
-    };
-
-    // 看已选的其他维度过滤后，是否还有作品包含 tag
-    const matchesDim = (it: GalleryItem, d: Dim): boolean => {
-      const v = activeFilters[d];
-      if (v === '全部') return true;
-      switch (d) {
-        case 'tech': return mapTechValueToLabel(it.tech_type) === v;
-        case 'scene': return it.scene === v;
-        case 'style': return it.style === v;
-        case 'stage': return it.stage === v;
-      }
-    };
-
-    const candidates = items.filter(it =>
-      (['tech','scene','style','stage'] as Dim[])
-        .filter(d => d !== dim)
-        .every(d => matchesDim(it, d))
-    );
-
-    return !candidates.some(it => getVal(it) === tag);
-  };
-
-  // ── tech_type value → label 映射 ──
-  const mapTechValueToLabel = (val: string | undefined): string | undefined => {
-    const map: Record<string, string> = {
-      'text-to-image': '文生图',
-      'text-to-video': '文生视频',
-      'image-to-image': '图生图',
-      'image-to-video': '图生视频',
-      'song-video': 'AI音乐',
-    };
-    return val ? map[val] ?? val : undefined;
-  };
-
-  // ── 纯前端四维交集筛选 ──
-  const displayedWorks = items.filter(it => {
-    const techLabel = mapTechValueToLabel(it.tech_type);
-    if (activeFilters.tech !== '全部' && techLabel !== activeFilters.tech) return false;
-    if (activeFilters.scene !== '全部' && it.scene !== activeFilters.scene) return false;
-    if (activeFilters.style !== '全部' && it.style !== activeFilters.style) return false;
-    if (activeFilters.stage !== '全部' && it.stage !== activeFilters.stage) return false;
-    return true;
-  });
+  const hasActiveFilters =
+    Object.values(singleFilters).some(v => v !== '') ||
+    Object.values(multiFilters).some(arr => arr.length > 0);
 
   // ── 加载作品数据 ──
   useEffect(() => {
-    // 映射后端需要的参数
-    const techMap: Record<string, string> = {
-      '文生图': 'text-to-image',
-      '文生视频': 'text-to-video',
-      '图生图': 'image-to-image',
-      '图生视频': 'image-to-video',
-      'AI音乐': 'song-video',
-    };
-
     const params: any = {};
-    if (activeFilters.tech !== '全部' && techMap[activeFilters.tech]) {
-      params.tech_type = techMap[activeFilters.tech];
+
+    // 单选
+    if (singleFilters.creation_type) params.creation_type = singleFilters.creation_type;
+    if (singleFilters.art_style) params.art_style = singleFilters.art_style;
+    if (singleFilters.difficulty) params.difficulty = singleFilters.difficulty;
+
+    // 多选 —— 后端用 LIKE 单值匹配，一次只传一个
+    // 多选时使用第一个选中值传参，其余值靠前端过滤
+    // 或者后端支持逗号分隔？看后端实现用的是单个 LIKE
+    // 这里取第一个选中值传给后端，其余值靠前端过滤
+    if (multiFilters.application_scenes.length > 0) {
+      params.application_scene = multiFilters.application_scenes[0];
+    }
+    if (multiFilters.tool_chain.length > 0) {
+      params.tool_chain = multiFilters.tool_chain[0];
+    }
+    if (multiFilters.secondary_tags.length > 0) {
+      params.secondary_tag = multiFilters.secondary_tags[0];
     }
 
+    setLoading(true);
     getGalleryItems(params).then((data) => {
       setItems(data);
       setLoading(false);
     });
-  }, [activeFilters.tech]); // 只在创作技术变化时重新请求
+  }, [
+    singleFilters.creation_type,
+    singleFilters.art_style,
+    singleFilters.difficulty,
+    multiFilters.application_scenes,
+    multiFilters.tool_chain,
+    multiFilters.secondary_tags,
+  ]);
 
-  // ── 浏览器回退处理：弹窗打开时 pushState，回退时关弹窗 ──
+  // ── 前端二次过滤（多选维度需要客户端交叉匹配） ──
+  const displayedWorks = items.filter(it => {
+    // 单选过滤（服务端已做，前端辅助）
+    if (singleFilters.creation_type && it.creation_type !== singleFilters.creation_type) return false;
+    if (singleFilters.art_style && it.art_style !== singleFilters.art_style) return false;
+    if (singleFilters.difficulty && it.difficulty !== singleFilters.difficulty) return false;
+
+    // 多选过滤（前端检查多个值）
+    if (multiFilters.application_scenes.length > 0) {
+      const scenes = it.application_scenes || [];
+      if (!multiFilters.application_scenes.some(s => scenes.includes(s))) return false;
+    }
+    if (multiFilters.tool_chain.length > 0) {
+      const chains = it.tool_chain || [];
+      if (!multiFilters.tool_chain.some(t => chains.includes(t))) return false;
+    }
+    if (multiFilters.secondary_tags.length > 0) {
+      const tags = it.secondary_tags || [];
+      if (!multiFilters.secondary_tags.some(t => tags.includes(t))) return false;
+    }
+
+    return true;
+  });
+
+  // ── 浏览器回退处理 ──
   const selectedRef = useRef<GalleryItem | null>(null);
   useEffect(() => { selectedRef.current = selectedItem; }, [selectedItem]);
 
@@ -150,7 +183,6 @@ export default function GalleryPage() {
   useEffect(() => {
     const onPopState = () => {
       if (selectedRef.current) {
-        // 弹窗开着时回退 → 关弹窗，不回退到前页
         setSelectedItem(null);
       }
     };
@@ -160,7 +192,6 @@ export default function GalleryPage() {
 
   // ── 记录浏览量 ──
   const openDetail = async (item: GalleryItem) => {
-    // 先 pushState，保证回退时能正确关弹窗而不是跳到上一页
     if (!selectedItem) {
       window.history.pushState({ galleryModalOpen: true }, "");
     }
@@ -205,40 +236,73 @@ export default function GalleryPage() {
     );
   };
 
-
-  // ── 渲染筛选按钮 ──
-  const renderTagRow = (dim: Dim) => {
-    const { label, tags } = DIMS[dim];
-    const active = activeFilters[dim];
-    const isPrimary = dim === 'tech';
+  // ── 渲染单选行 ──
+  const renderSingleRow = (dim: string, options: string[], labelMap?: Record<string, string>) => {
+    const meta = DIM_META[dim as Dim];
+    const active = singleFilters[dim] || '';
 
     return (
-      <div className={`${isPrimary ? 'mb-3' : 'mb-2 last:mb-0'}`}>
+      <div className="mb-2 last:mb-0">
         <div className="flex items-center gap-2 mb-1.5">
-          <span className={`${isPrimary ? 'text-xs' : 'text-[11px]'} font-medium whitespace-nowrap`} style={{ color: "rgba(0,0,0,0.3)" }}>
-            {label}
+          <span className="text-[11px] font-medium whitespace-nowrap" style={{ color: "rgba(0,0,0,0.3)" }}>
+            {meta.icon} {meta.label}
           </span>
         </div>
         <div className="flex flex-wrap gap-1.5">
-          {tags.map(tag => {
-            const isActive = active === tag;
-            const disabled = dim !== 'tech' && !isActive && isTagDisabled(dim, tag);
+          {options.map(opt => {
+            const label = labelMap?.[opt] ?? opt;
+            const isActive = active === opt;
             return (
               <button
-                key={tag}
-                disabled={disabled}
-                onClick={() => handleTagClick(dim, tag)}
+                key={opt}
+                onClick={() => handleSingleClick(dim, opt)}
                 className={[
-                  'px-2.5 py-1 rounded-md border transition-all duration-150',
-                  isPrimary ? 'text-sm' : 'text-xs',
+                  'px-2.5 py-1 rounded-md border transition-all duration-150 text-xs',
                   isActive
                     ? 'bg-blue-600/10 text-blue-600 border-blue-500/30'
-                    : disabled
-                      ? 'text-zinc-300 border-zinc-200/30 cursor-not-allowed'
-                      : 'text-zinc-400 border-zinc-300/30 hover:text-zinc-600 hover:border-zinc-400/50',
+                    : 'text-zinc-400 border-zinc-300/30 hover:text-zinc-600 hover:border-zinc-400/50',
                 ].join(' ')}
               >
-                {tag}
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  // ── 渲染多选行（标签云风格） ──
+  const renderMultiRow = (dim: string, options: string[], labelMap?: Record<string, string>) => {
+    const meta = DIM_META[dim as Dim];
+    const active = multiFilters[dim] || [];
+
+    return (
+      <div className="mb-2 last:mb-0">
+        <div className="flex items-center gap-2 mb-1.5">
+          <span className="text-[11px] font-medium whitespace-nowrap" style={{ color: "rgba(0,0,0,0.3)" }}>
+            {meta.icon} {meta.label}
+          </span>
+          {active.length > 0 && (
+            <span className="text-[10px] text-blue-400/60">已选 {active.length}</span>
+          )}
+        </div>
+        <div className="flex flex-wrap gap-1.5">
+          {options.map(opt => {
+            const label = labelMap?.[opt] ?? opt;
+            const isActive = active.includes(opt);
+            return (
+              <button
+                key={opt}
+                onClick={() => handleMultiClick(dim, opt)}
+                className={[
+                  'px-2.5 py-1 rounded-md border transition-all duration-150 text-xs',
+                  isActive
+                    ? 'bg-blue-600/10 text-blue-600 border-blue-500/30'
+                    : 'text-zinc-400 border-zinc-300/30 hover:text-zinc-600 hover:border-zinc-400/50',
+                ].join(' ')}
+              >
+                {label}
               </button>
             );
           })}
@@ -267,17 +331,31 @@ export default function GalleryPage() {
             学员AI作品展示区 · 用AI创造文化之美
           </p>
 
-          {/* ── 四维筛选面板（全部展开，视觉降权） ── */}
+          {/* ── 6 维筛选面板（全部展开，视觉降权） ── */}
           <div className="max-w-2xl mx-auto mt-6 p-4 rounded-xl"
             style={{ background: "#ffffff", border: "1px solid rgba(37,99,235,0.08)" }}>
-            {renderTagRow('tech')}
-            {renderTagRow('scene')}
-            {renderTagRow('style')}
-            {renderTagRow('stage')}
+
+            {/* 创作类型（单选） */}
+            {renderSingleRow('creation_type', (filterOptions.creation_types as string[]) || ['ai-image', 'ai-video', 'ai-music'], CREATION_TYPE_LABEL)}
+
+            {/* 应用场景（多选） */}
+            {(filterOptions.application_scenes as string[] || []).length > 0 && renderMultiRow('application_scenes', filterOptions.application_scenes as string[])}
+
+            {/* 工具链（多选） */}
+            {(filterOptions.tool_chains as string[] || []).length > 0 && renderMultiRow('tool_chain', filterOptions.tool_chains as string[])}
+
+            {/* 艺术风格（单选） */}
+            {(filterOptions.art_styles as string[] || []).length > 0 && renderSingleRow('art_style', filterOptions.art_styles as string[])}
+
+            {/* 二级标签（多选） */}
+            {(filterOptions.secondary_tags as string[] || []).length > 0 && renderMultiRow('secondary_tags', filterOptions.secondary_tags as string[])}
+
+            {/* 难度（单选） */}
+            {(filterOptions.difficulties as string[] || []).length > 0 && renderSingleRow('difficulty', filterOptions.difficulties as string[], DIFFICULTY_LABEL)}
 
             {/* 清除筛选按钮 */}
             {hasActiveFilters && (
-              <div className="mt-3 pt-2 border-t border-white/5">
+              <div className="mt-3 pt-2 border-t border-zinc-100">
                 <button
                   onClick={clearFilters}
                   className="px-3 py-1 text-xs rounded-lg border border-red-500/20 text-red-400/60 hover:text-red-400 hover:border-red-500/40 transition"
@@ -296,196 +374,278 @@ export default function GalleryPage() {
               <div className="w-8 h-8 border-2 border-[#c8b898]/30 border-t-[#c8b898] rounded-full animate-spin" />
             </div>
           ) : displayedWorks.length === 0 ? (
-            <div className="text-center py-32 text-white/20">
+            <div className="text-center py-32" style={{ color: "rgba(0,0,0,0.2)" }}>
               <p className="text-lg">暂无作品</p>
-              <p className="text-sm mt-2">点下方按钮显示全部作品</p>
+              <p className="text-sm mt-2">调整筛选条件后试试</p>
+              {hasActiveFilters && (
+                <button
+                  onClick={clearFilters}
+                  className="mt-4 px-4 py-2 text-xs rounded-lg border border-blue-500/20 text-blue-500/60 hover:text-blue-500 hover:border-blue-500/40 transition"
+                >
+                  显示全部
+                </button>
+              )}
             </div>
           ) : (
-            <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4">
-              {displayedWorks.map((item) => (
-                <div
-                  key={item.id}
-                  className="break-inside-avoid cursor-pointer group rounded-lg overflow-hidden border border-white/5 hover:border-[#c8b898]/20 transition-all duration-300"
-                  style={{ background: "rgba(255,255,255,0.02)" }}
-                  onClick={() => openDetail(item)}
-                >
-                  <div className="relative overflow-hidden">
-                    <img
-                      src={item.image_url}
-                      alt={item.title}
-                      className="w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      loading="lazy"
-                    />
-                    {item.media_type === 'video' && item.video_url && item.video_url !== '无' && (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-12 h-12 rounded-full bg-black/50 flex items-center justify-center backdrop-blur-sm group-hover:bg-black/70 transition">
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-                            <polygon points="8,5 19,12 8,19" />
-                          </svg>
+            <>
+              <div className="text-left mb-4 text-xs" style={{ color: "rgba(0,0,0,0.3)" }}>
+                共 {displayedWorks.length} 个作品
+              </div>
+              <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4">
+                {displayedWorks.map((item) => (
+                  <div
+                    key={item.id}
+                    className="break-inside-avoid cursor-pointer group rounded-lg overflow-hidden border border-white/5 hover:border-[#c8b898]/20 transition-all duration-300"
+                    style={{ background: "rgba(255,255,255,0.02)" }}
+                    onClick={() => openDetail(item)}
+                  >
+                    <div className="relative overflow-hidden">
+                      <img
+                        src={item.image_url}
+                        alt={item.title}
+                        className="w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy"
+                      />
+                      {item.media_type === 'video' && item.video_url && item.video_url !== '无' && (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-full bg-black/50 flex items-center justify-center backdrop-blur-sm">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                              <polygon points="8,5 19,12 8,19" />
+                            </svg>
+                          </div>
                         </div>
-                      </div>
-                    )}
-                    {item.media_type === 'video' && item.video_url && item.video_url !== '无' && item.duration_seconds && (
-                      <div className="absolute bottom-1.5 right-1.5 px-1.5 py-0.5 rounded text-[10px] font-medium"
-                        style={{ background: "rgba(0,0,0,0.65)", color: "rgba(255,255,255,0.85)" }}>
-                        {String(Math.floor(item.duration_seconds / 60)).padStart(2,'0')}:{String(item.duration_seconds % 60).padStart(2,'0')}
-                      </div>
-                    )}
-                  </div>
-                  <div className="p-3">
-                    <h3 className="text-sm text-white/80 font-medium truncate">{item.title}</h3>
-                    <div className="flex items-center gap-2 mt-2 text-xs text-white/30">
-                      <img src={item.avatar_url} alt="" className="w-4 h-4 rounded-full" />
-                      <span>{item.author}</span>
-                      <span className="ml-auto flex items-center gap-2">
-                        <span className="flex items-center gap-0.5 text-white/30">
-                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                            <circle cx="12" cy="12" r="3" />
-                          </svg>
-                          {item.views_count}
+                      )}
+                      {/* 创作类型角标 */}
+                      {item.creation_type && (
+                        <div className="absolute top-2 left-2 px-1.5 py-0.5 rounded text-[10px] font-medium"
+                          style={{ background: "rgba(0,0,0,0.6)", color: "rgba(255,255,255,0.7)" }}>
+                          {CREATION_TYPE_LABEL[item.creation_type] || item.creation_type}
+                        </div>
+                      )}
+                      {/* 难度角标 */}
+                      {item.difficulty && (
+                        <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded text-[10px] font-medium"
+                          style={{ background: "rgba(200,184,152,0.2)", color: "#c8b898" }}>
+                          {item.difficulty}
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-3">
+                      <div className="flex items-center gap-1.5 mb-1">
+                        <img
+                          src={item.avatar_url}
+                          alt={item.author}
+                          className="w-4 h-4 rounded-full"
+                        />
+                        <span className="text-xs" style={{ color: "rgba(0,0,0,0.4)" }}>
+                          {item.author}
                         </span>
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill={item.liked ? "#c8b898" : "none"} stroke="currentColor" strokeWidth="2" className="text-white/30">
-                          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                        </svg>
-                        {item.likes_count - item.dislikes_count}
-                      </span>
+                        <span className="text-[10px]" style={{ color: "rgba(0,0,0,0.2)" }}>·</span>
+                        <span className="text-[10px]" style={{ color: "rgba(0,0,0,0.25)" }}>
+                          {item.created_at}
+                        </span>
+                      </div>
+                      <h3 className="text-sm font-medium line-clamp-1" style={{ color: "rgba(0,0,0,0.8)" }}>
+                        {item.title}
+                      </h3>
+                      <div className="flex items-center gap-3 mt-1.5 text-xs" style={{ color: "rgba(0,0,0,0.3)" }}>
+                        <span>❤️ {item.likes_count - item.dislikes_count}</span>
+                        <span>👁 {item.views_count}</span>
+                        {item.course_name && (
+                          <span className="truncate">{item.course_name}</span>
+                        )}
+                      </div>
+                      {/* 工具链标签 */}
+                      {item.tool_chain && item.tool_chain.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-1.5">
+                          {item.tool_chain.slice(0, 3).map(tc => (
+                            <span key={tc} className="text-[10px] px-1.5 py-0.5 rounded"
+                              style={{ background: "rgba(0,0,0,0.03)", color: "rgba(0,0,0,0.35)" }}>
+                              {tc}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            </>
           )}
         </section>
+      </div>
 
-        {/* 详情弹窗 */}
-        {selectedItem && (
+      {/* ── 作品详情弹窗 ── */}
+      {selectedItem && (
+        <div
+          className="fixed inset-0 z-50 flex items-start justify-center overflow-auto"
+          style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(8px)" }}
+          onClick={closeDetail}
+        >
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
-            style={{ background: "rgba(0,0,0,0.8)" }}
-            onClick={closeDetail}
+            className="relative w-full max-w-4xl mx-auto my-8 rounded-xl overflow-hidden"
+            style={{ background: "#1a1a2e" }}
+            onClick={e => e.stopPropagation()}
           >
-            <div
-              className="max-w-2xl w-full max-h-[90vh] overflow-y-auto rounded-xl border border-white/10 relative"
-              style={{ background: "#111" }}
-              onClick={(e) => e.stopPropagation()}
+            {/* 关闭按钮 */}
+            <button
+              onClick={closeDetail}
+              className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-black/50 flex items-center justify-center text-white/60 hover:text-white transition-colors"
             >
-              <div className="relative">
-                {/* 关闭按钮 */}
-                <button
-                  onClick={closeDetail}
-                  className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full flex items-center justify-center text-white/50 hover:text-white transition"
-                  style={{ background: "rgba(0,0,0,0.5)" }}
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M18 6 6 18M6 6l12 12" />
-                  </svg>
-                </button>
-                {selectedItem.media_type === 'video' && selectedItem.video_url && selectedItem.video_url !== '无' ? (
-                  <video
-                    src={selectedItem.video_url}
-                    controls
-                    autoPlay
-                    muted
-                    preload="metadata"
-                    className="w-full max-h-[50vh] object-contain"
-                    style={{ background: "#0a0a0a" }}
-                    playsInline
-                  >
-                    您的浏览器不支持视频播放
-                  </video>
-                ) : (
-                  <img
-                    src={selectedItem.image_url}
-                    alt={selectedItem.title}
-                    className="w-full max-h-[50vh] object-contain"
-                    style={{ background: "#0a0a0a" }}
-                  />
-                )}
-              </div>
-              <div className="p-6">
-                <div className="flex items-center gap-4 mb-4 text-xs text-white/40">
-                  <span className="flex items-center gap-1">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                      <circle cx="12" cy="12" r="3" />
-                    </svg>
-                    {selectedItem.views_count?.toLocaleString() || 0}
-                  </span>
-                  <span className="flex items-center gap-1">❤️ {selectedItem.likes_count - selectedItem.dislikes_count}</span>
-                  <span className="flex items-center gap-1">💩 {selectedItem.dislikes_count}</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 6L6 18M6 6l12 12"/>
+              </svg>
+            </button>
+
+            {/* 媒体区域 */}
+            <div className="relative w-full max-h-[70vh] overflow-hidden bg-black/30 flex items-center justify-center">
+              {selectedItem.media_type === 'video' && selectedItem.video_url && selectedItem.video_url !== '无' ? (
+                <video
+                  src={selectedItem.video_url}
+                  controls
+                  autoPlay
+                  className="w-full max-h-[70vh] object-contain"
+                  poster={selectedItem.image_url}
+                />
+              ) : (
+                <img
+                  src={selectedItem.image_url}
+                  alt={selectedItem.title}
+                  className="w-full max-h-[70vh] object-contain"
+                />
+              )}
+              {/* 媒体信息角标 */}
+              {selectedItem.creation_type && (
+                <div className="absolute bottom-3 left-3 px-2 py-1 rounded text-xs font-medium"
+                  style={{ background: "rgba(0,0,0,0.6)", color: "rgba(255,255,255,0.7)" }}>
+                  {CREATION_TYPE_LABEL[selectedItem.creation_type] || selectedItem.creation_type}
+                  {selectedItem.difficulty && <> · {selectedItem.difficulty}</>}
                 </div>
-
-                <div className="flex items-start justify-between">
-                  <div>
-                    <h2 className="text-xl font-bold text-white/90">{selectedItem.title}</h2>
-                    <div className="flex items-center gap-2 mt-1 text-xs text-white/40">
-                      <img src={selectedItem.avatar_url} alt="" className="w-5 h-5 rounded-full" />
-                      <span>{selectedItem.author}</span>
-                      {selectedItem.course_name && (
-                        <>
-                          <span>·</span>
-                          <span className="text-[#c8b898]/60">{selectedItem.course_name}</span>
-                        </>
-                      )}
-                      <span>·</span>
-                      <span>{selectedItem.created_at}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => toggleLike(selectedItem.id)}
-                      className={`flex items-center gap-1 text-sm px-3 py-1 rounded-full border transition ${
-                        selectedItem.liked ? 'bg-[#c8b898]/10' : ''
-                      }`}
-                      style={{
-                        borderColor: selectedItem.liked ? "rgba(200,184,152,0.3)" : "rgba(255,255,255,0.1)",
-                        color: selectedItem.liked ? "#c8b898" : "rgba(255,255,255,0.4)",
-                      }}
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill={selectedItem.liked ? "#c8b898" : "none"} stroke="currentColor" strokeWidth="2">
-                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                      </svg>
-                      {selectedItem.likes_count - selectedItem.dislikes_count}
-                    </button>
-                    <button
-                      onClick={() => toggleDislike(selectedItem.id)}
-                      className={`flex items-center gap-1 text-sm px-3 py-1 rounded-full border transition ${
-                        selectedItem.disliked ? 'bg-red-900/20' : ''
-                      }`}
-                      style={{
-                        borderColor: selectedItem.disliked ? "rgba(255,80,80,0.3)" : "rgba(255,255,255,0.1)",
-                        color: selectedItem.disliked ? "#ff6666" : "rgba(255,255,255,0.4)",
-                      }}
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill={selectedItem.disliked ? "#ff6666" : "none"} stroke="currentColor" strokeWidth="2">
-                        <path d="M17 14V2M9 18.12l-4-6.3V4h11.2l1.2 5.46a2 2 0 0 1-.24 1.73L12 20" />
-                      </svg>
-                      {selectedItem.dislikes_count}
-                    </button>
-                  </div>
+              )}
+              {selectedItem.media_type === 'video' && selectedItem.duration_seconds && (
+                <div className="absolute bottom-3 right-3 px-2 py-1 rounded text-xs"
+                  style={{ background: "rgba(0,0,0,0.6)", color: "rgba(255,255,255,0.6)" }}>
+                  {Math.floor(selectedItem.duration_seconds / 60)}:{String(selectedItem.duration_seconds % 60).padStart(2, '0')}
                 </div>
+              )}
+            </div>
 
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {selectedItem.tags.map((tag) => (
-                    <span key={tag} className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-white/30">
-                      #{tag}
-                    </span>
-                  ))}
-                </div>
-
-                <p className="mt-4 text-sm text-white/50 leading-relaxed">{selectedItem.description}</p>
-
-                <div className="my-4 border-t border-white/5" />
-
+            {/* 信息区域 */}
+            <div className="p-6">
+              <div className="flex items-start justify-between">
                 <div>
-                  <CommentsList galleryId={selectedItem.id} />
+                  <h2 className="text-xl font-bold text-white/90">{selectedItem.title}</h2>
+                  <div className="flex items-center gap-2 mt-1 text-xs text-white/40">
+                    <img src={selectedItem.avatar_url} alt="" className="w-5 h-5 rounded-full" />
+                    <span>{selectedItem.author}</span>
+                    {selectedItem.course_name && (
+                      <>
+                        <span>·</span>
+                        <span className="text-[#c8b898]/60">{selectedItem.course_name}</span>
+                      </>
+                    )}
+                    <span>·</span>
+                    <span>{selectedItem.created_at}</span>
+                  </div>
                 </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => toggleLike(selectedItem.id)}
+                    className={`flex items-center gap-1 text-sm px-3 py-1 rounded-full border transition ${
+                      selectedItem.liked ? 'bg-[#c8b898]/10' : ''
+                    }`}
+                    style={{
+                      borderColor: selectedItem.liked ? "rgba(200,184,152,0.3)" : "rgba(255,255,255,0.1)",
+                      color: selectedItem.liked ? "#c8b898" : "rgba(255,255,255,0.4)",
+                    }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill={selectedItem.liked ? "#c8b898" : "none"} stroke="currentColor" strokeWidth="2">
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                    </svg>
+                    {selectedItem.likes_count - selectedItem.dislikes_count}
+                  </button>
+                  <button
+                    onClick={() => toggleDislike(selectedItem.id)}
+                    className={`flex items-center gap-1 text-sm px-3 py-1 rounded-full border transition ${
+                      selectedItem.disliked ? 'bg-red-900/20' : ''
+                    }`}
+                    style={{
+                      borderColor: selectedItem.disliked ? "rgba(255,80,80,0.3)" : "rgba(255,255,255,0.1)",
+                      color: selectedItem.disliked ? "#ff6666" : "rgba(255,255,255,0.4)",
+                    }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill={selectedItem.disliked ? "#ff6666" : "none"} stroke="currentColor" strokeWidth="2">
+                      <path d="M17 14V2M9 18.12l-4-6.3V4h11.2l1.2 5.46a2 2 0 0 1-.24 1.73L12 20" />
+                    </svg>
+                    {selectedItem.dislikes_count}
+                  </button>
+                </div>
+              </div>
+
+              {/* 6 维标签展示 */}
+              <div className="flex flex-wrap gap-1.5 mt-3">
+                {/* 创作类型 */}
+                {selectedItem.creation_type && (
+                  <span className="text-[10px] px-1.5 py-0.5 rounded"
+                    style={{ background: "rgba(59,130,246,0.1)", color: "rgba(59,130,246,0.6)" }}>
+                    {CREATION_TYPE_LABEL[selectedItem.creation_type] || selectedItem.creation_type}
+                  </span>
+                )}
+                {/* 艺术风格 */}
+                {selectedItem.art_style && (
+                  <span className="text-[10px] px-1.5 py-0.5 rounded"
+                    style={{ background: "rgba(168,85,247,0.1)", color: "rgba(168,85,247,0.6)" }}>
+                    {selectedItem.art_style}
+                  </span>
+                )}
+                {/* 难度 */}
+                {selectedItem.difficulty && (
+                  <span className="text-[10px] px-1.5 py-0.5 rounded"
+                    style={{ background: "rgba(200,184,152,0.1)", color: "rgba(200,184,152,0.7)" }}>
+                    {DIFFICULTY_LABEL[selectedItem.difficulty] || selectedItem.difficulty}
+                  </span>
+                )}
+                {/* 应用场景 */}
+                {selectedItem.application_scenes?.map(s => (
+                  <span key={s} className="text-[10px] px-1.5 py-0.5 rounded"
+                    style={{ background: "rgba(16,185,129,0.1)", color: "rgba(16,185,129,0.6)" }}>
+                    {s}
+                  </span>
+                ))}
+                {/* 工具链 */}
+                {selectedItem.tool_chain?.map(tc => (
+                  <span key={tc} className="text-[10px] px-1.5 py-0.5 rounded"
+                    style={{ background: "rgba(245,158,11,0.1)", color: "rgba(245,158,11,0.6)" }}>
+                    {tc}
+                  </span>
+                ))}
+                {/* 二级标签 */}
+                {selectedItem.secondary_tags?.map(t => (
+                  <span key={t} className="text-[10px] px-1.5 py-0.5 rounded"
+                    style={{ background: "rgba(236,72,153,0.1)", color: "rgba(236,72,153,0.6)" }}>
+                    #{t}
+                  </span>
+                ))}
+                {/* 旧标签 */}
+                {selectedItem.tags.map((tag) => (
+                  <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded"
+                    style={{ background: "rgba(255,255,255,0.05)", color: "rgba(255,255,255,0.3)" }}>
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+
+              <p className="mt-4 text-sm text-white/50 leading-relaxed">{selectedItem.description}</p>
+
+              <div className="my-4 border-t border-white/5" />
+
+              <div>
+                <CommentsList galleryId={selectedItem.id} />
               </div>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
       <Footer />
     </>
   );

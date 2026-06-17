@@ -118,6 +118,74 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_quiz_results_user ON quiz_results(user_id, quiz_id);
   CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id);
   CREATE INDEX IF NOT EXISTS idx_orders_course ON orders(course_id);
+
+  -- ============ 作品墙 ============
+  -- Phase 2: 6 维字段一次性建表，旧字段 category/scene/style 保留兼容
+  CREATE TABLE IF NOT EXISTS gallery (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL DEFAULT '',
+    description TEXT DEFAULT '',
+    media_type TEXT DEFAULT 'image',
+    image_url TEXT,
+    video_url TEXT,
+    user_id INTEGER,
+    author TEXT DEFAULT '',
+    avatar_url TEXT,
+    likes_count INTEGER DEFAULT 0,
+    dislikes_count INTEGER DEFAULT 0,
+    views_count INTEGER DEFAULT 0,
+    -- 旧字段（保留兼容）
+    category TEXT,                          -- 原6类: text-to-image, text-to-video...
+    scene TEXT,                             -- 旧应用场景（单值）
+    style TEXT,                             -- 旧风格（单值）
+    tags TEXT DEFAULT '[]',                 -- JSON 标签数组
+    sort_order INTEGER DEFAULT 0,
+    course_name TEXT,
+    course_id INTEGER,
+    -- 新 6 维字段（Phase 2）
+    creation_type TEXT,                     -- 创作类型: ai-image / ai-video / ai-music
+    application_scenes TEXT DEFAULT '[]',   -- 应用场景（JSON 多选）
+    tool_chain TEXT DEFAULT '[]',           -- 工具链（JSON 多选）
+    art_style TEXT,                         -- 艺术风格（单选）
+    secondary_tags TEXT DEFAULT '[]',       -- 二级标签（JSON 多选）
+    difficulty TEXT,                        -- 难度: M1 / M2 / M3 / M4 / M5
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now'))
+  );
+
+  -- gallery 辅助表（已存在的）
+  CREATE TABLE IF NOT EXISTS gallery_likes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    gallery_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    created_at TEXT DEFAULT (datetime('now')),
+    UNIQUE(gallery_id, user_id)
+  );
+
+  CREATE TABLE IF NOT EXISTS gallery_dislikes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    gallery_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    created_at TEXT DEFAULT (datetime('now')),
+    UNIQUE(gallery_id, user_id)
+  );
+
+  CREATE TABLE IF NOT EXISTS gallery_comments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    gallery_id INTEGER NOT NULL,
+    user_id INTEGER,
+    author TEXT DEFAULT '',
+    author_avatar TEXT,
+    content TEXT NOT NULL,
+    created_at TEXT DEFAULT (datetime('now'))
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_gallery_creation ON gallery(creation_type);
+  CREATE INDEX IF NOT EXISTS idx_gallery_art_style ON gallery(art_style);
+  CREATE INDEX IF NOT EXISTS idx_gallery_difficulty ON gallery(difficulty);
+  CREATE INDEX IF NOT EXISTS idx_gallery_category ON gallery(category);
+  CREATE INDEX IF NOT EXISTS idx_gallery_comments_gallery ON gallery_comments(gallery_id);
+  CREATE INDEX IF NOT EXISTS idx_gallery_likes_gallery ON gallery_likes(gallery_id);
 `);
 
 export default db;

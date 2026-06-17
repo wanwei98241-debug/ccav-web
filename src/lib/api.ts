@@ -173,6 +173,13 @@ export interface GalleryItem {
   comments_count?: number;
   /** 视频时长（秒） */
   duration_seconds?: number;
+  /** Phase 3: 6 维筛选字段 */
+  creation_type?: string;
+  application_scenes?: string[];
+  tool_chain?: string[];
+  art_style?: string;
+  secondary_tags?: string[];
+  difficulty?: string;
   /** Phase C: 积分锁 */
   unlocked?: boolean;
   unlock_cost?: number;
@@ -222,6 +229,12 @@ export function normalizeGalleryItem(raw: any): GalleryItem {
     views_count: raw.views_count ?? 0,
     liked: raw.liked ?? false,
     disliked: raw.disliked ?? false,
+    creation_type: raw.creation_type ?? undefined,
+    application_scenes: raw.application_scenes ?? [],
+    tool_chain: raw.tool_chain ?? [],
+    art_style: raw.art_style ?? undefined,
+    secondary_tags: raw.secondary_tags ?? [],
+    difficulty: raw.difficulty ?? undefined,
     tags: raw.tags ?? [],
     course_name: raw.courseName ?? raw.course_name ?? undefined,
     course_id: raw.course_id ?? undefined,
@@ -285,8 +298,19 @@ export async function getGalleryItems(opts?: {
   style?: string;
   tag?: string;
   category?: string;
+  // Phase 3: 6 维筛选参数
+  creation_type?: string;
+  application_scene?: string;
+  tool_chain?: string;
+  art_style?: string;
+  secondary_tag?: string;
+  difficulty?: string;
+  page?: number;
+  pageSize?: number;
 }): Promise<GalleryItem[]> {
-  const { tech_type, scene, style, tag, category } = opts || {};
+  const { tech_type, scene, style, tag, category,
+          creation_type, application_scene, tool_chain, art_style, secondary_tag, difficulty,
+          page, pageSize } = opts || {};
   // 优先请求后端 API (直连 3001)
   const params = new URLSearchParams();
   if (tech_type) params.set('tech_type', tech_type);
@@ -294,6 +318,15 @@ export async function getGalleryItems(opts?: {
   if (style) params.set('style', style);
   if (tag) params.set('tag', tag);
   if (category) params.set('category', category);
+  // Phase 3: 6 维参数
+  if (creation_type) params.set('creation_type', creation_type);
+  if (application_scene) params.set('application_scenes', application_scene);
+  if (tool_chain) params.set('tool_chain', tool_chain);
+  if (art_style) params.set('art_style', art_style);
+  if (secondary_tag) params.set('secondary_tags', secondary_tag);
+  if (difficulty) params.set('difficulty', difficulty);
+  if (page) params.set('page', String(page));
+  if (pageSize) params.set('pageSize', String(pageSize));
   const queryStr = params.toString();
   const url = `${GALLERY_API_BASE}/gallery${queryStr ? '?' + queryStr : ''}`;
   try {

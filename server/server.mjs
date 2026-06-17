@@ -16,6 +16,7 @@ import { createServer } from 'http';
 import authRoutes from './auth.js';
 import courseRoutes from './courses.mjs';
 import commentRoutes from './comments.mjs';
+import galleryRoutes from './gallery.mjs';
 
 // 手动加载 .env
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -42,6 +43,7 @@ app.use(express.json({ limit: '1mb' }));
 app.use('/api/auth', authRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/comments', commentRoutes);
+app.use('/api/gallery', galleryRoutes);
 
 // ============ 配置 ============
 

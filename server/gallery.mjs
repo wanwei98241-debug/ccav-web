@@ -64,27 +64,73 @@ function formatGalleryItem(row, userId = null) {
     tags: JSON.parse(row.tags || '[]'),
     course_name: row.course_name || undefined,
     course_id: row.course_id || undefined,
+    // Phase 2: 6 维字段
+    creation_type: row.creation_type || undefined,
+    application_scenes: JSON.parse(row.application_scenes || '[]'),
+    tool_chain: JSON.parse(row.tool_chain || '[]'),
+    art_style: row.art_style || undefined,
+    secondary_tags: JSON.parse(row.secondary_tags || '[]'),
+    difficulty: row.difficulty || undefined,
     created_at: row.created_at,
     comments_count: commentsRow.cnt,
   };
 }
 
-// ============ GET /api/gallery/filters — 获取筛选选项（场景+风格）============
+// ============ GET /api/gallery/filters — 获取筛选选项（6 维）============
 router.get('/filters', (req, res) => {
   try {
-    const scenes = db.prepare(`SELECT DISTINCT scene FROM gallery WHERE scene IS NOT NULL AND scene != '' ORDER BY scene`).all().map(r => r.scene);
-    const styles = db.prepare(`SELECT DISTINCT style FROM gallery WHERE style IS NOT NULL AND style != '' ORDER BY style`).all().map(r => r.style);
-    res.json({ code: 0, data: { scenes, styles } });
+    const scenes    = db.prepare(`SELECT DISTINCT scene FROM gallery WHERE scene IS NOT NULL AND scene != '' ORDER BY scene`).all().map(r => r.scene);
+    const styles    = db.prepare(`SELECT DISTINCT style FROM gallery WHERE style IS NOT NULL AND style != '' ORDER BY style`).all().map(r => r.style);
+
+    // Phase 2: 6 维筛选选项
+    const creationTypes = db.prepare(`SELECT DISTINCT creation_type FROM gallery WHERE creation_type IS NOT NULL AND creation_type != '' ORDER BY creation_type`).all().map(r => r.creation_type);
+    const artStyles     = db.prepare(`SELECT DISTINCT art_style FROM gallery WHERE art_style IS NOT NULL AND art_style != '' ORDER BY art_style`).all().map(r => r.art_style);
+    const difficulties  = db.prepare(`SELECT DISTINCT difficulty FROM gallery WHERE difficulty IS NOT NULL AND difficulty != '' ORDER BY difficulty`).all().map(r => r.difficulty);
+
+    // 枚举定义（即使数据库没数据也返回可选值）
+    const creationTypeOptions = ['ai-image', 'ai-video', 'ai-music'];
+    const artStyleOptions     = ['写实胶片', '国潮', '国风水墨', '抽象概念', '科幻赛博', '极简现代', '手绘插画'];
+    const difficultyOptions   = ['M1', 'M2', 'M3', 'M4', 'M5'];
+
+    // 动态取应用场景和工具链（JSON 反序列化后去重）
+    const sceneRows = db.prepare(`SELECT application_scenes FROM gallery WHERE application_scenes IS NOT NULL AND application_scenes != '[]'`).all();
+    const toolRows  = db.prepare(`SELECT tool_chain FROM gallery WHERE tool_chain IS NOT NULL AND tool_chain != '[]'`).all();
+    const tagRows   = db.prepare(`SELECT secondary_tags FROM gallery WHERE secondary_tags IS NOT NULL AND secondary_tags != '[]'`).all();
+
+    const allScenes = new Set();
+    const allTools  = new Set();
+    const allTags   = new Set();
+    for (const r of sceneRows) { try { for (const s of JSON.parse(r.application_scenes)) allScenes.add(s); } catch {} }
+    for (const r of toolRows)  { try { for (const t of JSON.parse(r.tool_chain)) allTools.add(t); } catch {} }
+    for (const r of tagRows)   { try { for (const t of JSON.parse(r.secondary_tags)) allTags.add(t); } catch {} }
+
+    res.json({
+      code: 0,
+      data: {
+        // 旧字段（兼容）
+        scenes,
+        styles,
+        // 新 6 维
+        creation_types: creationTypeOptions,
+        application_scenes: [...allScenes].sort(),
+        tool_chains: [...allTools].sort(),
+        art_styles: artStyleOptions,
+        secondary_tags: [...allTags].sort(),
+        difficulties: difficultyOptions,
+      }
+    });
   } catch (err) {
     console.error('[GET /api/gallery/filters Error]', err.message);
     res.status(500).json({ code: 1, error: err.message });
   }
 });
 
-// ============ GET /api/gallery — 获取作品列表（支持分类+标签交叉查询）============
+// ============ GET /api/gallery — 获取作品列表（支持分类+标签+6维筛选）============
 router.get('/', (req, res) => {
   try {
-    const { tag, category, techType, page = 1, pageSize = 50 } = req.query;
+    const { tag, category, techType, page = 1, pageSize = 50,
+            scene, style,
+            creation_type, application_scenes, tool_chain, art_style, secondary_tags, difficulty } = req.query;
     const offset = (Number(page) - 1) * Number(pageSize);
     const limit = Number(pageSize);
 
@@ -105,6 +151,39 @@ router.get('/', (req, res) => {
     if (category) {
       conditions.push('category = ?');
       params.push(category);
+    }
+    // Phase 2: 6 维筛选
+    if (scene) {
+      conditions.push('scene = ?');
+      params.push(scene);
+    }
+    if (style) {
+      conditions.push('style = ?');
+      params.push(style);
+    }
+    if (creation_type) {
+      conditions.push('creation_type = ?');
+      params.push(creation_type);
+    }
+    if (application_scenes) {
+      conditions.push('application_scenes LIKE ?');
+      params.push(`%${application_scenes}%`);
+    }
+    if (tool_chain) {
+      conditions.push('tool_chain LIKE ?');
+      params.push(`%${tool_chain}%`);
+    }
+    if (art_style) {
+      conditions.push('art_style = ?');
+      params.push(art_style);
+    }
+    if (secondary_tags) {
+      conditions.push('secondary_tags LIKE ?');
+      params.push(`%${secondary_tags}%`);
+    }
+    if (difficulty) {
+      conditions.push('difficulty = ?');
+      params.push(difficulty);
     }
     if (techType) {
       const cats = techTypeCategoryMap[String(techType).toLowerCase()];
