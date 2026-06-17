@@ -95,7 +95,7 @@ export default function Home() {
             { name: "王云飞", photo: "https://ccav.com/images/experts/EXP-002_王云飞.jpg", title: "北京其卡通董事长/CEO", desc: "知名动画导演，执导《西游记之再世妖王》《神秘世界历险记》两部过亿票房动画电影。获华表奖、星光奖。" },
             { name: "胡月明", photo: "https://ccav.com/images/experts/EXP-003_胡月明.jpg", title: "中国文化娱乐行业协会艺术品分会会长", desc: "原皇城艺术品交易中心董事长。国家财政部文化产业专项资金评审专家。出版《连环画情缘》《胡说动漫》等。" },
           ].map((t, i) => (
-            <div key={i} className="ink-card p-5 flex items-start gap-4">
+            <a key={i} href="/experts/" className="ink-card p-5 flex items-start gap-4 block" style={{textDecoration: 'none'}}>
               <img
                 src={t.photo}
                 alt={t.name}
@@ -111,12 +111,12 @@ export default function Home() {
                 <p className="text-xs font-medium mb-1" style={{ color: "#2563eb" }}>{t.title}</p>
                 <p className="text-xs leading-relaxed" style={{ color: "rgba(0,0,0,0.45)" }}>{t.desc}</p>
               </div>
-            </div>
+            </a>
           ))}
         </div>
 
         <div className="text-center">
-          <a href="/teacher-training" className="text-sm font-medium" style={{ color: "#2563eb" }}>查看全部师资 →</a>
+          <a href="/experts/" className="text-sm font-medium" style={{ color: "#2563eb" }}>查看全部师资 →</a>
         </div>
       </section>
 
