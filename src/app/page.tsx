@@ -84,32 +84,28 @@ export default function Home() {
         </div>
 
         {/* 专家团队 */}
-        <h3 className="text-base font-bold mb-4" style={{ color: "#1e293b" }}><span className="inline-block w-1 h-4 rounded-sm mr-2 align-middle" style={{ background: "#2563eb" }}/>专家团队</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-          {[
-            { initial: "A", name: "陈国良", title: "AI视频创作·行业资深", desc: "拥有15年影视后期与AI视频创作经验，参与多部商业AI短片制作，CCAV标准教材主要编写人之一。" },
-            { initial: "B", name: "李雪飞", title: "AI图像生成·高级讲师", desc: "专注AI图像与视频生成技术，ComfyUI工作流专家，累计培训学员超过2000人。" },
-          ].map((t, i) => (
-            <div key={i} className="ink-card p-5 flex items-start gap-4">
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex-shrink-0 flex items-center justify-center text-white text-lg font-bold">{t.initial}</div>
-              <div className="min-w-0">
-                <h4 className="text-base font-bold" style={{ color: "#1e293b" }}>{t.name}</h4>
-                <p className="text-xs font-medium mb-1" style={{ color: "#2563eb" }}>{t.title}</p>
-                <p className="text-xs leading-relaxed" style={{ color: "rgba(0,0,0,0.45)" }}>{t.desc}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* 讲师团队 */}
-        <h3 className="text-base font-bold mb-4" style={{ color: "#1e293b" }}><span className="inline-block w-1 h-4 rounded-sm mr-2 align-middle" style={{ background: "#2563eb" }}/>讲师团队</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {[
-            { initial: "C", name: "王嘉伟", title: "AI视频剪辑·技术顾问", desc: "前影视后期制作总监，精通AI视频全流程创作，主攻商业广告与品牌宣传方向。" },
-            { initial: "D", name: "赵晓雯", title: "AI短片导演·课程研发", desc: "毕业于中国传媒大学，AI短片导演，创作多部获奖AI作品，负责课程内容研发与教学体系设计。" },
+            { name: "金城", photo: "https://ccav.com/images/experts/EXP-008_金城.jpg", title: "广东省当代美术院院长", desc: "中国美术家协会理事，教育部高校动画、数字媒体专业教指委副主任。创办漫友杂志、中国动漫金龙奖赛事、CIAC全国插画扶持计划。" },
+            { name: "王晟", photo: "https://ccav.com/images/experts/EXP-007_王晟.jpg", title: "浙江光影空间文化创意有限公司副总经理", desc: "深耕IP商业化领域十余年，业务覆盖动漫、游戏、文旅、数字产业。擅长打造景区内容IP与文创产品。" },
+            { name: "柳洪博", photo: "https://ccav.com/images/experts/EXP-001_柳洪博.jpg", title: "北京神灯时代总经理/自由光数字科技副总经理", desc: "MagicLamp创始人，四川师大硕士导师。主持20余项数字交互艺术作品，打造《寻梦海洋》《Hi浮世绘》特展IP。" },
+            { name: "刘道勇", photo: "https://ccav.com/images/experts/EXP-005_刘道勇.jpg", title: "杭州赤兔数字科技有限公司总经理", desc: "动画行业20年，参与《天生我刺》《龙之谷》《熊出没》等数十部动画影视剧。2025年转型AIGC制作。" },
+            { name: "杨好刚", photo: "https://ccav.com/images/experts/EXP-006_杨好刚.jpg", title: "环球墨非（GMM.US）创始人、董事长兼CEO", desc: "纳斯达克上市公司实控人。获2025年度中国经济十大创新人物、年度最佳CEO。" },
+            { name: "方志宏", photo: "https://ccav.com/images/experts/EXP-004_方志宏.jpg", title: "技术总监", desc: "专注大模型体系化落地、多模态大模型集成、提示词工程与模型微调、AI影视动漫跨界融合。" },
+            { name: "王云飞", photo: "https://ccav.com/images/experts/EXP-002_王云飞.jpg", title: "北京其卡通董事长/CEO", desc: "知名动画导演，执导《西游记之再世妖王》《神秘世界历险记》两部过亿票房动画电影。获华表奖、星光奖。" },
+            { name: "胡月明", photo: "https://ccav.com/images/experts/EXP-003_胡月明.jpg", title: "中国文化娱乐行业协会艺术品分会会长", desc: "原皇城艺术品交易中心董事长。国家财政部文化产业专项资金评审专家。出版《连环画情缘》《胡说动漫》等。" },
           ].map((t, i) => (
             <div key={i} className="ink-card p-5 flex items-start gap-4">
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex-shrink-0 flex items-center justify-center text-white text-lg font-bold">{t.initial}</div>
+              <img
+                src={t.photo}
+                alt={t.name}
+                className="w-14 h-14 rounded-full object-cover flex-shrink-0"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = `data:image/svg+xml,${encodeURIComponent(
+                    `<svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 56 56"><rect width="56" height="56" rx="28" fill="%234f46e5"/><text x="28" y="28" text-anchor="middle" dominant-baseline="central" fill="white" font-size="20" font-weight="bold">${t.name[0]}</text></svg>`
+                  )}`;
+                }}
+              />
               <div className="min-w-0">
                 <h4 className="text-base font-bold" style={{ color: "#1e293b" }}>{t.name}</h4>
                 <p className="text-xs font-medium mb-1" style={{ color: "#2563eb" }}>{t.title}</p>
