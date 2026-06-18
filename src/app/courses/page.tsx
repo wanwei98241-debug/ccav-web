@@ -171,16 +171,21 @@ export default function CoursesPage() {
                   </div>
                   {course.outcomes && course.outcomes.length > 0 && (
                     <div className="mt-3 pt-3 border-t" style={{ borderColor: "rgba(0,0,0,0.06)" }}>
-                      <span
-                        className="text-[10px] px-2 py-0.5 rounded whitespace-nowrap"
-                        style={{
-                          background: "rgba(0,0,0,0.04)",
-                          border: "1px solid rgba(0,0,0,0.08)",
-                          color: "rgba(0,0,0,0.55)",
-                        }}
-                      >
-                        🎯 学习成果：{course.outcomes[0]}
-                      </span>
+                      <div className="flex flex-col gap-1 mb-2">
+                        <span className="text-[11px] font-medium" style={{ color: "rgba(0,0,0,0.45)" }}>🎯 学习成果</span>
+                        <div className="flex flex-col gap-0.5">
+                          {course.outcomes.slice(0, 3).map((o: string, oi: number) => (
+                            <span key={oi} className="text-xs" style={{ color: "rgba(0,0,0,0.5)" }}>
+                              · {o}
+                            </span>
+                          ))}
+                          {course.outcomes.length > 3 && (
+                            <span className="text-[10px]" style={{ color: "rgba(0,0,0,0.35)" }}>
+                              +{course.outcomes.length - 3} 项更多
+                            </span>
+                          )}
+                        </div>
+                      </div>
                       <Link
                         href={`/courses/${course.id}/`}
                         className="float-right flex items-center gap-1 text-xs transition-all"

@@ -1,6 +1,7 @@
 "use client";
 
 import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 
 export default function CertificationPage() {
@@ -74,7 +75,7 @@ export default function CertificationPage() {
                       <span>考核方式：{item.method}</span>
                       <span>→ {item.outcome}</span>
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                       {item.content.map((c, j) => (
                         <div key={j} className="flex items-center gap-1.5 text-xs text-[rgba(0,0,0,0.55)]">
                           <span className="text-green-500/70">✓</span>
@@ -126,9 +127,9 @@ export default function CertificationPage() {
           <h2 className="text-2xl serif font-bold text-[#1e293b] mb-6">作品示例</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
-              { title: "水墨层峦 · AI山水画", level: "初级作品", image: "https://p4-fdl.klingai.com/ksc2/uZgqi_xvE-0oyPgMhpqNVvXbitzbGhnVjl20bpetQpzO1r1b", author: "张三" },
-              { title: "星际穿越 · AI科幻短片", level: "中级作品", image: "https://p4-fdl.klingai.com/ksc2/uZgqi_xvE-0oyPgMhpqNVvXbitzbGhnVjl20bpetQpzO1r1b", author: "赵六" },
-              { title: "丝路飞天 · AI敦煌MV", level: "高级作品", image: "https://p4-fdl.klingai.com/ksc2/NI90PAbb1Q8Bsgn5y9TudfvE-LxokGttrOyHFeR5C67QdrPR", author: "齐小天" },
+              { title: "水墨层峦 · AI山水画", level: "初级作品", image: "/placeholder-example.svg", author: "张三" },
+              { title: "星际穿越 · AI科幻短片", level: "中级作品", image: "/placeholder-example.svg", author: "赵六" },
+              { title: "丝路飞天 · AI敦煌MV", level: "高级作品", image: "/placeholder-example.svg", author: "齐小天" },
             ].map((work, i) => (
               <div key={i} className="ink-card overflow-hidden group cursor-pointer">
                 <div className="aspect-video overflow-hidden">
@@ -190,10 +191,7 @@ export default function CertificationPage() {
         </section>
       </main>
 
-      <footer className="border-t border-[rgba(37,99,235,0.08)] py-8 text-center relative z-10">
-        <p className="text-sm text-[rgba(0,0,0,0.5)] mb-2 serif">CCAV — AI视频创作教育机构</p>
-        <p className="text-xs text-[rgba(0,0,0,0.35)]">以 T/CCPS 0041—2026 团体标准为核心的AI视频创作教育体系 · © 2026</p>
-      </footer>
+      <Footer />
     </>
   );
 }

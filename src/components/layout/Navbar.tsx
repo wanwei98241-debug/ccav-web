@@ -1,10 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // 点击外部关闭汉堡菜单
+  useEffect(() => {
+    if (!menuOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [menuOpen]);
 
   return (
     <>
@@ -70,7 +83,7 @@ export default function Navbar() {
       </nav>
       {/* 汉堡菜单展开面板 */}
       {menuOpen && (
-        <div className="md:hidden border-t z-10" style={{ background: "#ffffff", borderColor: "rgba(0,0,0,0.06)" }}>
+        <div ref={menuRef} className="md:hidden border-t z-10" style={{ background: "#ffffff", borderColor: "rgba(0,0,0,0.06)" }}>
           <div className="flex flex-col px-8 py-4 gap-3 text-sm" style={{ color: "rgba(0,0,0,0.55)" }}>
             <Link href="/" className="hover:text-[#2563eb] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>首页</Link>
             <Link href="/teacher-training" className="hover:text-[#2563eb] transition py-1 no-underline" onClick={() => setMenuOpen(false)}>教师培训</Link>
