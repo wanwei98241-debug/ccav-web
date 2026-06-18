@@ -169,6 +169,7 @@ export interface GalleryItem {
   tags: string[];
   course_name?: string;
   course_id?: number;
+  instructor?: string;
   created_at: string;
   comments_count?: number;
   /** 视频时长（秒） */
@@ -238,6 +239,7 @@ export function normalizeGalleryItem(raw: any): GalleryItem {
     tags: raw.tags ?? [],
     course_name: raw.courseName ?? raw.course_name ?? undefined,
     course_id: raw.course_id ?? undefined,
+    instructor: raw.instructor ?? undefined,
     created_at: raw.createdAt ?? raw.created_at ?? '',
     comments_count: raw.comments ?? raw.comments_count ?? 0,
     duration_seconds: raw.duration_seconds ?? raw.durationSeconds ?? undefined,

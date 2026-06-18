@@ -130,6 +130,7 @@ export default function CourseDetailClient({ id }: { id: string }) {
     { icon: FileText, label: "学习形式", value: course.format },
     { icon: Shield, label: "认证证书", value: course.certification },
     { icon: Target, label: "目标学员", value: course.targetAudience },
+    { icon: GraduationCap, label: "授课专家", value: course.instructor || "CCAV专家教研组" },
   ];
 
   // ── 学习收获列表 ──

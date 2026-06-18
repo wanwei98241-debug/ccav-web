@@ -139,6 +139,12 @@ export default function GalleryDetailPage() {
                         <img src={item.avatar_url} alt="" className="w-5 h-5 rounded-full" />
                       )}
                       <span>{item.author}</span>
+                      {item.instructor && (
+                        <>
+                          <span>·</span>
+                          <span className="text-[#e53e3e]/60">指导老师: {item.instructor}</span>
+                        </>
+                      )}
                       {item.course_name && (
                         <>
                           <span>·</span>

@@ -448,6 +448,11 @@ export default function GalleryPage() {
                       <h3 className="text-sm font-medium line-clamp-1" style={{ color: "rgba(0,0,0,0.8)" }}>
                         {item.title}
                       </h3>
+                      {item.instructor && (
+                        <div className="mt-1 text-[10px]" style={{ color: "rgba(229,62,62,0.5)" }}>
+                          指导老师: {item.instructor}
+                        </div>
+                      )}
                       <div className="flex items-center gap-3 mt-1.5 text-xs" style={{ color: "rgba(0,0,0,0.3)" }}>
                         <span>❤️ {item.likes_count - item.dislikes_count}</span>
                         <span>👁 {item.views_count}</span>
@@ -538,6 +543,12 @@ export default function GalleryPage() {
                   <div className="flex items-center gap-2 mt-1 text-xs text-white/40">
                     <img src={selectedItem.avatar_url} alt="" className="w-5 h-5 rounded-full" />
                     <span>{selectedItem.author}</span>
+                    {selectedItem.instructor && (
+                      <>
+                        <span>·</span>
+                        <span className="text-[#e53e3e]/50">指导老师: {selectedItem.instructor}</span>
+                      </>
+                    )}
                     {selectedItem.course_name && (
                       <>
                         <span>·</span>

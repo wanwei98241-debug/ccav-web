@@ -26,6 +26,7 @@ interface Tool {
   difficulty: "beginner" | "intermediate" | "advanced";
   free: boolean;
   highlight: boolean;
+  relatedLessons?: string[];
 }
 
 const tools: Tool[] = [
@@ -41,6 +42,7 @@ const tools: Tool[] = [
     difficulty: "beginner",
     free: true,
     highlight: true,
+    relatedLessons: ["M1-2: 提示词基础"],
   },
   {
     id: "midjourney",
@@ -53,6 +55,7 @@ const tools: Tool[] = [
     difficulty: "beginner",
     free: false,
     highlight: true,
+    relatedLessons: ["M1-2: 提示词基础"],
   },
   {
     id: "dalle",
@@ -65,6 +68,7 @@ const tools: Tool[] = [
     difficulty: "beginner",
     free: false,
     highlight: true,
+    relatedLessons: ["M1-2: 提示词基础"],
   },
   {
     id: "stable-diffusion",
@@ -77,6 +81,7 @@ const tools: Tool[] = [
     difficulty: "advanced",
     free: true,
     highlight: false,
+    relatedLessons: ["M3-2: ComfyUI入门"],
   },
   {
     id: "ideogram",
@@ -89,6 +94,7 @@ const tools: Tool[] = [
     difficulty: "beginner",
     free: true,
     highlight: false,
+    relatedLessons: ["M1-3: AI海报实战"],
   },
   // 🎬 视频生成
   {
@@ -102,6 +108,7 @@ const tools: Tool[] = [
     difficulty: "intermediate",
     free: false,
     highlight: true,
+    relatedLessons: ["M2-1: Runway进阶"],
   },
   {
     id: "sora",
@@ -114,6 +121,7 @@ const tools: Tool[] = [
     difficulty: "beginner",
     free: false,
     highlight: false,
+    relatedLessons: ["M2-1: 视频生成入门"],
   },
   {
     id: "pika",
@@ -126,6 +134,7 @@ const tools: Tool[] = [
     difficulty: "beginner",
     free: true,
     highlight: false,
+    relatedLessons: ["M2-3: 轻量视频工具"],
   },
   {
     id: "capcut",
@@ -138,6 +147,7 @@ const tools: Tool[] = [
     difficulty: "beginner",
     free: true,
     highlight: true,
+    relatedLessons: ["M1-5: 短视频实战"],
   },
   // 🎵 音频
   {
@@ -151,6 +161,7 @@ const tools: Tool[] = [
     difficulty: "beginner",
     free: true,
     highlight: true,
+    relatedLessons: ["M2-2: AI音乐创作"],
   },
   {
     id: "elevenlabs",
@@ -163,6 +174,7 @@ const tools: Tool[] = [
     difficulty: "intermediate",
     free: false,
     highlight: true,
+    relatedLessons: ["M3-5: AI配音"],
   },
   // 📝 文本
   {
@@ -176,6 +188,7 @@ const tools: Tool[] = [
     difficulty: "beginner",
     free: false,
     highlight: true,
+    relatedLessons: ["M1-1: AI基础认知"],
   },
   {
     id: "doubao",
@@ -188,6 +201,7 @@ const tools: Tool[] = [
     difficulty: "beginner",
     free: true,
     highlight: true,
+    relatedLessons: ["M1-1: AI基础认知"],
   },
   {
     id: "notebooklm",
@@ -200,6 +214,7 @@ const tools: Tool[] = [
     difficulty: "beginner",
     free: true,
     highlight: false,
+    relatedLessons: ["M4-1: 全流程项目"],
   },
   // 💻 代码/工作流
   {
@@ -213,6 +228,7 @@ const tools: Tool[] = [
     difficulty: "advanced",
     free: true,
     highlight: true,
+    relatedLessons: ["M3-2: ComfyUI入门"],
   },
 ];
 
@@ -391,6 +407,17 @@ function ToolCard({ tool, index }: { tool: Tool; index: number }) {
         </div>
         <ExternalLink className="w-4 h-4 text-[rgba(0,0,0,0.35)] flex-shrink-0 mt-1 group-hover:text-[#2563eb] transition-colors" />
       </div>
+      {tool.relatedLessons && tool.relatedLessons.length > 0 && (
+        <div className="flex items-center gap-1 mt-2.5 pt-2 border-t border-[rgba(37,99,235,0.06)]">
+          <BookOpen className="w-3 h-3 text-[#206683]/50 flex-shrink-0" />
+          <span className="text-[10px] text-[#206683]/50 mr-1">关联课时:</span>
+          {tool.relatedLessons.map((lesson, j) => (
+            <span key={j} className="text-[10px] px-1.5 py-0.5 rounded bg-[#206683]/8 text-[#206683]/60">
+              {lesson}
+            </span>
+          ))}
+        </div>
+      )}
     </motion.a>
   );
 }

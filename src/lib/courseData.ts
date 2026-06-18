@@ -52,6 +52,7 @@ export interface Course {
   outcomes: string[];
   certification: string;
   tags?: string[];
+  instructor?: string;
 }
 
 // ============================================================

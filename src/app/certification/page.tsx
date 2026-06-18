@@ -121,6 +121,36 @@ export default function CertificationPage() {
           </div>
         </section>
 
+        {/* 作品示例 */}
+        <section className="mb-16">
+          <h2 className="text-2xl serif font-bold text-[#1e293b] mb-6">作品示例</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[
+              { title: "水墨层峦 · AI山水画", level: "初级作品", image: "https://p4-fdl.klingai.com/ksc2/uZgqi_xvE-0oyPgMhpqNVvXbitzbGhnVjl20bpetQpzO1r1b", author: "张三" },
+              { title: "星际穿越 · AI科幻短片", level: "中级作品", image: "https://p4-fdl.klingai.com/ksc2/uZgqi_xvE-0oyPgMhpqNVvXbitzbGhnVjl20bpetQpzO1r1b", author: "赵六" },
+              { title: "丝路飞天 · AI敦煌MV", level: "高级作品", image: "https://p4-fdl.klingai.com/ksc2/NI90PAbb1Q8Bsgn5y9TudfvE-LxokGttrOyHFeR5C67QdrPR", author: "齐小天" },
+            ].map((work, i) => (
+              <div key={i} className="ink-card overflow-hidden group cursor-pointer">
+                <div className="aspect-video overflow-hidden">
+                  <img
+                    src={work.image}
+                    alt={work.title}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                </div>
+                <div className="p-4">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#2563eb]/10 text-[#2563eb]">{work.level}</span>
+                  </div>
+                  <h3 className="text-sm font-medium text-[#1e293b] line-clamp-1">{work.title}</h3>
+                  <p className="text-xs text-[rgba(0,0,0,0.4)] mt-1">{work.author}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
         {/* CTA */}
         <section className="text-center mb-16">
           <div className="ink-card p-8 md:p-12">
