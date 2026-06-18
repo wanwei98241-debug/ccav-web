@@ -142,6 +142,7 @@ export default function CertificationPage() {
                 <div className="p-4">
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#2563eb]/10 text-[#2563eb]">{work.level}</span>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#f59e0b]/15 text-[#d97706] ml-1">⏳占位示例</span>
                   </div>
                   <h3 className="text-sm font-medium text-[#1e293b] line-clamp-1">{work.title}</h3>
                   <p className="text-xs text-[rgba(0,0,0,0.4)] mt-1">{work.author}</p>
